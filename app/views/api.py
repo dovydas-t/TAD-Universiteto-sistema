@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import User
+from app.models import AuthUser
 from app.utils.decorators import json_required
 
 bp = Blueprint('api', __name__)
@@ -10,7 +10,7 @@ bp = Blueprint('api', __name__)
 @login_required
 def get_user(user_id):
     """Get user information"""
-    user = User.query.get_or_404(user_id)
+    user = AuthUser.query.get_or_404(user_id)
     return jsonify({
         'id': user.id,
         'username': user.username,

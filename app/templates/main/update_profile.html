@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Update Profile</h2>
+    <form
+      method="POST"
+      action="{{ url_for('main.profile_update') }}"
+      class="auth-form"
+    >
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.username.label(class="form-label") }}
+        {{ form.username(
+          class="form-input",
+          placeholder=current_user.username,
+          value=current_user.username | default('', true)
+          ) }}
+        {% for error in form.username.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          {{ form.first_name.label(class="form-label") }}
+          {{ form.first_name(
+            class="form-input",
+            placeholder=current_user.profile.first_name or 'Enter your first name',
+            value=current_user.profile.first_name | default('', true)
+            ) }}
+          {% for error in form.first_name.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          {{ form.last_name.label(class="form-label") }}
+          {{ form.last_name(
+            class="form-input",
+            placeholder=current_user.profile.last_name or 'Enter your last name',
+            value=current_user.profile.last_name | default('', true)
+            ) }}
+          {% for error in form.last_name.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="form-group">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(
+          class="form-input",
+          placeholder=current_user.profile.email or 'Enter your email',
+          value=current_user.profile.email | default('', true)
+          ) }}
+        {% for error in form.email.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.birth_date.label(class="form-label") }}
+        {{ form.birth_date(
+          class="form-input",
+          placeholder=current_user.profile.birth_date,
+          value=current_user.profile.birth_date | default('', true)
+          ) }}
+        {% for error in form.birth_date.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+
+
+      <div class="form-actions">
+        {{ form.submit(class="btn btn-primary btn-full") }}
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,7 +1,8 @@
+from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms.auth import LoginForm, RegistrationForm, PasswordResetRequestForm, PasswordResetForm
-from app.models import User
+from app.models import AuthUser, UserProfile
 from app.extensions import db
 
 bp = Blueprint('auth', __name__)
@@ -15,16 +16,20 @@ def login():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = AuthUser.query.filter_by(username=form.username.data).first()
         
         if user and user.check_password(form.password.data):
             if not user.is_active:
                 flash('Account is deactivated. Contact support.', 'error')
                 return redirect(url_for('auth.login'))
             
+            # Update last login
+            user.profile.last_login = db.func.current_timestamp()
+            db.session.commit()
+
             login_user(user, remember=form.remember_me.data)
             next_page = request.args.get('next')
-            flash(f'Welcome back, {user.full_name}!', 'success')
+            flash(f'Welcome back, {user.username}!', 'success')
             return redirect(next_page or url_for('main.dashboard'))
         
         flash('Invalid username or password', 'error')
@@ -40,14 +45,16 @@ def register():
     
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data
-        )
-        user.set_password(form.password.data)
-        
+        #Get data from from
+        username=form.username.data
+        password=form.password.data
+        password2=form.password2.data
+
+        # Create user and user.profile and save user
+        user = AuthUser(username=username)
+        user.profile = UserProfile()
+        # Function to hash given password
+        user.set_password(password)
         db.session.add(user)
         db.session.commit()
         
@@ -65,7 +72,7 @@ def reset_password_request():
     
     form = PasswordResetRequestForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = AuthUser.query.filter_by(email=form.email.data).first()
         if user:
             token = user.generate_reset_token()
             # In a real app, send reset email here
@@ -83,7 +90,7 @@ def reset_password(token):
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     
-    user = User.query.filter_by(reset_token=token).first()
+    user = AuthUser.query.filter_by(reset_token=token).first()
     if not user or not user.verify_reset_token(token):
         flash('Invalid or expired reset token.', 'error')
         return redirect(url_for('auth.login'))
@@ -101,7 +108,7 @@ def reset_password(token):
 @bp.route('/verify-email/<token>')
 def verify_email(token):
     """Verify email address"""
-    user = User.query.filter_by(email_verification_token=token).first()
+    user = AuthUser.query.filter_by(email_verification_token=token).first()
     if user and user.verify_email_token(token):
         flash('Email verified successfully!', 'success')
     else:
@@ -116,3 +123,21 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
+
+@bp.route('/delete_user', methods=['GET', 'POST'])
+@login_required
+def delete_user():
+    """Delete the current user account"""
+
+    # # Optional: delete related profile manually if not using cascading
+    # profile = UserProfile.query.filter_by(user_id=user.id).first()
+    # if profile:
+    #     db.session.delete(profile)
+
+    db.session.delete(current_user)
+    db.session.commit()
+
+    logout_user()
+    flash('Your account has been deleted.', 'info')
+    return redirect(url_for('main.index'))
+

@@ -1,7 +1,7 @@
 from flask import Flask
 from app.extensions import db, migrate, login_manager, csrf
 from app.config import Config
-from app.models.user import User
+from app.models.user_auth import AuthUser
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -16,7 +16,7 @@ def create_app(config_class=Config):
     # Register user loader
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return AuthUser.query.get(int(user_id))
     
     # Register blueprints
     from app.views.main import bp as main_bp
