@@ -12,5 +12,7 @@ class Post(db.Model):
     
     user_id = db.Column(db.Integer, db.ForeignKey('auth_user.id'), nullable=False)
 
+    creator = db.relationship('AuthUser', back_populates='posts')
+
     def __repr__(self):
         return f"Post('{self.title}', User ID: {self.user_id})"

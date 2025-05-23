@@ -50,18 +50,6 @@ def profile_update():
         return redirect(url_for('main.profile'))
 
     return render_template("main/update_profile.html", form=form)
-    #FIXME: Maybe needs a revert for update profile
-    # if form.validate_on_submit():
-    #     current_user.username = form.username.data
-    #     current_user.profile.first_name = form.first_name.data
-    #     current_user.profile.last_name = form.last_name.data
-    #     current_user.profile.email = form.email.data
-    #     current_user.profile.birth_date = form.birth_date.data
-    #     db.session.commit()
-    #     flash('Your profile has been updated!', 'success')
-    #     return redirect(url_for('main.profile'))
-
-    # return render_template('main/update_profile.html', form=form)
 
 @bp.route('/dashboard')
 @admin_required

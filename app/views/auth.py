@@ -1,11 +1,16 @@
 from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user, login_required, user_logged_in
 from app.forms.auth import LoginForm, RegistrationForm, PasswordResetRequestForm, PasswordResetForm
 from app.models import AuthUser, UserProfile
 from app.extensions import db
 
 bp = Blueprint('auth', __name__)
+
+# @user_logged_in.connect
+# def update_last_login(sender, user):
+#     user.profile.last_login = db.func.current_timestamp()
+#     db.session.commit()
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -17,19 +22,21 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = AuthUser.query.filter_by(username=form.username.data).first()
-        
         if user and user.check_password(form.password.data):
             if not user.is_active:
                 flash('Account is deactivated. Contact support.', 'error')
                 return redirect(url_for('auth.login'))
             
+            login_user(user, remember=form.remember_me.data)
+
             # Update last login
             user.profile.last_login = db.func.current_timestamp()
             db.session.commit()
 
-            login_user(user, remember=form.remember_me.data)
+
             next_page = request.args.get('next')
-            flash(f'Welcome back, {user.username}!', 'success')
+
+            flash(f'Login successful! Welcome back, {user.username}!', 'success')
             return redirect(next_page or url_for('main.dashboard'))
         
         flash('Invalid username or password', 'error')

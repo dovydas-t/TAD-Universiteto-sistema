@@ -10,9 +10,11 @@ class UserProfile(db.Model):
     email = db.Column(db.String(35), unique=True, nullable=True)
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
-    last_login = db.Column(db.DateTime)
+    last_login = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp(), nullable=False)
+
+    user = db.relationship('AuthUser', back_populates='profile')
 
     def __repr__(self):
         return f"UserProfile('{self.id}', '{self.created_at}')"
