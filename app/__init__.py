@@ -2,7 +2,7 @@ from flask import Flask
 from flask_login import user_logged_in
 from app.extensions import db, migrate, login_manager, csrf
 from app.config import Config
-from app.models.user_auth import AuthUser
+from app.models.auth import AuthUser
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -18,8 +18,9 @@ def create_app(config_class=Config):
     @login_manager.user_loader
     def load_user(user_id):
         user = AuthUser.query.get(int(user_id))
-        user.profile.last_login = db.func.current_timestamp()
-        db.session.commit()
+        if user:
+            user.profile.last_login = db.func.current_timestamp()
+            db.session.commit()
         return user
 
     # Register blueprints
@@ -31,6 +32,9 @@ def create_app(config_class=Config):
     
     from app.views.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
+
+    from app.views.post import bp as post_bp
+    app.register_blueprint(post_bp, url_prefix='/posts')
 
 
     return app

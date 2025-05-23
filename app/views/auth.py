@@ -2,16 +2,11 @@ from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required, user_logged_in
 from app.forms.auth import LoginForm, RegistrationForm, PasswordForm, EnterEmailForm
-from app.models import AuthUser, UserProfile
+from app.models.auth import AuthUser
+from app.models.main import UserProfile
 from app.extensions import db
 
 bp = Blueprint('auth', __name__)
-
-# @user_logged_in.connect
-# def update_last_login(sender, user):
-#     user.profile.last_login = db.func.current_timestamp()
-#     db.session.commit()
-
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -143,40 +138,39 @@ def logout():
 #     return redirect(url_for('main.index'))
 
 
-@bp.route('/delete-user-request', methods=['GET', 'POST'])
+@bp.route('/request-user-delete', methods=['GET', 'POST'])
 @login_required
-def delete_user_request():
+def request_user_delete():
     """Request user account deletion"""
     form = PasswordForm()
     if form.validate_on_submit():
-        if current_user.verify_password(form.password.data):
-            # Optionally send a confirmation email or log the request
+        if current_user.check_password(form.password.data):
             db.session.delete(current_user)
             db.session.commit()
             logout_user()
             flash("Your account has been deleted.", 'success')
-            return redirect(url_for('home.index'))
+            return redirect(url_for('main.index'))
         else:
             flash("Incorrect password. Please try again.", 'danger')
 
     return render_template('auth/delete_user_request.html', title='Delete Account', form=form)
 
-@bp.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    """Reset password with token"""
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+# @bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+# def reset_password(token):
+#     """Reset password with token"""
+#     if current_user.is_authenticated:
+#         return redirect(url_for('main.index'))
     
-    user = AuthUser.query.filter_by(reset_token=token).first()
-    if not user or not user.verify_reset_token(token):
-        flash('Invalid or expired reset token.', 'error')
-        return redirect(url_for('auth.login'))
+#     user = AuthUser.query.filter_by(reset_token=token).first()
+#     if not user or not user.verify_reset_token(token):
+#         flash('Invalid or expired reset token.', 'error')
+#         return redirect(url_for('auth.login'))
     
-    form = PasswordForm()
-    if form.validate_on_submit():
-        user.set_password(form.password.data)
-        user.clear_reset_token()
-        flash('Your password has been reset successfully.', 'success')
-        return redirect(url_for('auth.login'))
+#     form = PasswordForm()
+#     if form.validate_on_submit():
+#         user.set_password(form.password.data)
+#         user.clear_reset_token()
+#         flash('Your password has been reset successfully.', 'success')
+#         return redirect(url_for('auth.login'))
     
-    return render_template('auth/reset_password.html', title='Reset Password', form=form)
+#     return render_template('auth/reset_password.html', title='Reset Password', form=form)

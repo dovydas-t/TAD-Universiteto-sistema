@@ -1,4 +1,3 @@
-from sqlalchemy import event
 from datetime import datetime
 from flask_login import UserMixin
 from app.extensions import db, bcrypt
@@ -20,6 +19,8 @@ class AuthUser(UserMixin, db.Model):
     def check_password(self, password):
         """Check user's password"""
         return bcrypt.check_password_hash(self.password_hash, password)
+
+    
 
     def __repr__(self):
         return f'<User {self.username}>'

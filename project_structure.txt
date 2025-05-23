@@ -1,0 +1,55 @@
+university-management-system/
+├── app/
+│   ├── __init__.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── module.py
+│   │   ├── group.py
+│   │   ├── assignment.py
+│   │   └── test.py
+│   ├── controllers/
+│   │   ├── __init__.py
+│   │   ├── auth_controller.py
+│   │   ├── module_controller.py
+│   │   ├── admin_controller.py
+│   │   └── student_controller.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── auth_service.py
+│   │   ├── user_service.py
+│   │   ├── module_service.py
+│   │   └── file_service.py
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── auth/
+│   │   │   ├── login.html
+│   │   │   └── register.html
+│   │   ├── dashboard/
+│   │   │   ├── admin.html
+│   │   │   ├── teacher.html
+│   │   │   └── student.html
+│   │   └── modules/
+│   │       ├── view_module.html
+│   │       └── edit_module.html
+│   ├── static/
+│   │   ├── css/
+│   │   └── img/
+│   └── forms/
+│       ├── __init__.py
+│       ├── login_form.py
+│       ├── register_form.py
+│       └── module_form.py
+├── migrations/
+├── uploads/
+│   ├── profile_pictures/
+│   └── module_images/
+├── tests/
+│   ├── test_auth.py
+│   ├── test_module.py
+│   └── test_user.py
+├── .gitignore
+├── config.py
+├── run.py
+├── README.md
+└── requirements.txt

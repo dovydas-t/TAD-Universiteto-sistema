@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
-from app.models.user_auth import AuthUser
+from app.models.auth import AuthUser
 
 
 class RegistrationForm(FlaskForm):
@@ -68,7 +68,7 @@ class EnterEmailForm(FlaskForm):
 
 class PasswordForm(FlaskForm):
     """Form for user to enter his password 2 times"""
-    password = PasswordField('New Password', validators=[DataRequired()])
+    password = PasswordField('Enter Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[
         DataRequired(), 
         EqualTo('password', message='Passwords must match')
