@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required, user_logged_in
-from app.forms.auth import LoginForm, RegistrationForm, PasswordResetRequestForm, PasswordResetForm
+from app.forms.auth import LoginForm, RegistrationForm, PasswordForm, EnterEmailForm
 from app.models import AuthUser, UserProfile
 from app.extensions import db
 
@@ -52,7 +52,7 @@ def register():
     
     form = RegistrationForm()
     if form.validate_on_submit():
-        #Get data from from
+        #Get data from form
         username=form.username.data
         password=form.password.data
         password2=form.password2.data
@@ -77,7 +77,7 @@ def reset_password_request():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     
-    form = PasswordResetRequestForm()
+    form = EnterEmailForm()
     if form.validate_on_submit():
         user = AuthUser.query.filter_by(email=form.email.data).first()
         if user:
@@ -102,7 +102,7 @@ def reset_password(token):
         flash('Invalid or expired reset token.', 'error')
         return redirect(url_for('auth.login'))
     
-    form = PasswordResetForm()
+    form = PasswordForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)
         user.clear_reset_token()
@@ -131,20 +131,52 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
 
-@bp.route('/delete_user', methods=['GET', 'POST'])
+# @bp.route('/delete-user', methods=['GET', 'POST'])
+# @login_required
+# def delete_user():
+#     """Delete the current user account"""
+#     db.session.delete(current_user)
+#     db.session.commit()
+
+#     logout_user()
+#     flash('Your account has been deleted.', 'info')
+#     return redirect(url_for('main.index'))
+
+
+@bp.route('/delete-user-request', methods=['GET', 'POST'])
 @login_required
-def delete_user():
-    """Delete the current user account"""
+def delete_user_request():
+    """Request user account deletion"""
+    form = PasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.password.data):
+            # Optionally send a confirmation email or log the request
+            db.session.delete(current_user)
+            db.session.commit()
+            logout_user()
+            flash("Your account has been deleted.", 'success')
+            return redirect(url_for('home.index'))
+        else:
+            flash("Incorrect password. Please try again.", 'danger')
 
-    # # Optional: delete related profile manually if not using cascading
-    # profile = UserProfile.query.filter_by(user_id=user.id).first()
-    # if profile:
-    #     db.session.delete(profile)
+    return render_template('auth/delete_user_request.html', title='Delete Account', form=form)
 
-    db.session.delete(current_user)
-    db.session.commit()
-
-    logout_user()
-    flash('Your account has been deleted.', 'info')
-    return redirect(url_for('main.index'))
-
+@bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """Reset password with token"""
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
+    user = AuthUser.query.filter_by(reset_token=token).first()
+    if not user or not user.verify_reset_token(token):
+        flash('Invalid or expired reset token.', 'error')
+        return redirect(url_for('auth.login'))
+    
+    form = PasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        user.clear_reset_token()
+        flash('Your password has been reset successfully.', 'success')
+        return redirect(url_for('auth.login'))
+    
+    return render_template('auth/reset_password.html', title='Reset Password', form=form)

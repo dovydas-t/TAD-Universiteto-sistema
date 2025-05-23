@@ -60,15 +60,17 @@ class PostForm(FlaskForm):
     #         raise ValidationError('Email already registered.')
 
 
-class PasswordResetRequestForm(FlaskForm):
+class EnterEmailForm(FlaskForm):
+    """Enter email to request password reset"""
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
 
 
-class PasswordResetForm(FlaskForm):
+class PasswordForm(FlaskForm):
+    """Form for user to enter his password 2 times"""
     password = PasswordField('New Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[
         DataRequired(), 
         EqualTo('password', message='Passwords must match')
     ])
-    submit = SubmitField('Reset Password')
+    submit = SubmitField('Submit Password')
