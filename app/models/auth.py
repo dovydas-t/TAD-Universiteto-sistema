@@ -10,7 +10,7 @@ class AuthUser(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
 
     profile = db.relationship('UserProfile', back_populates='user', uselist=False, cascade="all, delete-orphan")
-    posts = db.relationship('Post', back_populates='creator', lazy=True)
+    posts = db.relationship('Post', back_populates='author', lazy=True)
 
     def set_password(self, password):
         """Set user's password"""

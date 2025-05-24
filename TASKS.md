@@ -1,3 +1,14 @@
+🟢 **Progress Legend**:
+- `[x]` = Complete
+- `[ ]` = To Do
+
+
+# DONE: Finished tasks
+- `[x]` = Set up login functionality
+- `[x]` = Implement user registration
+# FIXME: Need fixes
+# TODO: Tasks need to be done
+
 # ✅ University Management System – Task Checklist
 
 ## 🔐 User Authentication & Registration
@@ -70,12 +81,3 @@
 - [ ] Track tasks using JIRA or similar platform
 
 ---
-
-🟢 **Progress Legend**:
-- `[x]` = Complete
-- `[ ]` = To Do
-
-
-# TODO: Implement student registration
-# FIXME: Validate email format
-# DONE: Set up login functionality

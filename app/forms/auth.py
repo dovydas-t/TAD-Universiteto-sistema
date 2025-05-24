@@ -24,7 +24,7 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
-
+#FIXME:Profile related form should be inside: forms/main.py
 class UpdateProfileForm(FlaskForm):
     username = StringField('Username', validators=[
         DataRequired(), 
@@ -40,12 +40,6 @@ class UpdateProfileForm(FlaskForm):
     ])
     submit = SubmitField('Register')
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(max=100)])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Create Post')
-    
-
 # Flask-WTF automatically calls custom validators during form.validate_on_submit()
 # Any method named validate_<fieldname> gets executed after built-in validators pass
 # If ValidationError is raised, form validation fails and error shows in template
@@ -59,12 +53,11 @@ class PostForm(FlaskForm):
     #     if user:
     #         raise ValidationError('Email already registered.')
 
-
+#FIXME:Profile related form should be inside: forms/main.py
 class EnterEmailForm(FlaskForm):
     """Enter email to request password reset"""
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
-
 
 class PasswordForm(FlaskForm):
     """Form for user to enter his password 2 times"""
