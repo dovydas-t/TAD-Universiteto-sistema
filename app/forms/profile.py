@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, ValidationError
 from wtforms.validators import Length, Email, Optional
 from app.models.auth import AuthUser
-from app.models.main import UserProfile
+from app.models.profile import UserProfile
 
 from flask_login import current_user
 

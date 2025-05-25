@@ -1,4 +1,4 @@
-from app.models.post import Post
+from app.models.study_program import Post
 from app.extensions import db
 
 def create_post(title, content, user_id):
