@@ -1,20 +1,43 @@
-from datetime import datetime
 from app.extensions import db
-
+from app.models.enum import RoleEnum
 
 class UserProfile(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('auth_user.id'), primary_key=True)
+
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
     birth_date = db.Column(db.Date, nullable=True)
+    age = db.Column(db.Integer)
     email = db.Column(db.String(35), unique=True, nullable=True)
+    failed_logins = db.Column(db.Integer)
+
+    profile_pic_path = db.Column(db.String(255))
+
+
     is_active = db.Column(db.Boolean, default=True)
-    is_admin = db.Column(db.Boolean, default=False)
+    study_program_id = db.Column(db.Integer, db.ForeignKey('study_program.id'))
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
+
+    #user role setting
+    role = db.Column(db.Enum(RoleEnum), default=RoleEnum.Student, nullable=False)
+
+    #Account creation time
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+
+    #Last acc update time
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+    #FIXME: need to be changed to last_activity, because, its what it is doing now...
+    #TODO: rename this to last activity
     last_login = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp(), nullable=False)
 
+    #Relationships
     user = db.relationship('AuthUser', back_populates='profile')
+    study_program = db.relationship("StudyProgram", back_populates="users")
+    group = db.relationship("Groups", back_populates="users")
+    attendances = db.relationship("Attendance", back_populates="student")
+    grades = db.relationship("Grade", back_populates="student")
+
 
     def __repr__(self):
         return f"UserProfile('{self.id}', '{self.created_at}')"

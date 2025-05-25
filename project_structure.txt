@@ -1,25 +1,56 @@
+# University Management System - Updated Project Structure
+
+```
 university-management-system/
 ├── app/
 │   ├── __init__.py
 │   ├── models/
 │   │   ├── __init__.py
-│   │   ├── user.py
-│   │   ├── module.py
-│   │   ├── group.py
-│   │   ├── assignment.py
-│   │   └── test.py
-│   ├── controllers/
+│   │   ├── auth.py                    # AuthUser model
+│   │   ├── profile.py                 # UserProfile model
+│   │   ├── faculty.py                 # Faculty model
+│   │   ├── study_program.py          # StudyProgram model
+│   │   ├── module.py                  # Module model (existing)
+│   │   ├── module_requirement.py     # ModuleRequirement model
+│   │   ├── groups.py                  # Groups model
+│   │   ├── assignment.py             # Assignment model (existing)
+│   │   ├── schedule_item.py          # ScheduleItem model
+│   │   ├── attendance.py             # Attendance model
+│   │   ├── test.py                   # Test model (existing)
+│   │   ├── test_question.py          # TestQuestion model
+│   │   ├── answer_option.py          # AnswerOption model
+│   │   ├── grade.py                  # Grade model
+│   │   └── user.py                   # Legacy user model (may need refactoring)
+│   ├── views/ # Routes
 │   │   ├── __init__.py
-│   │   ├── auth_controller.py
-│   │   ├── module_controller.py
-│   │   ├── admin_controller.py
-│   │   └── student_controller.py
-│   ├── services/
+│   │   ├── auth.py        # Handle AuthUser operations
+│   │   ├── profile.py     # Handle UserProfile operations
+│   │   ├── faculty.py     # Handle Faculty operations
+│   │   ├── study_program.py # Handle StudyProgram operations
+│   │   ├── module.py      # Handle Module operations (existing)
+│   │   ├── groups.py      # Handle Groups operations
+│   │   ├── assignment.py  # Handle Assignment operations
+│   │   ├── schedule.py    # Handle ScheduleItem operations
+│   │   ├── attendance.py  # Handle Attendance operations
+│   │   ├── test.py        # Handle Test operations
+│   │   ├── grade.py       # Handle Grade operations
+│   │   ├── admin.py       # Admin operations (existing)
+│   │   └── student.py     # Student operations (existing)
+│   ├── services/ #Route services
 │   │   ├── __init__.py
-│   │   ├── auth_service.py
-│   │   ├── user_service.py
-│   │   ├── module_service.py
-│   │   └── file_service.py
+│   │   ├── auth_service.py           # Authentication services (existing)
+│   │   ├── user_service.py           # User management services (existing)
+│   │   ├── profile_service.py        # Profile management services
+│   │   ├── faculty_service.py        # Faculty management services
+│   │   ├── study_program_service.py  # Study program services
+│   │   ├── module_service.py         # Module services (existing)
+│   │   ├── groups_service.py         # Groups management services
+│   │   ├── assignment_service.py     # Assignment services
+│   │   ├── schedule_service.py       # Schedule management services
+│   │   ├── attendance_service.py     # Attendance tracking services
+│   │   ├── test_service.py           # Test management services
+│   │   ├── grade_service.py          # Grade calculation and management
+│   │   └── file_service.py           # File handling services (existing)
 │   ├── templates/
 │   │   ├── base.html
 │   │   ├── auth/
@@ -29,27 +60,147 @@ university-management-system/
 │   │   │   ├── admin.html
 │   │   │   ├── teacher.html
 │   │   │   └── student.html
-│   │   └── modules/
-│   │       ├── view_module.html
-│   │       └── edit_module.html
+│   │   ├── profile/
+│   │   │   ├── view_profile.html
+│   │   │   └── edit_profile.html
+│   │   ├── faculty/
+│   │   │   ├── list_faculties.html
+│   │   │   ├── view_faculty.html
+│   │   │   └── manage_faculty.html
+│   │   ├── study_program/
+│   │   │   ├── list_programs.html
+│   │   │   ├── view_program.html
+│   │   │   └── manage_program.html
+│   │   ├── modules/
+│   │   │   ├── view_module.html      # (existing)
+│   │   │   ├── edit_module.html      # (existing)
+│   │   │   └── module_requirements.html
+│   │   ├── groups/
+│   │   │   ├── list_groups.html
+│   │   │   ├── view_group.html
+│   │   │   └── manage_group.html
+│   │   ├── assignments/
+│   │   │   ├── list_assignments.html
+│   │   │   ├── view_assignment.html
+│   │   │   ├── create_assignment.html
+│   │   │   └── submit_assignment.html
+│   │   ├── schedule/
+│   │   │   ├── view_schedule.html
+│   │   │   ├── manage_schedule.html
+│   │   │   └── calendar_view.html
+│   │   ├── attendance/
+│   │   │   ├── take_attendance.html
+│   │   │   ├── view_attendance.html
+│   │   │   └── attendance_report.html
+│   │   ├── tests/
+│   │   │   ├── list_tests.html
+│   │   │   ├── take_test.html
+│   │   │   ├── create_test.html
+│   │   │   ├── manage_questions.html
+│   │   │   └── test_results.html
+│   │   └── grades/
+│   │       ├── view_grades.html
+│   │       ├── grade_book.html
+│   │       └── grade_report.html
 │   ├── static/
 │   │   ├── css/
+│   │   │   ├── main.css
+│   │   │   ├── dashboard.css
+│   │   │   ├── forms.css
+│   │   │   └── calendar.css
+│   │   ├── js/
+│   │   │   ├── main.js
+│   │   │   ├── calendar.js
+│   │   │   ├── test-timer.js
+│   │   │   └── attendance.js
 │   │   └── img/
+│   │       ├── logos/
+│   │       └── icons/
 │   └── forms/
 │       ├── __init__.py
-│       ├── login_form.py
-│       ├── register_form.py
-│       └── module_form.py
+│       ├── login_form.py             # (existing)
+│       ├── register_form.py          # (existing)
+│       ├── profile_form.py           # Profile management forms
+│       ├── faculty_form.py           # Faculty forms
+│       ├── study_program_form.py     # Study program forms
+│       ├── module_form.py            # Module forms (existing)
+│       ├── group_form.py             # Group management forms
+│       ├── assignment_form.py        # Assignment forms
+│       ├── schedule_form.py          # Schedule forms
+│       ├── attendance_form.py        # Attendance forms
+│       ├── test_form.py              # Test creation and management forms
+│       └── grade_form.py             # Grade entry forms
 ├── migrations/
+│   ├── versions/
+│   └── alembic.ini
 ├── uploads/
 │   ├── profile_pictures/
-│   └── module_images/
+│   ├── module_images/
+│   ├── assignments/
+│   │   ├── submissions/
+│   │   └── resources/
+│   └── test_attachments/
 ├── tests/
-│   ├── test_auth.py
-│   ├── test_module.py
-│   └── test_user.py
+│   ├── __init__.py
+│   ├── test_auth.py                  # (existing)
+│   ├── test_module.py                # (existing)
+│   ├── test_user.py                  # (existing)
+│   ├── test_profile.py               # Profile tests
+│   ├── test_faculty.py               # Faculty tests
+│   ├── test_study_program.py         # Study program tests
+│   ├── test_groups.py                # Groups tests
+│   ├── test_assignment.py            # Assignment tests
+│   ├── test_schedule.py              # Schedule tests
+│   ├── test_attendance.py            # Attendance tests
+│   ├── test_test_management.py       # Test management tests
+│   └── test_grade.py                 # Grade tests
 ├── .gitignore
 ├── config.py
 ├── run.py
 ├── README.md
 └── requirements.txt
+```
+
+## Key Changes Made
+
+### New Model Files Added:
+- `auth.py` - AuthUser model (authentication)
+- `profile.py` - UserProfile model (user profiles)
+- `faculty.py` - Faculty model (academic faculties)
+- `study_program.py` - StudyProgram model (degree programs)
+- `module_requirement.py` - ModuleRequirement model (prerequisites)
+- `groups.py` - Groups model (student groups/classes)
+- `schedule_item.py` - ScheduleItem model (timetable entries)
+- `attendance.py` - Attendance model (attendance tracking)
+- `test_question.py` - TestQuestion model (test questions)
+- `answer_option.py` - AnswerOption model (multiple choice options)
+- `grade.py` - Grade model (student grades)
+
+### New Routes Added:
+- Routes for each new model to handle CRUD operations
+- Specialized routes for complex operations (schedule, attendance, tests, grades)
+
+### New Services Added:
+- Service layer for each new model to handle business logic
+- Separation of concerns between routes and services
+
+### Enhanced Template Structure:
+- New template directories for each major feature
+- Organized by functionality (profile, faculty, study_program, etc.)
+- Added common templates for CRUD operations
+
+### Expanded Static Assets:
+- Added JavaScript directory for interactive features
+- Enhanced CSS organization
+- Additional image directories for better organization
+
+### Enhanced Upload Structure:
+- New directories for assignment submissions and resources
+- Test attachments directory
+- Better organization of uploaded content
+
+### Comprehensive Test Coverage:
+- Test files for each new model and controller
+- Organized testing structure matching the application structure
+
+This updated structure provides a solid foundation for a comprehensive university management system with proper separation of concerns and scalability.
