@@ -1,63 +1,164 @@
+---
+
 # 🛠️ Project Setup Instructions
+
 Welcome! Follow these steps to get the project running locally on your machine.
 
+---
+
 ## 1. 📥 Clone the Repository
+
+```bash
 git clone https://github.com/dovydas-t/TAD-Universiteto-sistema.git
 cd TAD-Universiteto-sistema
+```
+
+---
 
 ## 2. 🌱 Switch to the Development Branch
-git checkout dev
-Make sure you are working on the correct branch for development.
 
+```bash
+git checkout dev
+```
+
+Always base your work on the `dev` branch unless told otherwise.
+
+---
 
 ## 3. 🐍 Create and Activate Virtual Environment
+
 ### Windows:
+
+```bash
 python -m venv venv
 venv\Scripts\activate
+```
+
 ### macOS/Linux:
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
 
+---
 
 ## 4. 📦 Install Project Requirements
-pip install -r requirements.txt
 
+```bash
+pip install -r requirements.txt
+```
+
+---
 
 ## 5. ⚙️ Create Your Own `.env` File
-Create a `.env` file in the root directory with the following content (replace values with your own):
-SECRET_KEY=your-secret-key-here
-DATABASE_URL=mysql://
-FLASK_APP=run.py
-FLASK_ENV=development
+
+Create a `.env` file in the root directory with this content:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=your_mysql_user
+DB_PASSWORD=your_mysql_password
+DB_NAME=universiteto_sistema
+```
+
+---
 
 ## 6. 🛢️ Create the Database in MySQL
-Log into MySQL and run:
+
+Log in to MySQL and create the database:
+
+```sql
 CREATE DATABASE universiteto_sistema CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+---
 
 ## 7. 🔄 Run Database Migrations with Alembic
-flask db upgrade
-or
-flask db upgrade head
+
+If using Alembic for schema migrations:
+
+### Run existing migrations:
+
+```bash
+alembic upgrade head
+```
+
+### Make a new migration after model changes:
+
+```bash
+alembic revision --autogenerate -m "Your message here"
+alembic upgrade head
+```
+
+> Make sure your database URL is correctly set in `alembic.ini` or fetched from your `.env`.
+
+---
+
+## 8. 🎨 Code Formatting & Linting
+
+We recommend using **Black** for formatting and **Flake8** for linting.
+
+### Format code with Black:
+
+```bash
+black .
+```
+
+### Check code style with Flake8:
+
+```bash
+flake8 .
+```
+
+---
 
 ## 9. 🌿 Git Workflow (Feature Branches)
-# Create a new feature branch:
+
+### Create a new feature branch:
+
+```bash
 git checkout -b feature/your-feature-name
-# After work is done:
+```
+
+### After work is done:
+
+```bash
 git add .
 git commit -m "Add: meaningful message"
 git push origin feature/your-feature-name
-# Then open a Pull Request (PR) to merge into dev.
-# Important: Never commit directly to dev or main. Always work on your own feature branch.
+```
 
-## 7. 🚀 Run the App
-Use the appropriate command, depending on your project setup:
+### Then open a Pull Request (PR) to merge into `dev`.
+
+> **Important:** Never commit directly to `dev` or `main`. Always work on your own feature branch.
+
+---
+
+## 10. 🚀 Run the App
+
+Depending on how your app is started, use one of the following:
+
+```bash
 flask run
-or
-python run.py
+```
 
-## ✅ You're Done!
-Check that:
-* MySQL is running.
-* `.env` is correctly configured.
-* You’re on the `dev` branch.
-* Requirements are installed.
+or
+
+```bash
+python main.py
+```
+
+---
+
+## ✅ You're Ready!
+
+* ✅ You're on `dev`
+* ✅ Virtual environment activated
+* ✅ Requirements installed
+* ✅ `.env` configured
+* ✅ Database created
+* ✅ Alembic migrations applied
+
+---
