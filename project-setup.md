@@ -1,3 +1,5 @@
+---
+
 # 🛠️ Project Setup Instructions
 
 Welcome! Follow these steps to get the project running locally on your machine.
@@ -160,9 +162,3 @@ python main.py
 * ✅ Alembic migrations applied
 
 ---
-
-Let me know if you'd like to include:
-
-* Example `.env` file in the repo (`.env.example`)
-* Pre-commit hook setup
-* Common issues & troubleshooting section
