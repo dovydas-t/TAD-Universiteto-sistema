@@ -1,16 +1,41 @@
-# from flask import Blueprint, request, redirect, render_template
-# from flask_login import login_required, current_user
-# from app.services.post_service import create_post, get_post, update_post, delete_post, get_all_posts
-# from app.forms.post import PostForm
-# from app.models.study_program import Post
+from flask import Blueprint, request, redirect, render_template
+from flask_login import login_required, current_user
+from app.services.study_program_service import StudyProgramService
+from app.models.study_program import StudyProgram
+from app.services.faculty_service import FacultyService
 
 
-# bp = Blueprint('posts', __name__)
+bp = Blueprint('programs', __name__)
 
-# @bp.route('/')
-# def index():
-#     posts = get_all_posts()
-#     return render_template('posts/posts.html', title='Posts', posts=posts)
+@bp.route('/')
+def index():
+    study_programs_list = StudyProgramService.get_all_study_programs() or []
+    faculty_list = FacultyService.get_all_faculties() or []
+    faculty_names = [faculty.name for faculty in faculty_list]
+
+    if not study_programs_list:
+        return render_template('programs/no_programs.html',
+                               title='No Study Programs Available')
+    
+    return render_template('programs/study_programs.html',
+                           title='Study Programs',
+                           study_programs_list=study_programs_list,
+                           faculty_names=faculty_names)
+
+@bp.route('/detail/<int:study_program_id>')
+def detail(study_program_id):
+    study_program = StudyProgramService.get_study_program_by_id(study_program_id)
+    
+    if not study_program:
+        return render_template('programs/no_program.html',
+                               title='Study Program Not Found')
+    
+    faculty = FacultyService.get_faculty_by_id(study_program.faculty_id)
+    
+    return render_template('programs/study_program_detail.html',
+                           title='Study Program Detail',
+                           study_program=study_program,
+                           faculty=faculty)
 
 # @bp.route('/new_post', methods=['GET', 'POST'])
 # @login_required

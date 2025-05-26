@@ -9,9 +9,14 @@
       <p>First name: {{ current_user.profile.first_name or 'Not Set' }}</p>
       <p>Last name: {{ current_user.profile.last_name or 'Not Set' }}</p>
       <p>Birth date: {{ current_user.profile.birth_date or 'Not Set' }}</p>
+      <p>Age : {{ current_user.profile.age or 'Not Set' }}</p>
       <p>Email: {{ current_user.profile.email or 'Not Set' }}</p>
       <p>Created at: {{ current_user.profile.created_at }}</p>
       <p>Last login: {{ current_user.profile.last_login }}</p>
+      <p>Updated at: {{ current_user.profile.updated_at }}</p>
+      <p>
+        <a href="{{ url_for('main.profile_update') }}" class="btn btn-primary">Update User</a>
+      </p>
       <div class="auth-links">
         <div class="form-actions">
           <a href="{{ url_for('auth.request_user_delete') }}" class="btn btn-primary">Delete User</a>
