@@ -12,7 +12,10 @@
                         {{ study_program.name }}
                     </a>
                 </h2>
-                <p>Provided by: {{ study_program.faculty.name }}</p>
+                <p>
+                    <a href="{{ url_for('faculty.detail', faculty_id=study_program.faculty.id) }}">
+                    Provided by: {{ study_program.faculty.name }}</a>
+                </p>
             </li>
         {% endfor %}
     {% else %}

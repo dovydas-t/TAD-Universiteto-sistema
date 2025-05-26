@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %} Faculty Details {% endblock %}
+{% block content %}
+  <div class="faculty-container">
+      <h2>Faculty ID {{ faculty.id }}</h2>
+      <p>Faculty name {{ faculty.name }}</p>
+      <p>Faculty description {{ faculty.description }}</p>
+      <h1>Faculty programs :</h1>
+        {% if study_programs_list %}
+            {% for program in study_programs_list %}
+                <li>{{ program.name }}</li>
+            {% endfor %}
+        {% endif %}
+  </div>
+{% endblock %}
