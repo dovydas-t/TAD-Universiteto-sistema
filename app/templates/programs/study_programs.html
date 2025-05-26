@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %} Study Programs {% endblock %}
+
+{% block content %}
+<h1>All Study Programs:</h1>
+<ul class="study-program-list">
+    {% if study_programs_list %}
+        {% for study_program in study_programs_list %}
+            <li>
+                <h2>
+                    <a href="{{ url_for('programs.detail', study_program_id=study_program.id) }}">
+                        {{ study_program.name }}
+                    </a>
+                </h2>
+                <p>Provided by: {{ study_program.faculty.name }}</p>
+            </li>
+        {% endfor %}
+    {% else %}
+        <p>No Study Programs</p>
+    {% endif %}
+</ul>
+{% endblock %}

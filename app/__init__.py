@@ -34,8 +34,8 @@ def create_app(config_class=Config):
     from app.views.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
-    # from app.views.post import bp as post_bp
-    # app.register_blueprint(post_bp, url_prefix='/posts')
+    from app.views.study_program import bp as study_program_bp
+    app.register_blueprint(study_program_bp, url_prefix='/programs')
 
     from app.views.profile import bp as profile_bp
     app.register_blueprint(profile_bp, url_prefix='/profile')
