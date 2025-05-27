@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block title %}Faculty Details{% endblock %} {%
+block content %}
+<div class="container fade-in">
+  <h1>{{ faculty.name }}</h1>
+
+  <div class="feature-card">
+    <h3>Study Programs</h3>
+    {% if faculty.programs %}
+    <ul>
+      {% for program in faculty.programs %}
+      <li>{{ program.name }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No study programs found for this faculty.</p>
+    {% endif %}
+  </div>
+
+  <div class="form-actions">
+    <a href="{{ url_for('main.faculties') }}" class="btn btn-secondary"
+      >Back to Faculties</a
+    >
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block title %}Test Details{% endblock %} {% block
+content %}
+<div class="container fade-in">
+  <h1>{{ test.name }}</h1>
+
+  <div class="feature-card">
+    <h3>Module</h3>
+    <p>{{ test.module.name }}</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>Questions</h3>
+    {% if test.questions %}
+    <ul>
+      {% for question in test.questions %}
+      <li>{{ question.question_text }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No questions found for this test.</p>
+    {% endif %}
+  </div>
+
+  <div class="form-actions">
+    <a href="{{ url_for('main.tests') }}" class="btn btn-secondary"
+      >Back to Tests</a
+    >
+  </div>
+</div>
+{% endblock %}

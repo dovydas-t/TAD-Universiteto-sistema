@@ -1,13 +1,20 @@
+from flask import Blueprint, flash, request, redirect, render_template, url_for
 from app.extensions import db, datetime
 from flask import Blueprint, request, redirect, render_template,flash,url_for
 from flask_login import login_required, current_user
+from app.utils.decorators import admin_required
+
+from app.models.study_program import StudyProgram
 from app.services.study_program_service import StudyProgramService
+
 from app.forms.hybrid_registration_form import HybridRegistrationForm
 from app.models.study_program import StudyProgram
 from app.models.module import Module
 from app.models.grade import Grade
 from app.services.faculty_service import FacultyService
 
+from app.forms.study_program import StudyProgramForm
+from app.services.module_service import ModuleService
 
 bp = Blueprint('programs', __name__)
 
@@ -36,11 +43,13 @@ def detail(study_program_id):
                                title='Study Program Not Found')
     
     faculty = FacultyService.get_faculty_by_id(study_program.faculty_id)
+    modules = ModuleService.get_modules_by_study_program_id(study_program_id) or []
     
     return render_template('programs/study_program_detail.html',
                            title='Study Program Detail',
                            study_program=study_program,
-                           faculty=faculty)
+                           faculty=faculty, 
+                           modules=modules)
 
 bp.route('/registration_to_study_program', methods=['GET', 'POST'])
 @login_required
@@ -147,16 +156,25 @@ def process_registration(student_profile_id, study_program_id, selected_module_i
         db.session.rollback()
         print(f"Registration failed: {str(e)}")
         return False
+
+@bp.route('/add_program', methods=['GET', 'POST'])
+@admin_required
+def add_program():
+    """Add a new study program"""
+    form = StudyProgramForm()
     
-
-
-
-
-
-
-
-
-
+    if form.validate_on_submit():
+        new_program = StudyProgram(
+            name=form.name.data,
+            faculty_id=form.faculty_id.data
+        )
+        StudyProgramService.add_study_program(new_program)
+        flash('Study Program added successfully!', 'success')
+        return redirect(url_for('programs.detail', study_program_id=new_program.id))
+    
+    if request.method == 'GET':
+        return render_template('programs/add_program.html', form=form, title='Add Study Program')
+    
 # @bp.route('/new_post', methods=['GET', 'POST'])
 # @login_required
 # def new_post():
