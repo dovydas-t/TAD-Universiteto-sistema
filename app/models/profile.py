@@ -15,7 +15,7 @@ class UserProfile(db.Model):
 
 
     is_active = db.Column(db.Boolean, default=True)
-    study_program_id = db.Column(db.Integer, db.ForeignKey('study_program.id'))
+    study_program_id = db.Column(db.Integer, db.ForeignKey('study_program.id'), nullable=True)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
 
     #user role setting
@@ -46,3 +46,5 @@ class UserProfile(db.Model):
     def full_name(self):
         """Get user's full name"""  
         return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
+    
+
