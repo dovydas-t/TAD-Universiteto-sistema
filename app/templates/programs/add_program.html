@@ -2,10 +2,10 @@
 {% block content %}
 <div class="auth-container">
   <div class="auth-card">
-    <h2>New Study Program</h2>
+    <h2>Create new Group</h2>
     <form
       method="POST"
-      action="{{ url_for('programs.add_program') }}"
+      action="{{ url_for('groups.create group') }}"
       class="auth-form">
       {{ form.hidden_tag() }}
 

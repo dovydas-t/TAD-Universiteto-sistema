@@ -49,5 +49,33 @@ class StudyProgramService:
         db.session.delete(program)
         db.session.commit()
         return True
+    
+    @staticmethod
+    def generate_group_code_for_study_program(study_program: StudyProgram, starting_year: int, existing_codes: list[str]) -> str:
+        """Generate a group code like TAD-u-SP25-x for a study program, avoiding duplicates"""
+        
+        # Step 1: Generate program prefix
+        words = study_program.name.split()
+        code_prefix = ''.join(word[0].upper() for word in words if word)
+        
+        # Step 2: Year suffix
+        year_suffix = str(starting_year)[-2:]
+        
+        # Step 3: Build base code (TAD-u-SP25)
+        # T - Toma, A - Aivaras, D - Dovydas, u - university - XXX - Study Program name initials, 25 - last two digits of starting year
+        base_code = f"TAD-u-{code_prefix}{year_suffix}"
+        
+        # Step 4: Find existing groups with same base
+        existing_group_numbers = [
+            int(code.rsplit('-', 1)[-1])
+            for code in existing_codes
+            if code.startswith(base_code + "-") and code.rsplit('-', 1)[-1].isdigit()
+        ]
+        
+        # Step 5: Determine next group number
+        next_group_number = max(existing_group_numbers, default=0) + 1
+        
+        return f"{base_code}-{next_group_number}"
+
 
     
