@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Assignment Detail{% endblock %} {%
+block content %}
+<div class="container fade-in">
+  <h1>{{ assignment.title }}</h1>
+
+  <div class="feature-card">
+    <p><strong>Module:</strong> {{ assignment.module.name }}</p>
+    <p>
+      <strong>Due Date:</strong> {{ assignment.due_date.strftime('%B %d, %Y at
+      %I:%M %p') }}
+    </p>
+  </div>
+
+  {% if assignment.description %}
+  <div class="feature-card">
+    <h3>Description</h3>
+    <p>{{ assignment.description }}</p>
+  </div>
+  {% else %}
+  <p>No description provided for this assignment.</p>
+  {% endif %}
+
+  <div class="form-actions">
+    <a href="{{ url_for('main.assignments') }}" class="btn btn-secondary"
+      >Back to Assignments</a
+    >
+  </div>
+</div>
+{% endblock %}

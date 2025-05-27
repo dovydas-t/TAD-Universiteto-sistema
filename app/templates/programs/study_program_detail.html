@@ -3,13 +3,13 @@
 {% block title %}Study Program Details{% endblock %}
 
 {% block content %}
-<div class="study-program-container">
-  <h1>Study {{ study_program.name }} at TAD University</h1>
+<div class="container fade-in">
+  <h1>{{ program.name }}</h1>
 
-  <section>
-    <h2>Faculty Information</h2>
-    <p><strong>Faculty ID:</strong> {{ faculty.id }}</p>
-    <p><strong>Faculty Name:</strong> {{ faculty.name }}</p>
+  <div class="feature-card">
+    <h3>Faculty</h3>
+    <p>{{ program.faculty.name }}</p>
+    <p>Study program description</p>
     <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">Check information about faculty</a>
   </section>
 

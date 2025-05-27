@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title %}Solve Test{% endblock %} {% block
+content %}
+<div class="container fade-in">
+  <h1>Solve: {{ test.name }}</h1>
+
+  <form
+    method="POST"
+    action="{{ url_for('main.test_solve', test_id=test.id) }}"
+    class="auth-form"
+  >
+    {{ form.hidden_tag() }} {% for question in test.questions %}
+    <div class="feature-card">
+      <p><strong>Q{{ loop.index }}:</strong> {{ question.question_text }}</p>
+
+      {% for option in question.options %}
+      <div class="form-check">
+        <input
+          type="radio"
+          name="question_{{ question.id }}"
+          value="{{ option.id }}"
+          class="form-checkbox"
+          id="q{{ question.id }}_{{ option.id }}"
+        />
+        <label for="q{{ question.id }}_{{ option.id }}"
+          >{{ option.option_text }}</label
+        >
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit Test</button>
+      <a href="{{ url_for('main.tests') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

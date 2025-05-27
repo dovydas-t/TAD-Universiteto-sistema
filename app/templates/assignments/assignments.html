@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Assignments{% endblock %} {% block
+content %}
+<div class="dashboard fade-in">
+  <div class="dashboard-header">
+    <h1>Assignments</h1>
+    <p>Here you can view all your upcoming and past assignments.</p>
+  </div>
+
+  <div class="dashboard-grid">
+    {% for assignment in assignments %}
+    <div class="dashboard-card">
+      <h3>{{ assignment.title }}</h3>
+      <p><strong>Module:</strong> {{ assignment.module.name }}</p>
+      <p>
+        <strong>Due:</strong> {{ assignment.due_date.strftime('%B %d, %Y at
+        %I:%M %p') }}
+      </p>
+      <a
+        href="{{ url_for('main.assignment_detail', assignment_id=assignment.id) }}"
+        class="btn btn-primary"
+        >View Details</a
+      >
+    </div>
+    {% else %}
+    <p>No assignments found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
