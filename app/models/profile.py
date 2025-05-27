@@ -37,7 +37,10 @@ class UserProfile(db.Model):
     group = db.relationship("Groups", back_populates="users")
     attendances = db.relationship("Attendance", back_populates="student")
     grades = db.relationship("Grade", back_populates="student")
-
+    
+    def __init__(self, role=RoleEnum.Student, **kwargs):
+        super(UserProfile, self).__init__(**kwargs)
+        self.role = role
 
     def __repr__(self):
         return f"UserProfile('{self.id}', '{self.created_at}')"
@@ -46,5 +49,6 @@ class UserProfile(db.Model):
     def full_name(self):
         """Get user's full name"""  
         return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
+
     
 

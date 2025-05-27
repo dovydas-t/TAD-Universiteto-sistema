@@ -3,6 +3,7 @@ from wtforms import StringField, SubmitField, DateField, SelectField, Validation
 from wtforms.validators import Length, Email, Optional, DataRequired
 from app.models.auth import AuthUser
 from app.models.profile import UserProfile
+from app.services.study_program_service import StudyProgramService
 
 from flask_login import current_user
 
@@ -23,6 +24,14 @@ class ProfileForm(FlaskForm):
     
     submit = SubmitField('Update Profile')
 
+    
+    def __init__(self, user=None, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.study_program_id.choices = [(sp.id, sp.name) for sp in StudyProgramService.get_all_study_programs()]
+    # FIXME Palikti sita dali init arba perkelti i route
+        if user:
+            self.study_program_id.data = user.profile.study_program_id
+
 #Functions execute when from is being submitted
     def validate_username(self, field):
         if field.data != current_user.username:
@@ -35,3 +44,4 @@ class ProfileForm(FlaskForm):
             user = UserProfile.query.filter_by(email=email_field.data).first()
             if user:
                 raise ValidationError('Email is already in use.')
+    
