@@ -54,7 +54,6 @@ def profile_update():
 
 @bp.route('/dashboard')
 @admin_required
-@teacher_status_required
 def dashboard():
     """User dashboard"""
     return render_template('dashboard.html', title='Dashboard')
