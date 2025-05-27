@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Group Details{% endblock %}
+{% block content %}
+    <h1>Group Details</h1>
+
+    <p><strong>Group ID:</strong> {{ group.id }}</p>
+    <p><strong>Code:</strong> {{ group.code }}</p>
+    <p><strong>Study Program:</strong> {{ group.study_program.name }}</p>
+
+    <h2>Users in this Group</h2>
+    {% if group.users %}
+        <ul>
+            {% for user in group.users %}
+                <li>{{ user.full_name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users assigned to this group.</p>
+    {% endif %}
+
+    <a href="{{ url_for('main.index') }}">Back to Groups List</a>
+{% endblock %}

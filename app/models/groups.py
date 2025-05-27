@@ -1,8 +1,7 @@
 from app.extensions import db
 
-#Pavadinau Groups, nes nerekomenduoja naudoti Group kaip pavadinimo :D
 class Groups(db.Model):
-    _tablename__ = 'groups'
+    __tablename__ = 'groups'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     code = db.Column(db.String(255))
     study_program_id = db.Column(db.Integer, db.ForeignKey('study_program.id'))

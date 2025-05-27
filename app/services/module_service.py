@@ -12,7 +12,7 @@ class ModuleService:
         return Module.query.get(module_id)
     
     @staticmethod
-    def get_modules_by_study_program(study_program_id):
+    def get_modules_by_study_program_id(study_program_id):
         return Module.query.filter_by(study_program_id=study_program_id).all()
     
     @staticmethod
@@ -34,7 +34,7 @@ class ModuleService:
     
     @staticmethod
     def update_module(module_id, **kwargs):
-        module = get_module_by_id(module_id)
+        module = ModuleService.get_module_by_id(module_id)
         if not module:
             return None
         for key, value in kwargs.items():
@@ -46,9 +46,25 @@ class ModuleService:
     
     @staticmethod
     def delete_module(module_id):
-        module = get_module_by_id(module_id)
+        module = ModuleService.get_module_by_id(module_id)
         if not module:
             return False
         db.session.delete(module)
         db.session.commit()
         return True
+
+    @staticmethod
+    def create_module_from_form(form):
+        # Handle optional image_path safely
+        image_path = None
+        if hasattr(form, 'image_path') and form.image_path.data:
+            image_path = form.image_path.data  # Could be string or FileStorage, adjust as needed
+
+        return ModuleService.create_module(
+            name=form.name.data,
+            description=form.description.data,
+            credits=form.credits.data,
+            semester=form.semester.data,
+            study_program_id=form.study_program_id.data,
+            image_path=image_path
+        )

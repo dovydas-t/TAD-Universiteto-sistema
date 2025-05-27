@@ -1,25 +1,61 @@
 {% extends "base.html" %}
-{% block title %} Study Program Details {% endblock %}
+
+{% block title %}Study Program Details{% endblock %}
+
 {% block content %}
-  <div class="study-program-container">
-    <h1>Study {{ study_program.name }} at TAD University</h1>
-    <h2>Faculty ID {{ faculty.id }}</h2>
-    <p>Faculty name {{ faculty.name }}</p>
-    <p>Study program description</p>
+<div class="study-program-container">
+  <h1>Study {{ study_program.name }} at TAD University</h1>
+
+  <section>
+    <h2>Faculty Information</h2>
+    <p><strong>Faculty ID:</strong> {{ faculty.id }}</p>
+    <p><strong>Faculty Name:</strong> {{ faculty.name }}</p>
     <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">Check information about faculty</a>
-    <h2>Modules for the Study Program:</h2>
-      {% if modules %}
+  </section>
+
+  <section>
+    <h2>Modules for the Study Program</h2>
+    {% if modules %}
       <ul>
-          {% for module in modules %}
-              <li>
-                  <a href="{{ url_for('module.detail', module_id=module.id) }}">
-                      {{ module.name }}</a>
-              </li>
-          {% endfor %}
+        {% for module in modules %}
+          <li>
+            <a href="{{ url_for('module.detail', module_id=module.id) }}">
+              {{ module.name }}
+            </a>
+          </li>
+        {% endfor %}
       </ul>
-      {% else %}
-              <p>No Study Programs for this faculty</p>
-              <a href="{{ url_for('programs.add_program') }}"> Add new Study Program</a>
-      {% endif %}
-  </div>
+    {% else %}
+      <p>This Study Program has no modules available.</p>
+    {% endif %}
+    <a href="{{ url_for('module.add_module', study_program_id=study_program.id) }}">Add a new Module</a>
+  </section>
+
+  <section>
+    <h2>Groups in this Study Program</h2>
+    {% if groups %}
+      <ul>
+        {% for group in groups %}
+          <li>{{ group.name }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No groups are assigned to this Study Program.</p>
+    {% endif %}
+      <a href="{{ url_for('groups.create_group', study_program_id=study_program.id) }}">Create a new Group for the Module</a>
+  </section>
+
+  <section>
+    <h2>Students in this Study Program</h2>
+    {% if users %}
+      <ul>
+        {% for user in users %}
+          <li>{{ user.full_name }} ({{ user.email }})</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No students are currently enrolled in this Study Program.</p>
+    {% endif %}
+  </section>
+</div>
 {% endblock %}
