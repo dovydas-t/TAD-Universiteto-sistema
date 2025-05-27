@@ -4,16 +4,21 @@
   <div class="faculty-container">
       <h2>Faculty ID {{ faculty.id }}</h2>
       <p>Faculty name :{{ faculty.name }}</p>
-      <p>Faculty adress :{{ faculty.get_full_address() }}</p>
+      <p>Faculty address :{{ faculty.get_full_address() }}</p>
       <p>Faculty description :{{ faculty.description }}</p>
-      <h1>Faculty programs :</h1>
+      <h1>Faculty Programs:</h1>
         {% if study_programs_list %}
+        <ul>
             {% for program in study_programs_list %}
                 <li>
                     <a href="{{ url_for('programs.detail', study_program_id=program.id) }}">
                         {{ program.name }}</a>
                 </li>
             {% endfor %}
+        </ul>
+        {% else %}
+                <p>No Study Programs for this faculty</p>
+                <a href="{{ url_for('programs.add_program') }}"> Add new Study Program</a>
         {% endif %}
   </div>
 {% endblock %}
