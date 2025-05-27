@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>New Study Program</h2>
+    <form
+      method="POST"
+      action="{{ url_for('programs.add_program') }}"
+      class="auth-form">
+      {{ form.hidden_tag() }}
+
+        <div>
+            {{ form.name.label(class="form-label") }}<br>
+            {{ form.name(class="form-input") }}<br>
+            {% for error in form.name.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {{ form.faculty_id.label(class="form-label") }}<br>
+            {{ form.faculty_id(class="form-input") }}<br>
+            {% for error in form.faculty_id.errors %}
+                <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+      <div class="form-actions">
+        {{ form.submit(class="btn btn-primary btn-full") }}
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

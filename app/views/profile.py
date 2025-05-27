@@ -25,7 +25,8 @@ def profile_update():
             form.first_name.data != current_user.profile.first_name or
             form.last_name.data != current_user.profile.last_name or
             form.email.data != current_user.profile.email or
-            form.birth_date.data != current_user.profile.birth_date
+            form.birth_date.data != current_user.profile.birth_date or
+            form.study_program_id.data != current_user.profile.study_program_id
         )
 
         if not user_changed:
@@ -38,6 +39,7 @@ def profile_update():
         current_user.profile.last_name = form.last_name.data
         current_user.profile.email = form.email.data
         current_user.profile.birth_date = form.birth_date.data
+        current_user.profile.study_program_id = form.study_program_id.data 
 
         db.session.commit()
         flash("Profile updated successfully!", "success")

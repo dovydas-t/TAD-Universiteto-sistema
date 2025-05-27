@@ -49,12 +49,17 @@ def register():
     if form.validate_on_submit():
         #Get data from form
         username=form.username.data
+        study_program_id = form.study_program_id.data
         password=form.password.data
         password2=form.password2.data
 
         # Create user and user.profile and save user
         user = AuthUser(username=username)
         user.profile = UserProfile()
+
+        if study_program_id:
+            user.profile.study_program_id = study_program_id
+            
         # Function to hash given password
         user.set_password(password)
         db.session.add(user)

@@ -1,4 +1,5 @@
 from app.models.profile import UserProfile
+from app.models.enum import RoleEnum
 from app.models.auth import AuthUser
 from app.extensions import db
 from datetime import datetime
@@ -20,6 +21,15 @@ class UserService:
         except Exception as e:
             logger.error(f"Error getting user profile: {str(e)}")
             return None
+        
+    @staticmethod
+    def get_all_teachers():
+        """Get all teachers"""
+        try:
+            return UserProfile.query.filter_by(role=RoleEnum.Teacher).all()
+        except Exception as e:
+            logger.error(f"Error getting teachers: {str(e)}")
+            return []
     
     @staticmethod
     def create_user_profile(user_id, profile_data):

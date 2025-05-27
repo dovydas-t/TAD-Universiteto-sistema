@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %} Faculties {% endblock %}
+
+{% block content %}
+<h1>All TAD University Faculties:</h1>
+<ul class="faculty-program-list">
+    {% if faculty_list %}
+        {% for faculty in faculty_list %}
+            <li>
+                <h2>
+                    <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">
+                        {{ faculty.name }}
+                    </a>
+                </h2>
+            </li>
+        {% endfor %}
+    {% else %}
+        <p>No Faculties</p>
+    {% endif %}
+</ul>
+{% endblock %}
