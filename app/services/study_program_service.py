@@ -5,6 +5,11 @@ class StudyProgramService:
     """Service class for study program operations"""
 
     @staticmethod
+    def add_study_program(program: StudyProgram):
+        db.session.add(program)
+        db.session.commit()
+
+    @staticmethod
     def get_all_study_programs():
         """Get all study programs"""
         return StudyProgram.query.all()
