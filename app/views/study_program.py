@@ -48,8 +48,7 @@ def detail(study_program_id):
     return render_template('programs/study_program_detail.html',
                            title='Study Program Detail',
                            study_program=study_program,
-                           faculty=faculty 
-                           faculty=faculty,
+                           faculty=faculty, 
                            modules=modules)
 
 bp.route('/registration_to_study_program', methods=['GET', 'POST'])

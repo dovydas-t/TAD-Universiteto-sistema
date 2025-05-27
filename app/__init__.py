@@ -55,8 +55,7 @@ def create_app(config_class=Config):
     from app.views.teacher import bp as teacher_bp
     app.register_blueprint(teacher_bp, url_prefix='/teacher')
 
-    from app.views.admin import bp as admin_bp
-    app.register_blueprint(admin_bp, url_prefix='/admin')
+
 
 
     return app
