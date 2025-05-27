@@ -13,7 +13,7 @@ class Faculty(db.Model):
 
     def get_full_address(self):
         parts = [self.street, self.address, self.city]
-        return ', '.join(part for part in parts if part)
+        return ' '.join(part for part in parts if part)
 
     def __repr__(self):
         return f"<Faculty {self.id}: {self.name}>"

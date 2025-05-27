@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateField, ValidationError
-from wtforms.validators import Length, Email, Optional
+from wtforms import StringField, SubmitField, DateField, SelectField, ValidationError
+from wtforms.validators import Length, Email, Optional, DataRequired
 from app.models.auth import AuthUser
 from app.models.profile import UserProfile
 
@@ -14,6 +14,13 @@ class ProfileForm(FlaskForm):
     last_name = StringField('Last Name', validators=[Length(max=50), Optional()])
     email = StringField('Email', validators=[Length(min=6, max=35), Email(), Optional()])
     birth_date = DateField('Birth Date (YYYY-MM-DD)', format='%Y-%m-%d', validators=[Optional()])
+    
+    study_program_id = SelectField(
+        'Study Program:', 
+        coerce=int, 
+        validators=[DataRequired(message="Please select a study program")]
+    )
+    
     submit = SubmitField('Update Profile')
 
 #Functions execute when from is being submitted

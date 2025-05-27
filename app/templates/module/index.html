@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero-section">
+ <h1>About Modules</h1>
+    <p>Your guide to understanding the study modules available</p>
+  </header>
+
+  <section>
+    <h2>What are Study Modules?</h2>
+    <p>
+      Study modules are distinct units or subjects that make up your academic program.
+      Each module focuses on a particular topic or skill and contributes to your overall qualification.
+    </p>
+
+    <h2>Why Modules Matter</h2>
+    <p>Modules allow you to:</p>
+    <ul>
+      <li>Specialize in areas of interest within your study program</li>
+      <li>Gain focused knowledge and skills in manageable segments</li>
+      <li>Track your academic progress clearly and efficiently</li>
+      <li>Choose elective modules that align with your career goals</li>
+    </ul>
+
+    <h2>Types of Modules</h2>
+    <ul>
+      <li><strong>Core Modules:</strong> Mandatory courses you must complete</li>
+      <li><strong>Elective Modules:</strong> Optional courses to broaden your knowledge</li>
+      <li><strong>Practical Modules:</strong> Hands-on training and labs</li>
+    </ul>
+
+    <h2>How to Choose the Right Modules</h2>
+    <p>
+      Consider your interests, career plans, and the requirements of your study program.
+      Consult with your academic advisor to create a balanced module plan.
+    </p>
+
+    <p>
+      For more detailed information about specific modules, please visit your
+        <a href="{{ url_for('programs.index') }}">study programs page</a>.
+    </p>
+  </section>
+{% endblock %}

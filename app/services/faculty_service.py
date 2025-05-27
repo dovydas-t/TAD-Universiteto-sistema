@@ -4,8 +4,7 @@ from app.models import Faculty
 class FacultyService:
 
     @staticmethod
-    def create_faculty(name):
-        faculty = Faculty(name=name)
+    def add_faculty(faculty):
         db.session.add(faculty)
         db.session.commit()
         return faculty
