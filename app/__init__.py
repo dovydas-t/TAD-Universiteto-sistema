@@ -43,6 +43,9 @@ def create_app(config_class=Config):
     from app.views.student import bp as student_bp
     app.register_blueprint(student_bp, url_prefix='/student')
 
+    from app.views.admin import bp as admin_bp
+    app.register_blueprint(admin_bp, url_prefix='/faculty')
+
     from app.views.faculty import bp as faculty_bp
     app.register_blueprint(faculty_bp, url_prefix='/faculty')
 

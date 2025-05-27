@@ -1,0 +1,47 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1>⚡ Quick Actions</h1>
+    
+    {% if requests %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">Pending Requests - Quick Actions</div>
+        <div class="panel-body">
+            {% for request in requests %}
+            <div class="media" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                <div class="media-body">
+                    <h5 class="media-heading">
+                        {{ request.student.first_name }} {{ request.student.last_name }}
+                        <small class="text-muted">{{ request.student.email }}</small>
+                    </h5>
+                    <p><strong>Module:</strong> {{ request.module.name }}</p>
+                    <p><strong>Study Program:</strong> {{ request.study_program.name }}</p>
+                    <p><strong>Reason:</strong> {{ request.reason }}</p>
+                    {% if request.student_notes %}
+                    <p><strong>Student Notes:</strong> "{{ request.student_notes }}"</p>
+                    {% endif %}
+                    <p><small class="text-muted">Requested: {{ request.created_at.strftime('%B %d, %Y at %I:%M %p') }}</small></p>
+                </div>
+                <div class="media-right">
+                    <a href="{{ url_for('.quick_approve', request_id=request.id) }}" 
+                       class="btn btn-success" onclick="return confirm('Approve this request?')">
+                        ✅ Approve
+                    </a>
+                    <a href="{{ url_for('.quick_reject', request_id=request.id) }}" 
+                       class="btn btn-danger" onclick="return confirm('Reject this request?')">
+                        ❌ Reject
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        <h4>🎉 All caught up!</h4>
+        <p>No pending requests at the moment.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

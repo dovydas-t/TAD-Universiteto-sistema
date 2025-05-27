@@ -1,0 +1,90 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1>📊 Registration Dashboard</h1>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-warning">
+                <div class="panel-heading">⏳ Pending Requests</div>
+                <div class="panel-body text-center">
+                    <h2>{{ pending_count }}</h2>
+                    <a href="{{ url_for('registrationrequestview.index_view') }}" class="btn btn-warning">Manage</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-success">
+                <div class="panel-heading">✅ Approved</div>
+                <div class="panel-body text-center">
+                    <h2>{{ approved_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-danger">
+                <div class="panel-heading">❌ Rejected</div>
+                <div class="panel-body text-center">
+                    <h2>{{ rejected_count }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if urgent_requests %}
+    <div class="panel panel-danger">
+        <div class="panel-heading">🚨 Urgent Requests (>3 days old)</div>
+        <div class="panel-body">
+            {% for request in urgent_requests %}
+            <div class="alert alert-warning">
+                <strong>{{ request.student.first_name }} {{ request.student.last_name }}</strong> - {{ request.module.name }}
+                <span class="pull-right">{{ request.created_at.strftime('%m/%d/%Y') }}</span>
+                <br><small>{{ request.reason }}</small>
+                <div style="margin-top: 10px;">
+                    <a href="{{ url_for('quickactionsview.quick_approve', request_id=request.id) }}" 
+                       class="btn btn-sm btn-success" onclick="return confirm('Approve this request?')">Quick Approve</a>
+                    <a href="{{ url_for('quickactionsview.quick_reject', request_id=request.id) }}" 
+                       class="btn btn-sm btn-danger" onclick="return confirm('Reject this request?')">Quick Reject</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="panel panel-info">
+        <div class="panel-heading">📋 Recent Activity</div>
+        <div class="panel-body">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Module</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in recent_requests %}
+                    <tr>
+                        <td>{{ request.student.first_name }} {{ request.student.last_name }}</td>
+                        <td>{{ request.module.name }}</td>
+                        <td>
+                            {% if request.status == 'pending' %}
+                                <span class="label label-warning">⏳ Pending</span>
+                            {% elif request.status == 'approved' %}
+                                <span class="label label-success">✅ Approved</span>
+                            {% elif request.status == 'rejected' %}
+                                <span class="label label-danger">❌ Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ request.created_at.strftime('%m/%d/%Y') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
