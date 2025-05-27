@@ -1,34 +1,53 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField ,SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, RadioField ,SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from app.models.auth import AuthUser
-from app.models.study_program import StudyProgram
+from app.services.study_program_service import StudyProgramService
+from app.models.enum import RoleEnum
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username',validators=[DataRequired(), Length(min=3, max=20)])
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     
-    study_program_id = SelectField(
-        'Study Program:', 
-        coerce=int, 
-        validators=[DataRequired(message="Please select a study program")]
-    )
+    role = RadioField('I am registering as:', 
+                     choices=[
+                         ('Student', 'Student'),      # Match your enum values
+                         ('Teacher', 'Teacher')
+                     ],
+                     default='Student',               # Default to 'Student'
+                     validators=[DataRequired()])
     
-    password = PasswordField('Password',validators=[DataRequired(), Length(min=6)])
-    password2 = PasswordField('Repeat Password', validators=[
-        DataRequired(), 
-        EqualTo('password', message='Passwords must match')
-    ])
-    submit =SubmitField('Register')
+    # Conditional fields
+    study_program_id = SelectField('Study Program', coerce=int)
+    registration_code = StringField('Teacher Registration Code')
+    
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Confirm Password', 
+                             validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+    
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+        # Populate study programs
+        self.study_program_id.choices = [(0, 'Select Study Program')] + \
+            [(p.id, p.name) for p in StudyProgramService.get_all_study_programs()]
+    
+    def validate_study_program_id(self, field):
+        if self.role.data == 'Student':  # Use 'Student' (capitalized)
+            if not field.data or field.data == 0:
+                raise ValidationError('Study program is required for students.')
 
+    def validate_registration_code(self, field):
+        if self.role.data == 'Teacher':  # Use 'Teacher' (capitalized)
+            if not field.data or field.data != 'TEACH2024':
+                raise ValidationError('Valid teacher registration code is required.')
+    
     def validate_username(self, username):
         user = AuthUser.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username already exists.')
-        
-    def __init__(self, *args, **kwargs):
-        super(RegistrationForm, self).__init__(*args, **kwargs)
-        self.study_program_id.choices = [(sp.id, sp.name) for sp in StudyProgram.query.all()]
+
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -59,13 +78,6 @@ class UpdateProfileForm(FlaskForm):
     submit = SubmitField('Update Pr')
 
 
-    def __init__(self, user=None, *args, **kwargs):
-        super(UpdateProfileForm, self).__init__(*args, **kwargs)
-        self.study_program_id.choices = [(sp.id, sp.name) for sp in StudyProgram.query.all()]
-        
-        # Set current user's study program as default
-        if user:
-            self.study_program_id.data = user.profile.study_program_id
 
 # Flask-WTF automatically calls custom validators during form.validate_on_submit()
 # Any method named validate_<fieldname> gets executed after built-in validators pass

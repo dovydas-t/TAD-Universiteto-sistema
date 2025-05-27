@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required, user_logged_in
 from app.forms.auth import LoginForm, RegistrationForm, PasswordForm, EnterEmailForm
 from app.models.auth import AuthUser
+from app.models.enum import RoleEnum
 from app.models.profile import UserProfile
 from app.extensions import db
 
@@ -47,22 +48,31 @@ def register():
     
     form = RegistrationForm()
     if form.validate_on_submit():
-        #Get data from form
-        username=form.username.data
+        # Get data from form
+        username = form.username.data
+        email = form.email.data
         study_program_id = form.study_program_id.data
-        password=form.password.data
-        password2=form.password2.data
+        password = form.password.data
+        password2 = form.password2.data
+        
+
+        role_value = form.role.data  # This will be 'Student' or 'Teacher'
+        
+        # Convert string to enum
+        role = RoleEnum(role_value)  # Direct conversion since values match
 
         # Create user and user.profile and save user
-        user = AuthUser(username=username)
-        user.profile = UserProfile()
+        user = AuthUser(username=username)  # Keep original
+        user.email = email  # Set email separately
+        user.profile = UserProfile(role=role)
 
-        if study_program_id:
+        if study_program_id and study_program_id != 0:
             user.profile.study_program_id = study_program_id
             
         # Function to hash given password
         user.set_password(password)
         db.session.add(user)
+        db.session.add(user.profile)
         db.session.commit()
         
         flash('Registration successful! You can now log in.', 'success')

@@ -49,3 +49,5 @@ class StudyProgramService:
         db.session.delete(program)
         db.session.commit()
         return True
+
+    
