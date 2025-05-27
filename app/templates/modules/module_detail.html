@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title %}Module Details{% endblock %} {% block
+content %}
+<div class="container fade-in">
+  <h1>{{ module.name }}</h1>
+
+  <div class="feature-card">
+    <p><strong>Description:</strong> {{ module.description }}</p>
+    <p><strong>Credits:</strong> {{ module.credits }}</p>
+    <p><strong>Semester:</strong> {{ module.semester }}</p>
+    <p><strong>Study Program:</strong> {{ module.study_program.name }}</p>
+
+    {% if module.image_path %}
+    <img
+      src="{{ url_for('static', filename=module.image_path) }}"
+      alt="{{ module.name }}"
+      style="max-width: 100%; margin-top: 1rem"
+    />
+    {% endif %}
+  </div>
+
+  {% if module.requirements %}
+  <div class="feature-card">
+    <h3>Prerequisites</h3>
+    <ul>
+      {% for req in module.requirements %}
+      <li>{{ req.required_module.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="form-actions">
+    <a href="{{ url_for('main.modules') }}" class="btn btn-secondary"
+      >Back to Modules</a
+    >
+  </div>
+</div>
+{% endblock %}

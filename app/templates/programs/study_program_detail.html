@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %}Study Program Details{% endblock %}
+{% block content %}
+<div class="container fade-in">
+  <h1>{{ program.name }}</h1>
+
+  <div class="feature-card">
+    <h3>Faculty</h3>
+    <p>{{ program.faculty.name }}</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>Modules</h3>
+    {% if program.modules %}
+    <ul>
+      {% for module in program.modules %}
+      <li>
+        {{ module.name }} ({{ module.credits }} credits, {{ module.semester }}
+        semester)
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No modules found for this program.</p>
+    {% endif %}
+  </div>
+
+  <div class="form-actions">
+    <a href="{{ url_for('main.study_programs') }}" class="btn btn-secondary"
+      >Back to Study Programs</a
+    >
+  </div>
+</div>
+{% endblock %}

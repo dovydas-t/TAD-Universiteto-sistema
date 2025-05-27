@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block title %}Study Programs{% endblock %} {% block
+content %}
+<div class="dashboard fade-in">
+  <div class="dashboard-header">
+    <h1>Study Programs</h1>
+    <p>Browse all study programs offered by the university.</p>
+  </div>
+
+  <div class="dashboard-grid">
+    {% for program in study_programs %}
+    <div class="dashboard-card">
+      <h3>{{ program.name }}</h3>
+      <p><strong>Faculty:</strong> {{ program.faculty.name }}</p>
+      <a
+        href="{{ url_for('main.study_program_detail', program_id=program.id) }}"
+        class="btn btn-primary"
+        >View Details</a
+      >
+    </div>
+    {% else %}
+    <p>No study programs found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
