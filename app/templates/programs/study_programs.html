@@ -1,25 +1,25 @@
-{% extends "base.html" %}
-{% block title %} Study Programs {% endblock %}
+{% extends "base.html" %} {% block title %}Study Programs{% endblock %} {% block
+content %}
+<div class="dashboard fade-in">
+  <div class="dashboard-header">
+    <h1>Study Programs</h1>
+    <p>Browse all study programs offered by the university.</p>
+  </div>
 
-{% block content %}
-<h1>All Study Programs:</h1>
-<ul class="study-program-list">
-    {% if study_programs_list %}
-        {% for study_program in study_programs_list %}
-            <li>
-                <h2>
-                    <a href="{{ url_for('programs.detail', study_program_id=study_program.id) }}">
-                        {{ study_program.name }}
-                    </a>
-                </h2>
-                <p>
-                    <a href="{{ url_for('faculty.detail', faculty_id=study_program.faculty.id) }}">
-                    Provided by: {{ study_program.faculty.name }}</a>
-                </p>
-            </li>
-        {% endfor %}
+  <div class="dashboard-grid">
+    {% for program in study_programs %}
+    <div class="dashboard-card">
+      <h3>{{ program.name }}</h3>
+      <p><strong>Faculty:</strong> {{ program.faculty.name }}</p>
+      <a
+        href="{{ url_for('main.study_program_detail', program_id=program.id) }}"
+        class="btn btn-primary"
+        >View Details</a
+      >
+    </div>
     {% else %}
-        <p>No Study Programs</p>
-    {% endif %}
-</ul>
+    <p>No study programs found.</p>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

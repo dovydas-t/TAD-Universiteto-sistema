@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="auth-container">
   <div class="auth-card">
     <h2>Delete User</h2>
@@ -11,18 +10,18 @@
       {{ form.hidden_tag() }}
 
       <div class="form-group">
-        {{ form.password.label(class="form-label") }}
-        {{ form.password(class="form-input") }}
-        {% for error in form.password.errors %}
-            <div class="form-error">{{ error }}</div>
+        {{ form.password.label(class="form-label") }} {{
+        form.password(class="form-input") }} {% for error in
+        form.password.errors %}
+        <div class="form-error">{{ error }}</div>
         {% endfor %}
       </div>
 
       <div class="form-group">
-        {{ form.password2.label(class="form-label") }}
-        {{ form.password2(class="form-input") }}
-        {% for error in form.password2.errors %}
-            <div class="form-error">{{ error }}</div>
+        {{ form.password2.label(class="form-label") }} {{
+        form.password2(class="form-input") }} {% for error in
+        form.password2.errors %}
+        <div class="form-error">{{ error }}</div>
         {% endfor %}
       </div>
 
@@ -30,7 +29,6 @@
         {{ form.submit(class="btn btn-primary btn-full") }}
       </div>
     </form>
-
   </div>
 </div>
 {% endblock %}

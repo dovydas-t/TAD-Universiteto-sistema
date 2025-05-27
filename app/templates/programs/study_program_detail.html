@@ -1,10 +1,11 @@
-{% extends "base.html" %}
-{% block title %} Study Program Details {% endblock %}
+{% extends "base.html" %} {% block title %}Study Program Details{% endblock %}
 {% block content %}
-  <div class="study-program-container">
-    <h1>Study {{ study_program.name }} at TAD University</h1>
-    <h2>Faculty ID {{ faculty.id }}</h2>
-    <p>Faculty name {{ faculty.name }}</p>
+<div class="container fade-in">
+  <h1>{{ program.name }}</h1>
+
+  <div class="feature-card">
+    <h3>Faculty</h3>
+    <p>{{ program.faculty.name }}</p>
     <p>Study program description</p>
     <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">Check information about faculty</a>
     <h2>Modules for the Study Program:</h2>
@@ -22,4 +23,27 @@
               <a href="{{ url_for('programs.add_program') }}"> Add new Study Program</a>
       {% endif %}
   </div>
+
+  <div class="feature-card">
+    <h3>Modules</h3>
+    {% if program.modules %}
+    <ul>
+      {% for module in program.modules %}
+      <li>
+        {{ module.name }} ({{ module.credits }} credits, {{ module.semester }}
+        semester)
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No modules found for this program.</p>
+    {% endif %}
+  </div>
+
+  <div class="form-actions">
+    <a href="{{ url_for('main.study_programs') }}" class="btn btn-secondary"
+      >Back to Study Programs</a
+    >
+  </div>
+</div>
 {% endblock %}
