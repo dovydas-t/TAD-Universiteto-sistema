@@ -1,5 +1,6 @@
 from app.extensions import db
 from app.models import Faculty
+from sqlalchemy.orm import joinedload
 
 class FacultyService:
 
@@ -13,9 +14,11 @@ class FacultyService:
     def get_all_faculties():
         return Faculty.query.all()
 
+
     @staticmethod
     def get_faculty_by_id(faculty_id):
-        return Faculty.query.get(faculty_id)
+        return Faculty.query.options(joinedload(Faculty.programs)).get(faculty_id)
+
 
     @staticmethod
     def update_faculty(faculty_id, name):
