@@ -1,0 +1,82 @@
+<!-- templates/dashboard_base.html -->
+{% extends "base.html" %}
+{% block head %}    
+<link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}"
+/>
+{% endblock %}
+{%block navbar %} {% endblock %}
+{% block content %}
+<div class="dash-container">
+  <!-- Sidebar -->
+  
+  <div class="dash-sidebar">
+    <div class="dash-sidebar-header">
+      <h3>{{ current_user.username }}</h3>
+      <span class="dash-user-role">{{ current_user.profile.role.value }}</span>
+    </div>
+    
+    <nav class="dash-sidebar-nav">
+      {% block sidebar_nav %}
+      <!-- Default navigation items -->
+      <a href="{{ url_for('main.dashboard') }}" class="dash-nav-item active">
+        <i class="dash-icon">🏠</i>
+        <span>Dashboard</span>
+      </a>
+      
+      <a href="{{ url_for('main.profile') }}" class="dash-nav-item">
+        <i class="dash-icon">👤</i>
+        <span>Profile</span>
+      </a>
+      {% endblock %}
+      
+      <!-- Common items for all users -->
+      <div class="dash-nav-separator">
+       
+
+
+
+      
+
+      </div>
+      
+      <a href="{{ url_for('main.index') }}" class="dash-nav-item">
+        <i class="dash-icon">⚙️</i>
+        <span>Settings</span>
+      </a>
+      
+      <a href="{{ url_for('auth.logout') }}" class="dash-nav-item logout">
+        <i class="dash-icon">🚪</i>
+        <span>Logout</span>
+      </a>
+    </nav>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="dash-main-content">
+    <div class="dash-content-header">
+      <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+      <div class="dash-breadcrumb">
+        {% block breadcrumb %}
+        <span>Home</span> / <span>Dashboard</span>
+        {% endblock %}
+      </div>
+    </div>
+    
+    <div class="dash-content-body">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      
+      {% block dashboard_content %}
+      <!-- Dashboard content goes here -->
+      {% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}
