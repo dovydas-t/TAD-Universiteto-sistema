@@ -17,7 +17,7 @@
     {% if module.image_path %}
         <div>
             <img
-                src="{{ url_for('static', filename=module.image_path) }}"
+                src="{{ url_for('static/images', filename=module.image_path) }}"
                 alt="Module image"
                 style="max-width: 300px;">
         </div>
