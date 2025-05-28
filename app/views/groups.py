@@ -10,6 +10,12 @@ from app.utils.decorators import admin_or_teacher_role_required
 bp = Blueprint('groups', __name__)
 
 
+@bp.route('/')
+@admin_or_teacher_role_required
+def index():
+    return render_template('groups/groups.html')
+
+
 @bp.route('/create_group', methods=['GET', 'POST'])
 @admin_required
 def create_group():
