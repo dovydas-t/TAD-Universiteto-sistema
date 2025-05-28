@@ -1,4 +1,5 @@
-html{% extends "base.html" %}
+{% extends "base.html" %}
+
 {% block content %}
 <div class="auth-container">
   <div class="auth-card">
@@ -7,6 +8,7 @@ html{% extends "base.html" %}
       method="POST"
       action="{{ url_for('auth.register') }}"
       class="auth-form"
+      id="registrationForm"
     >
       {{ form.hidden_tag() }}
 
@@ -19,11 +21,50 @@ html{% extends "base.html" %}
       </div>
 
       <div class="form-group">
-        {{ form.study_program_id.label(class="form-label") }}
-        {{ form.study_program_id(class="form-input") }}
-        {% for error in form.study_program_id.errors %}
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-input") }}
+        {% for error in form.email.errors %}
             <div class="form-error">{{ error }}</div>
         {% endfor %}
+      </div>
+
+      <!-- Role Selection - Flask-WTF Way -->
+      <div class="form-group">
+        {{ form.role.label(class="form-label") }}
+        <div class="radio-group">
+          {% for subfield in form.role %}
+            <div class="radio-option">
+              {{ subfield(class="radio-input", onchange="toggleFields()") }}
+              {{ subfield.label(class="radio-label") }}
+            </div>
+          {% endfor %}
+        </div>
+        {% for error in form.role.errors %}
+            <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Student-specific fields -->
+      <div id="studentFields" class="conditional-fields">
+        <div class="form-group">
+          {{ form.study_program_id.label(class="form-label") }}
+          {{ form.study_program_id(class="form-input") }}
+          {% for error in form.study_program_id.errors %}
+              <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Teacher-specific fields -->
+      <div id="teacherFields" class="conditional-fields" style="display: none;">
+        <div class="form-group">
+          {{ form.registration_code.label(class="form-label") }}
+          {{ form.registration_code(class="form-input") }}
+          <div class="form-help">Contact administration for the registration code</div>
+          {% for error in form.registration_code.errors %}
+              <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
       </div>
 
       <div class="form-group">
@@ -43,7 +84,7 @@ html{% extends "base.html" %}
       </div>
 
       <div class="form-actions">
-        {{ form.submit(class="btn btn-primary btn-full") }}
+        {{ form.submit(class="btn btn-primary btn-full", id="submitBtn") }}
       </div>
     </form>
 
@@ -55,4 +96,50 @@ html{% extends "base.html" %}
     </div>
   </div>
 </div>
+
+<script>
+function toggleFields() {
+    const radioButtons = document.querySelectorAll('input[name="role"]');
+    const studentFields = document.getElementById('studentFields');
+    const teacherFields = document.getElementById('teacherFields');
+    const studyProgramSelect = document.querySelector('select[name="study_program_id"]');
+    const registrationCodeInput = document.querySelector('input[name="registration_code"]');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    let selectedValue = null;
+    radioButtons.forEach(radio => {
+        if (radio.checked) {
+            selectedValue = radio.value;
+        }
+    });
+    
+    console.log('Selected role:', selectedValue); // Debug
+    
+    // Use capitalized values to match your enum
+    if (selectedValue === 'Student') {
+        studentFields.style.display = 'block';
+        teacherFields.style.display = 'none';
+        if (studyProgramSelect) studyProgramSelect.required = true;
+        if (registrationCodeInput) registrationCodeInput.required = false;
+        if (submitBtn) submitBtn.textContent = 'Register as Student';
+    } else if (selectedValue === 'Teacher') {
+        studentFields.style.display = 'none';
+        teacherFields.style.display = 'block';
+        if (studyProgramSelect) studyProgramSelect.required = false;
+        if (registrationCodeInput) registrationCodeInput.required = true;
+        if (submitBtn) submitBtn.textContent = 'Register as Teacher';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    toggleFields();
+    
+    // Add event listeners to all radio buttons
+    const radioButtons = document.querySelectorAll('input[name="role"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', toggleFields);
+    });
+});
+</script>
 {% endblock %}
