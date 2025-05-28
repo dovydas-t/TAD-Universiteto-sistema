@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from app.forms.profile import ProfileForm
 from app.extensions import db
+from app.models.enum import RoleEnum
 from app.utils.decorators import admin_required, teacher_status_required
 
 bp = Blueprint('main', __name__)
@@ -50,10 +51,39 @@ def profile_update():
         flash("Profile updated successfully!", "success")
         return redirect(url_for('main.profile'))
 
-    return render_template("main/update_profile.html", form=form)
+    return render_template("profile/update_profile.html", form=form)
 
 @bp.route('/dashboard')
-@admin_required
+@login_required
 def dashboard():
     """User dashboard"""
-    return render_template('dashboard.html', title='Dashboard')
+
+    """User dashboard - redirects based on role"""
+    if not current_user.profile:
+        flash('Profile not found. Please contact administrator.', 'error')
+        return redirect(url_for('auth.logout'))
+    
+    # Redirect based on user role
+    if current_user.profile.role == RoleEnum.Admin:
+        return redirect(url_for('main.admin_dashboard'))
+    elif current_user.profile.role == RoleEnum.Teacher:
+        return redirect(url_for('main.teacher_dashboard'))
+    elif current_user.profile.role == RoleEnum.Student:
+        return redirect(url_for('main.student_dashboard'))
+    else:
+        flash('Invalid user role. Please contact administrator.', 'error')
+        return redirect(url_for('auth.logout'))
+    
+
+
+# @bp.route('/student_dashboard')
+# @login_required
+# def student_dashboard():
+
+
+    
+
+    
+    
+    
+    

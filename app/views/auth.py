@@ -33,7 +33,7 @@ def login():
             next_page = request.args.get('next')
 
             flash(f'Login successful! Welcome back, {user.username}!', 'success')
-            return redirect(next_page or url_for('main.dashboard'))
+            return redirect(next_page or url_for('main.index'))
         
         flash('Invalid username or password', 'error')
     
