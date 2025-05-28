@@ -28,4 +28,5 @@ class GroupsService:
         db.session.add(group)
         db.session.commit()
         return group
+    
         

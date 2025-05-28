@@ -55,6 +55,8 @@ class StudyProgramService:
         """Generate a group code like TAD-u-SP25-x for a study program, avoiding duplicates"""
         
         # Step 1: Generate program prefix
+        print(f"DEBUG: study_program.name = {study_program.name}")
+
         words = study_program.name.split()
         code_prefix = ''.join(word[0].upper() for word in words if word)
         

@@ -1,14 +1,20 @@
 from flask import Blueprint, flash, request, redirect, render_template, url_for
 from flask_login import login_required, current_user
 from app.utils.decorators import admin_required
-from app.forms.groups import GroupForm
+from app.forms.groups import GroupForm, EditGroupForm
 from app.models import Groups
 from app.services.study_program_service import StudyProgramService
 from app.services.group_service import GroupsService
+from app.services.user_service import UserService
 from app.utils.decorators import admin_or_teacher_role_required
 
 bp = Blueprint('groups', __name__)
 
+@bp.route('/')
+@admin_or_teacher_role_required
+def index():
+    groups = GroupsService.get_all_groups()
+    return render_template('groups/groups.html', groups=groups)
 
 @bp.route('/create_group', methods=['GET', 'POST'])
 @admin_required
@@ -53,11 +59,44 @@ def create_group():
 def detail(group_id):
     """Display group details"""
     group = GroupsService.get_group_by_id(group_id)
-    
+    students = UserService.get_students_by_group(group_id)
+
     if not group:
         flash('Group not found.', 'error')
         return redirect(url_for('index'))
     
     return render_template('groups/group_detail.html',
                            title='Group Detail',
-                           group=group)
+                           group=group,
+                           students=students)
+
+
+@bp.route('/edit_group/<int:group_id>', methods=['GET', 'POST'])
+def edit_group(group_id):
+    group = GroupsService.get_group_by_id(group_id)
+    students = UserService.get_students()
+    assigned_students = UserService.get_students_by_group(group_id)
+    teachers = UserService.get_all_teachers()
+
+    form = EditGroupForm()
+
+    # Set dynamic choices
+    form.teacher_id.choices = [(t.id, t.full_name) for t in teachers]
+    form.students.choices = [(s.id, s.full_name) for s in students]
+
+    if form.validate_on_submit():
+        UserService.update_user_group_from_form(form, group_id)
+        flash("Group updated successfully!", "success")
+        return redirect(url_for('groups.detail', group_id=group.id))
+
+    # Pre-fill form with current selections
+    form.students.data = [s.id for s in assigned_students]
+    current_teacher = UserService.get_teacher_by_group(group_id)
+    if current_teacher:
+        form.teacher_id.data = current_teacher.id
+
+    return render_template(
+        'groups/edit_group.html',
+        group=group,
+        form=form
+    )
