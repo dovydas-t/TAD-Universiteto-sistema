@@ -4,7 +4,7 @@ content %}
   <h1>Group: {{ group.code }}</h1>
 
   <div class="feature-card">
-    <h3>Study Program</h3>
+    <h3>Group belong to Study Program</h3>
     <p>{{ group.study_program.name }}</p>
   </div>
 
@@ -21,7 +21,9 @@ content %}
     <ul>
       {% for student in students %}
       <li>
-        {{ student.first_name }} {{ student.last_name }} ({{ student.full_name }})
+        <a href="{{ url_for('student.detail', student_id=student.id)}}">
+          {{ student.first_name }} {{ student.last_name }} ({{ student.full_name }})
+        </a>
       </li>
       {% endfor %}
     </ul>
