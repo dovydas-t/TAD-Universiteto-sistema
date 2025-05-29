@@ -7,15 +7,15 @@
     <title>{% if title %}{{ title }} - {% endif %}Dashboard</title>
 
     <!-- Custom CSS -->
-   {%base %}
+   {% block css %}
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    {% endblock %}
 
 
-    {% block head %}    <link
-    />{% endblock %}
+    {% block head %}{% endblock %}
   </head>
 
   <body>
