@@ -4,7 +4,6 @@ from wtforms.validators import Length, Email, Optional, DataRequired
 from app.models.auth import AuthUser
 from app.models.profile import UserProfile
 from app.services.study_program_service import StudyProgramService
-
 from flask_login import current_user
 
 

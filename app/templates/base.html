@@ -7,15 +7,19 @@
     <title>{% if title %}{{ title }} - {% endif %}Dashboard</title>
 
     <!-- Custom CSS -->
+   {% block css %}
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    {% endblock %}
+
 
     {% block head %}{% endblock %}
   </head>
 
   <body>
+    {%block navbar%}
     <!-- Navigation -->
     <nav class="navbar">
       <div class="nav-container">
@@ -52,6 +56,7 @@
         </ul>
       </div>
     </nav>
+    {%endblock%}
 
     <!-- Flash Messages -->
     <div class="container">

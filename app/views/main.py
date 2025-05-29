@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from app.forms.profile import ProfileForm
 from app.extensions import db
+from app.models.enum import RoleEnum
 from app.utils.decorators import admin_required, teacher_status_required
 
 bp = Blueprint('main', __name__)
@@ -50,10 +51,64 @@ def profile_update():
         flash("Profile updated successfully!", "success")
         return redirect(url_for('main.profile'))
 
-    return render_template("main/update_profile.html", form=form)
+    return render_template("profile/update_profile.html", form=form)
 
 @bp.route('/dashboard')
-@admin_required
+@login_required
 def dashboard():
     """User dashboard"""
-    return render_template('dashboard.html', title='Dashboard')
+
+    """User dashboard - redirects based on role"""
+    if not current_user.profile:
+        flash('Profile not found. Please contact administrator.', 'error')
+        return redirect(url_for('auth.logout'))
+    
+    # Redirect based on user role
+       # Redirect based on user role
+    if current_user.profile.role == RoleEnum.Admin:
+        return redirect(url_for('main.admin_dashboard'))
+    elif current_user.profile.role == RoleEnum.Teacher:
+        return redirect(url_for('main.teacher_dashboard'))
+    else:  # Default to student dashboard (no role check needed)
+        return redirect(url_for('main.student_dashboard'))
+    
+
+
+@bp.route('/admin_dashboard')
+@admin_required
+def admin_dashboard():
+
+
+    # total_students = UserProfile.query.filter_by(role=RoleEnum.Student).count()
+    # total_teachers = UserProfile.query.filter_by(role=RoleEnum.Teacher).count()
+    # study_programs = StudyProgram.query.all()
+    """                  total_students=total_students,
+                         total_teachers=total_teachers,
+                         study_programs=study_programs"""
+    return render_template('dashboard_base.html')
+
+@bp.route('/teacher/dashboard')
+@teacher_status_required
+def teacher_dashboard():
+    """Teacher dashboard"""
+    teacher_profile = current_user.profile
+    return render_template('teacher/dashboard.html', teacher=teacher_profile)
+
+@bp.route('/student/dashboard')
+@login_required  # Only login required, not role-specific
+def student_dashboard():
+    """Student dashboard - default for all users"""
+    student_profile = current_user.profile
+    study_program = student_profile.study_program if student_profile.study_program_id else None
+    
+    return render_template('student/dashboard.html', 
+                         student=student_profile,
+                         study_program=study_program)
+
+
+    
+
+    
+    
+    
+    

@@ -2,10 +2,13 @@ from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required, user_logged_in
 from app.forms.auth import LoginForm, RegistrationForm, PasswordForm, EnterEmailForm
+from app.forms.profile_setup_form import ProfileSetupForm
 from app.models.auth import AuthUser
 from app.models.enum import RoleEnum
 from app.models.profile import UserProfile
 from app.extensions import db
+from app.utils.generate_avatar_url import generate_avatar_url
+from app.utils.save_profile_picture import save_profile_picture
 
 bp = Blueprint('auth', __name__)
 
@@ -33,7 +36,7 @@ def login():
             next_page = request.args.get('next')
 
             flash(f'Login successful! Welcome back, {user.username}!', 'success')
-            return redirect(next_page or url_for('main.dashboard'))
+            return redirect(next_page or url_for('main.index'))
         
         flash('Invalid username or password', 'error')
     
@@ -42,7 +45,7 @@ def login():
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    """User registration"""
+    """User registration - Step 1"""
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     
@@ -50,24 +53,24 @@ def register():
     if form.validate_on_submit():
         # Get data from form
         username = form.username.data
-        email = form.email.data
         study_program_id = form.study_program_id.data
         password = form.password.data
         password2 = form.password2.data
         
-
         role_value = form.role.data  # This will be 'Student' or 'Teacher'
         
         # Convert string to enum
         role = RoleEnum(role_value)  # Direct conversion since values match
 
         # Create user and user.profile and save user
-        user = AuthUser(username=username)  # Keep original
-        user.email = email  # Set email separately
+        user = AuthUser(username=username)  
         user.profile = UserProfile(role=role)
 
         if study_program_id and study_program_id != 0:
             user.profile.study_program_id = study_program_id
+        
+        # Generate default avatar URL using username only
+        user.profile.profile_picture_url = generate_avatar_url(username)
             
         # Function to hash given password
         user.set_password(password)
@@ -75,10 +78,50 @@ def register():
         db.session.add(user.profile)
         db.session.commit()
         
-        flash('Registration successful! You can now log in.', 'success')
-        return redirect(url_for('auth.login'))
+        # Auto-login the user for step 2
+        login_user(user)
+        
+        flash('Account created! Please complete your profile.', 'info')
+        return redirect(url_for('auth.profile_setup'))  # Redirect to step 2
     
     return render_template('auth/register.html', title='Register', form=form)
+
+@bp.route('/profile-setup', methods=['GET', 'POST'])
+@login_required
+def profile_setup():
+    """User registration - Step 2: Profile Setup"""
+    # Check if profile is already complete
+    if current_user.profile.email and current_user.profile.first_name and current_user.profile.last_name:
+        return redirect(url_for('main.dashboard'))
+    
+    form = ProfileSetupForm()
+    if form.validate_on_submit():
+        # Update profile with all details including email
+        current_user.profile.email = form.email.data
+        current_user.profile.first_name = form.first_name.data
+        current_user.profile.last_name = form.last_name.data
+        current_user.profile.birth_date = form.birth_date.data
+        
+        # Update avatar URL to use email now
+        current_user.profile.profile_picture_url = generate_avatar_url(
+            current_user.username, 
+            form.email.data
+        )
+        
+        # Handle profile picture upload if provided
+        if form.profile_picture.data:
+            filename = save_profile_picture(form.profile_picture.data, current_user.username)
+            current_user.profile.profile_picture_url = filename
+        
+        db.session.commit()
+        
+        flash('Profile completed successfully!', 'success')
+        return redirect(url_for('main.dashboard'))
+    
+    return render_template('auth/profile_setup.html', title='Complete Profile', form=form)
+
+
+
 
 
 @bp.route('/reset-password-request', methods=['GET', 'POST'])
