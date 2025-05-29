@@ -1,35 +1,48 @@
-{% extends "base.html" %} {% block title %} Profile {% endblock %} {% block
-content %}
+{% extends "dashboard_base.html" %}
+{%block css%}
+    
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
+    
+    
+    {%endblock%}
+{% block dashboard_content %}
+
+
+
 <div class="profile-container">
-  <h1>Welcome back, {{ current_user.username }}</h1>
-  <h2>Your Profile</h2>
-  <p>Profile ID: {{ current_user.profile.id }}</p>
-  <p>Full name: {{ current_user.profile.full_name }}</p>
-  <p>First name: {{ current_user.profile.first_name or 'Not Set' }}</p>
-  <p>Last name: {{ current_user.profile.last_name or 'Not Set' }}</p>
-  <p>Birth date: {{ current_user.profile.birth_date or 'Not Set' }}</p>
-  <p>Email: {{ current_user.profile.email or 'Not Set' }}</p>
-  <p>Created at: {{ current_user.profile.created_at }}</p>
-  <p>Last login: {{ current_user.profile.last_login }}</p>
+ {% from 'profile/macros.html' import user_avatar %}
+  
+  <div class="profile-info">
+    <div class="profile-details">
+      <h1>Welcome back, {{ current_user.username }}</h1>
+      <h2>Your Profile</h2>
+      <p>Profile ID: {{ current_user.profile.id }}</p>
+      <p>Full name: {{ current_user.profile.full_name }}</p>
+      <p>First name: {{ current_user.profile.first_name or 'Not Set' }}</p>
+      <p>Last name: {{ current_user.profile.last_name or 'Not Set' }}</p>
+      <p>Birth date: {{ current_user.profile.birth_date or 'Not Set' }}</p>
+      <p>Email: {{ current_user.profile.email or 'Not Set' }}</p>
+      <p>Created at: {{ current_user.profile.created_at }}</p>
+      <p>Last login: {{ current_user.profile.last_login }}</p>
+    </div>
+    
+    <div class="profile-pic">
       {% if current_user.profile.profile_pic_path %}
-        <div>
-            <img
-                src="{{ url_for('static', filename='profile_pics/'  ~ current_user.profile.profile_pic_path) }}"
-                alt="Module image"
-                style="max-width: 300px;">
-        </div>
-    {% endif %}
+      <div>
+        {{ user_avatar(current_user, 'large') }}  
+      </div>
+      {% endif %}
+    </div> 
+  </div>
+  
+
   <div class="auth-links">
     <div class="form-actions">
-      <a
-        href="{{ url_for('auth.request_user_delete') }}"
-        class="btn btn-primary"
-        >Delete User</a
-      >
-      <a href="{{ url_for('main.profile_update') }}" class="btn btn-primary"
-        >Update User</a
-      >
+      <a href="{{ url_for('auth.request_user_delete') }}" class="btn btn-primary">Delete User</a>
+      <a href="{{ url_for('main.profile_update') }}" class="btn btn-primary">Update User</a>
     </div>
   </div>
 </div>
+
 {% endblock %}

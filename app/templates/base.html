@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{% if title %}{{ title }} - {% endif %}Dashboard</title>
-
+    
     <!-- Custom CSS -->
    {% block css %}
     <link
@@ -19,6 +19,7 @@
   </head>
 
   <body>
+   {% from 'profile/macros.html' import user_avatar %} 
     {%block navbar%}
     <!-- Navigation -->
     <nav class="navbar">

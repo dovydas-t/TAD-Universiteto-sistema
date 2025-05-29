@@ -7,7 +7,7 @@ from app.models.auth import AuthUser
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    app.config['UPLOAD_FOLDER'] = 'static'
+    app.config['UPLOAD_FOLDER'] = 'app/static'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     
     # Initialize extensions

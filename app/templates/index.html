@@ -14,7 +14,7 @@
     <p>Welcome back, {{ current_user.username }}!</p>
     {% if current_user.profile.role.value %}
       <div class="hero-buttons">
-        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">View {{ current_user.profile.role.value }} Dashboard</a>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">View {{ current_user.profile.role.value }} Dashboard</a>
       </div>
     {% endif %}
   {% endif %}

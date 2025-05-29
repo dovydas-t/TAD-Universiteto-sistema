@@ -1,0 +1,13 @@
+<!-- profile/macros.html -->
+{% macro user_avatar(user, size='medium') %}
+    {% set size_class = 'avatar-' + size %}
+    {% if user.profile.profile_pic_path %}
+        {% if user.profile.profile_pic_path.startswith('http') %}
+            <img src="{{ user.profile.profile_pic_path }}" alt="Profile Picture" class="{{ size_class }}">
+        {% else %}
+            <img src="{{ url_for('static', filename=user.profile.profile_pic_path) }}" alt="Profile Picture" class="{{ size_class }}">
+        {% endif %}
+    {% else %}
+        <img src="{{ generate_avatar_url(user.username) }}" alt="Default Avatar" class="{{ size_class }}">
+    {% endif %}
+{% endmacro %}

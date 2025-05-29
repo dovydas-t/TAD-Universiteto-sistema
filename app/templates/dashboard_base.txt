@@ -1,0 +1,26 @@
+        <nav class="sidebar-nav">
+            <ul>
+                {% if current_user.profile.role.value == 'Student' %}
+                    <!-- Student Navigation -->
+                  <!-- <li><a href="{{ url_for('main.dashboard') }}" class="nav-link">📊 Dashboard</a></li>
+                    <li><a href="{{ url_for('student.courses') }}" class="nav-link">📚 My Courses</a></li>
+                    <li><a href="{{ url_for('student.assignments') }}" class="nav-link">📝 Assignments</a></li>
+                    <li><a href="{{ url_for('student.grades') }}" class="nav-link">📊 Grades</a></li>
+                    <li><a href="{{ url_for('student.schedule') }}" class="nav-link">📅 Schedule</a></li>
+                    <li><a href="{{ url_for('student.resources') }}" class="nav-link">📖 Resources</a></li>   -->
+                    
+                {% elif current_user.profile.role.value == 'Teacher' %}
+                    <!-- Teacher Navigation -->
+                    <!-- <li><a href="{{ url_for('teacher.dashboard') }}" class="nav-link">📊 Dashboard</a></li>
+                    <li><a href="{{ url_for('teacher.courses') }}" class="nav-link">📚 My Courses</a></li>
+                    <li><a href="{{ url_for('teacher.students') }}" class="nav-link">👥 Students</a></li>
+                    <li><a href="{{ url_for('teacher.assignments') }}" class="nav-link">📝 Assignments</a></li>
+                    <li><a href="{{ url_for('teacher.grades') }}" class="nav-link">📊 Grade Book</a></li>
+                    <li><a href="{{ url_for('teacher.reports') }}" class="nav-link">📈 Reports</a></li> -->
+                    
+                {% else %}
+                    <!-- Default/Admin Navigation -->
+                    <!-- <li><a href="{{ url_for('main.dashboard') }}" class="nav-link">📊 Dashboard</a></li>
+                    <li><a href="{{ url_for('admin.users') }}" class="nav-link">👥 Users</a></li>
+                    <li><a href="{{ url_for('admin.settings') }}" class="nav-link">⚙️ Settings</a></li> -->
+                {% endif %}

@@ -13,7 +13,7 @@ def save_profile_picture(file, username):
     unique_filename = f"{username}_{uuid.uuid4().hex[:8]}{file_ext}"
     
     # Create upload directory if it doesn't exist
-    upload_dir = os.path.join(current_app.config.get('UPLOAD_FOLDER', 'static/uploads'), 'profiles')
+    upload_dir = os.path.join('app', 'static', 'profile_pics')
     os.makedirs(upload_dir, exist_ok=True)
     
     # Save file
@@ -21,4 +21,4 @@ def save_profile_picture(file, username):
     file.save(file_path)
     
     # Return relative path for storing in database
-    return f"uploads/profiles/{unique_filename}"
+    return f"profile_pics/{unique_filename}"

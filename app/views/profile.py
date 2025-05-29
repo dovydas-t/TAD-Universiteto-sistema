@@ -16,6 +16,7 @@ def profile():
 @login_required
 def profile_update():
     """User profile update"""
+    
     form = ProfileForm(obj=current_user.profile)    
     if form.validate_on_submit():
         user_changed = (

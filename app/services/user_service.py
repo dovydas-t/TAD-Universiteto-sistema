@@ -210,3 +210,9 @@ class UserService:
                 teacher.group_id = group_id
 
         db.session.commit()
+    
+    @staticmethod
+    def get_user_study_programs_by_user_id(user_id):
+        db.session.commit()
+        
+
