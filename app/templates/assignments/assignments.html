@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% block content %}
+<div class="container dashboard">
+  <div class="dashboard-header">
+    <h1>Assignments</h1>
+    <p>Here you can view and manage your assignments.</p>
+  </div>
+
+  <div class="dashboard-grid">
+    {% for assignment in assignments %}
+    <div class="dashboard-card">
+      <h3>{{ assignment.title }}</h3>
+      <p>Module: {{ assignment.module_name }}</p>
+      <p>Due Date: {{ assignment.due_date.strftime('%Y-%m-%d') }}</p>
+      <div class="form-actions">
+        <a
+          href="{{ url_for('assignments.edit', id=assignment.id) }}"
+          class="btn btn-primary"
+          >Edit</a
+        >
+        <form
+          action="{{ url_for('assignments.delete', id=assignment.id) }}"
+          method="POST"
+          style="display: inline"
+        >
+          <button type="submit" class="btn btn-secondary">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <p>No assignments found.</p>
+    {% endfor %}
+  </div>
+
+  <div class="profile-container" style="margin-top: 2rem">
+    <h1>Create New Assignment</h1>
+    <form
+      action="{{ url_for('assignments.create') }}"
+      method="POST"
+      class="profile-form"
+    >
+      <div class="form-group">
+        <label class="form-label" for="title">Title</label>
+        <input
+          class="form-input"
+          type="text"
+          id="title"
+          name="title"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="module_id">Module</label>
+        <select class="form-input" id="module_id" name="module_id" required>
+          {% for module in modules %}
+          <option value="{{ module.id }}">{{ module.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="due_date">Due Date</label>
+        <input
+          class="form-input"
+          type="date"
+          id="due_date"
+          name="due_date"
+          required
+        />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Create Assignment</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
