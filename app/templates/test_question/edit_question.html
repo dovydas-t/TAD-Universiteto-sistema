@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Edit Question and it's answer options {% endblock %}
+{% block content %}
+<form
+  method="POST"
+  action="{{ url_for('test_question.edit_question', test_question_id=test_question_id) }}">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.question_text.label }}<br>
+        {{ form.question_text }}
+    </p>
+
+    <h4>Answer Options</h4>
+    {% for option_form in form.answer_options %}
+      {{ option_form.option_text.label }} {{ option_form.option_text }}
+      {{ option_form.is_correct.label }} {{ option_form.is_correct }}
+      <br>
+    {% endfor %}
+
+    <p>{{ form.submit }}</p>
+</form>
+{% endblock %}
