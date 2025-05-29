@@ -80,7 +80,10 @@
 
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/group_form.js') }}"></script>
 
-    {% block scripts %}{% endblock %}
+    {% block scripts %}
+    <script src="{{ url_for('static', filename='js/group_form.js') }}"></script>
+    {% endblock %}
   </body>
 </html>

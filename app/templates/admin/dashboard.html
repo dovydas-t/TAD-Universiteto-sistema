@@ -3,9 +3,8 @@
 <div class="container mt-4">
     <h2>Admin Menu</h2>
     <div class="mb-3">
-        <button
-          class="btn btn-success"> 
-          <a href="{{ url_for('faculty.add_faculty') }}">Add faculty</a>
+        <button class="btn btn-success"> 
+            <a href="{{ url_for('faculty.add_faculty') }}">Add faculty</a>
         </button>
         <button class="btn btn-danger">Delete Faculty</button>
     </div>
@@ -17,8 +16,8 @@
             <span>{{ faculty.name }}</span>
             <button 
                 class="btn btn-primary btn-sm view-details-btn"
-                data-name="{{ faculty.name }}">
-                See Details
+                data-id="{{ faculty.id }}">
+                    See Details
             </button>
         </div>
         {% endfor %}
@@ -32,4 +31,5 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/admin-faculty.js') }}"></script>
 {% endblock %}

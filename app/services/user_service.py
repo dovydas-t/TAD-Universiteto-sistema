@@ -32,6 +32,22 @@ class UserService:
             return []
     
     @staticmethod
+    def get_current_teacher_for_group(group_id):
+        return UserProfile.query.filter_by(role=RoleEnum.Teacher, group_id=group_id).first()
+
+    @staticmethod
+    def get_students():
+        return UserProfile.query.filter_by(role=RoleEnum.Student).all()
+    
+    @staticmethod
+    def get_teacher_by_group(group_id):
+        return UserProfile.query.filter_by(role=RoleEnum.Teacher, group_id=group_id).first()
+
+    @staticmethod
+    def get_students_by_group(group_id):
+        return UserProfile.query.filter_by(role=RoleEnum.Student, group_id=group_id).all()
+
+    @staticmethod
     def create_user_profile(user_id, profile_data):
         """Create user profile"""
         try:
@@ -172,3 +188,25 @@ class UserService:
             logger.error(f"Error searching users: {str(e)}")
             return []
 
+    @staticmethod
+    def update_user_group_from_form(form, group_id):
+        students = UserService.get_students()
+        selected_student_ids = form.students.data
+        selected_teacher_id = form.teacher_id.data
+
+        # Assign students
+        for student in students:
+            student.group_id = group_id if student.id in selected_student_ids else None
+
+        # Remove current teacher
+        current_teacher = UserService.get_teacher_by_group(group_id)
+        if current_teacher and (not selected_teacher_id or current_teacher.id != selected_teacher_id):
+            current_teacher.group_id = None
+
+        # Assign new teacher
+        if selected_teacher_id:
+            teacher = UserProfile.query.get(selected_teacher_id)
+            if teacher and teacher.role.name == "Teacher":
+                teacher.group_id = group_id
+
+        db.session.commit()

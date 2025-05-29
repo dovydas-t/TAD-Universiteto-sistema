@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models.auth import AuthUser
+from app.services.faculty_service import FacultyService
 from app.utils.decorators import json_required
 
 bp = Blueprint('api', __name__)
@@ -41,4 +42,18 @@ def update_profile():
             'id': current_user.id,
             'full_name': current_user.full_name
         }
+    })
+
+@bp.route('/faculty_detail/<int:faculty_id>')
+def faculty_detail(faculty_id):
+    faculty = FacultyService.get_faculty_by_id(faculty_id)
+    if faculty is None:
+        return jsonify({'error': 'Faculty not found'}), 404
+
+    return jsonify({
+        'id': faculty.id,
+        'name': faculty.name,
+        'description': faculty.description,
+        'full_address': faculty.get_full_address(),
+        'programs': [program.name for program in faculty.programs]  # optional
     })

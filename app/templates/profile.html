@@ -11,6 +11,14 @@ content %}
   <p>Email: {{ current_user.profile.email or 'Not Set' }}</p>
   <p>Created at: {{ current_user.profile.created_at }}</p>
   <p>Last login: {{ current_user.profile.last_login }}</p>
+      {% if current_user.profile.profile_pic_path %}
+        <div>
+            <img
+                src="{{ url_for('static', filename='profile_pics/'  ~ current_user.profile.profile_pic_path) }}"
+                alt="Module image"
+                style="max-width: 300px;">
+        </div>
+    {% endif %}
   <div class="auth-links">
     <div class="form-actions">
       <a

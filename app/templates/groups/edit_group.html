@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Edit Group: {{ group.code }}</h1>
+    <form
+      method="POST"
+      action="{{ url_for('groups.edit_group', group_id=group.id) }}"
+      class="auth-form">
+      {{ form.hidden_tag() }}
+
+        <div>
+          {{ form.teacher_id.label }}<br>
+          {{ form.teacher_id(class="form-select") }}
+        </div>
+
+        <h3>Select Students</h3>
+        <div>
+          {% for subfield in form.students %}
+          <div>
+            {{ subfield() }} {{ subfield.label.text }}
+          </div>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+      </form>
+  </div>
+</div>
+{% endblock %}

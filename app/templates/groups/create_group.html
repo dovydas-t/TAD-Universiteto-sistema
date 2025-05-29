@@ -1,58 +1,42 @@
-{% extends "base.html" %} {% block content %}
-<div class="container">
-  <h1>Create Group Code</h1>
-  <p>Only admins can generate group codes. Fill in the details below:</p>
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Create new Group</h2>
+    <form
+      method="POST"
+      action="{{ url_for('groups.create_group') }}"
+      class="auth-form">
+      {{ form.hidden_tag() }}
 
-  {% with messages = get_flashed_messages(with_categories=true) %} {% if
-  messages %}
-  <div class="messages">
-    {% for category, message in messages %}
-    <div class="message message-{{ category }}">
-      {{ message }}
-      <span class="message-close">&times;</span>
-    </div>
-    {% endfor %}
+       <div class="form-group">
+        {{ form.study_program_id.label }}
+        {{ form.study_program_id(class="form-control", id="study_program_id") }}
+        {% for error in form.study_program_id.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.starting_year.label }}
+        {{ form.starting_year(class="form-control", id="starting_year") }}
+        {% for error in form.starting_year.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.code.label }}
+        {{ form.code(class="form-control", id="code", readonly=True) }}
+        {% for error in form.code.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+    </form>
   </div>
-  {% endif %} {% endwith %}
-
-  <form method="POST" action="{{ url_for('admin.create_group') }}">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      <label class="form-label">Study Program Name:</label>
-      <input
-        type="text"
-        name="study_program_name"
-        required
-        class="form-input"
-        placeholder="e.g., Graphic Design"
-      />
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Year:</label>
-      <input
-        type="number"
-        name="year"
-        required
-        class="form-input"
-        placeholder="e.g., 2025"
-      />
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Group Number:</label>
-      <input
-        type="number"
-        name="group_number"
-        required
-        class="form-input"
-        placeholder="e.g., 1"
-      />
-    </div>
-
-    <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Generate Group Code</button>
-    </div>
-  </form>
 </div>
 {% endblock %}

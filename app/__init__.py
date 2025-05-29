@@ -44,18 +44,20 @@ def create_app(config_class=Config):
     app.register_blueprint(student_bp, url_prefix='/student')
 
     from app.views.admin import bp as admin_bp
-    app.register_blueprint(admin_bp, url_prefix='/faculty')
+    app.register_blueprint(admin_bp, url_prefix='/admin')
 
     from app.views.faculty import bp as faculty_bp
     app.register_blueprint(faculty_bp, url_prefix='/faculty')
 
     from app.views.module import bp as module_bp
-    app.register_blueprint(module_bp, url_prefix='/modules')
+    app.register_blueprint(module_bp, url_prefix='/module')
 
     from app.views.teacher import bp as teacher_bp
     app.register_blueprint(teacher_bp, url_prefix='/teacher')
 
 
 
+    from app.views.groups import bp as groups_bp
+    app.register_blueprint(groups_bp, url_prefix='/groups')
 
     return app
