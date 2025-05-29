@@ -10,7 +10,7 @@ from app.models.groups import Groups
 from app.models.schedule_item import ScheduleItem
 from app.services.registration_service import RegistrationDecisionEngine
 from datetime import datetime
-
+from app.services.user_service import UserService
 # Create blueprint for student routes
 bp = Blueprint('student', __name__, url_prefix='/student')
 
@@ -237,3 +237,16 @@ def assign_student_to_group(student_id, study_program_id):
         
     except Exception as e:
         print(f"Group assignment failed: {str(e)}")
+
+@bp.route('/detail/<int:student_id>', methods=['GET', 'POST'])
+@login_required
+def detail(student_id):
+    student, grades = UserService.get_student_and_student_grades(student_id)
+    if not student:
+        flash('Error: No student at ID: {{ student.id }})', 'error')
+        return redirect(url_for('module.index'))
+    
+    return render_template('student/student_detail.html',
+                           title='Student Details',
+                           student=student,
+                           grades=grades)

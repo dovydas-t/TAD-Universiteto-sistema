@@ -1,6 +1,7 @@
 from app.models.profile import UserProfile
 from app.models.enum import RoleEnum
 from app.models.auth import AuthUser
+from app.models.grade import Grade
 from app.extensions import db
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -210,9 +211,13 @@ class UserService:
                 teacher.group_id = group_id
 
         db.session.commit()
-    
+
     @staticmethod
-    def get_user_study_programs_by_user_id(user_id):
-        db.session.commit()
-        
+    def get_student_and_student_grades(student_id):
+        student = UserProfile.query.filter_by(id=student_id, role=RoleEnum.Student).first()
+        if not student:
+            return None, []
+
+        grades = Grade.query.filter_by(student_id=student_id).all()
+        return student, grades
 
