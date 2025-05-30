@@ -17,7 +17,7 @@ bp = Blueprint('auth', __name__)
 def login():
     """User login"""
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.dashboard'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -37,7 +37,7 @@ def login():
             next_page = request.args.get('next')
 
             flash(f'Login successful! Welcome back, {user.username}!', 'success')
-            return redirect(next_page or url_for('main.index'))
+            return redirect(next_page or url_for('main.dashboard'))
         
         flash('Invalid username or password', 'error')
     

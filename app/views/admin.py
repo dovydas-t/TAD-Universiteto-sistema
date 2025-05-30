@@ -46,6 +46,7 @@ from app.models.attendance import Attendance
 
 bp = Blueprint('admin', __name__)
 
+
 @bp.route('/dashboard', methods=['GET'])
 @admin_required
 def admin_dashboard():
@@ -53,10 +54,6 @@ def admin_dashboard():
     study_programs = StudyProgramService.get_all_study_programs()
     modules = ModuleService.get_all_modules()
     teachers = UserService.get_all_teachers()
-
-
-
-
 
     """Admin dashboard"""
     return render_template('admin/dashboard.html',

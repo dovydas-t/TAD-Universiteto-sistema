@@ -16,6 +16,9 @@ li{
 }
 
 /* Sidebar Base Styles */
+
+
+
 .sidebar {
     width: 280px;
     background-color: rgba(0, 0, 0, 0.773);
@@ -40,6 +43,99 @@ li{
     font-weight: 600;
     color: white;
 }
+/* Fix for sidebar navigation */
+.sidebar-nav ul.nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav ul.nav-menu li {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-nav .nav-link,
+.sidebar-nav .btn {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #bdc3c7;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .btn:hover {
+    background: #34495e;
+    color: white;
+}
+
+.sidebar-nav .btn-danger {
+    color: #e74c3c;
+}
+
+.sidebar-nav .btn-danger:hover {
+    background: #e74c3c;
+    color: white;
+}
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+/* Hide the dropdown content by default */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    z-index: 1;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Show the dropdown content when hovering over the container */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropbtn {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    padding: 12px 20px;
+    color: #bdc3c7;
+    transition: all 0.3s ease;
+}
+
+.dropbtn:hover {
+    background: #34495e;
+    color: white;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px 15px;
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #2c3e50;
+    color: white;
+}
+
+
 
 /* User Profile Section */
 .user-profile-section {

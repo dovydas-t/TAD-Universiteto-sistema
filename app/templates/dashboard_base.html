@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {%block navbar%} {%endblock%}
-{%block css%}<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/basedashboard.css') }}"
-    />{%endblock%}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth_forms.css') }}"/>{%endblock%}
+
 {% block content %}
 
 {% from 'profile/macros.html' import user_avatar %}
@@ -16,27 +17,69 @@
                 <h3>Student Portal</h3>
             {% elif current_user.profile.role == 'Teacher' or current_user.profile.role.value == 'Teacher' %}
                 <h3>Teacher Portal</h3>
+            {% elif current_user.profile.role == 'Admin' or current_user.profile.role.value == 'Admin' %}
+                <h3>Admin Portal</h3>
             {% else %}
                 <h3>Portal</h3>
             {% endif %}
         </div>
-        
         {% block sidebar_user %}
         {% if current_user.is_authenticated %}
-              <div class="user-profile-section">
-                    <div class="user-info">
-                        {{ user_avatar(current_user, 'medium') }}
-                        <div class="user-details">
-                            <h4>{{ current_user.profile.first_name or current_user.username }}</h4>
-                            {% if current_user.profile.group %}
-                            <p class="user-group">{{ current_user.profile.group.code }}</p>
-                            {% endif %}
-                            <p class="user-role">{{ current_user.profile.role.value if current_user.profile.role else 'User' }}</p>          
-                                
+            <div class="user-profile-section">
+                <div class="user-info">
+                    {{ user_avatar(current_user, 'medium') }}
+                    <div class="user-details">
+                        <h4>{{ current_user.profile.first_name or current_user.username }}</h4>
+                        {% if current_user.profile.role.value == 'Student' and current_user.profile.group %}
+                        <p class="user-group">{{ current_user.profile.group.code }}</p>
+                        {% endif %}
+                        <p class="user-role">{{ current_user.profile.role.value if current_user.profile.role else 'User' }}</p>          
                     </div>
-              </div>
-          </div>
-      {% endif %}         
+                </div>
+            </div>
+        {% endif %}
+        {% endblock %}
+        
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                {% if current_user.profile.role.value == 'Admin' %}
+                    <!-- Admin Navigation -->
+                    <li><a href="{{ url_for('admin.admin_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
+                    <li class="dropdown">
+                        <div class="nav-link dropbtn">📚 Groups</div>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('groups.create_group') }}">Create Groups</a>
+
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <div class="nav-link dropbtn">🏛️ Faculties</div>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('faculty.add_faculty') }}">Add Faculty</a>
+                            <a href="{{ url_for('faculty.index') }}">Faculties List</a>
+                        </div>
+                    </li>
+
+                    
+                {% elif current_user.profile.role.value == 'Teacher' %}
+                    <!-- Teacher Navigation -->
+                    <li><a href="{{ url_for('main.teacher_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
+                    
+
+                    
+                    
+                {% elif current_user.profile.role.value == 'Student' %}
+                    <!-- Student Navigation -->
+                    <li><a href="{{ url_for('main.student_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
+
+                    
+                    
+                {% else %}
+                    <!-- Default Navigation -->
+                    <li><a href="{{ url_for('main.dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
+            
+                    
+                {% endif %}
 
                 <!-- Common links for all roles -->
                 <li class="nav-divider"></li>
@@ -44,7 +87,6 @@
                 <li><a href="{{ url_for('auth.logout') }}" class="nav-link">🚪 Logout</a></li>
             </ul>
         </nav>
-        {% endblock %}
     </aside>
     
     <!-- Main content area -->
@@ -60,4 +102,6 @@
         </div>
     </main>
 </div>
+
 {% endblock %}
+

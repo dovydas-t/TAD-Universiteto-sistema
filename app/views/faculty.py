@@ -18,7 +18,7 @@ def index():
         return render_template('faculty/no_faculty.html',
                                title='No Faculties Available')
     
-    return render_template('faculty/faculties.html',
+    return render_template('faculty/faculties_list.html',
                            title='TAD University Faculties',
                            faculty_list=faculty_list,
                            faculty_names=faculty_names)

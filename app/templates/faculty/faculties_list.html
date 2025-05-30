@@ -1,15 +1,16 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 {% block title %} Faculties {% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
 <h1>All TAD University Faculties:</h1>
 <ul class="faculty-program-list">
     {% if faculty_list %}
         {% for faculty in faculty_list %}
             <li>
                 <h2>
+                    <span>{{ faculty.name }}</span>
                     <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">
-                        {{ faculty.name }}
+                     Details
                     </a>
                 </h2>
             </li>
