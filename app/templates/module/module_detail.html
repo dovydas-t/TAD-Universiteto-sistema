@@ -6,46 +6,52 @@
 <div class="module-container">
     <div class="module-information-container">
         <h2>Module Details</h2>
-        <p><strong>Module ID:</strong> {{ module.id }}</p>
+        <a href="{{ url_for('module.detail', module_id=module.id) }}">
+            <p><strong>Module ID:</strong> {{ module.id }}</p>
+        </a>
         <p><strong>Name:</strong> {{ module.name }}</p>
         <p><strong>Description:</strong> {{ module.description }}</p>
         <p><strong>Credits:</strong> {{ module.credits }}</p>
         <p><strong>Semester:</strong> {{ module.semester.value }}</p>
-        <p><strong>Study Program:</strong> {{ module.study_program.name }}</p>
+        {% if module.image_path %}
+            <div>
+                <img
+                    src="{{ url_for('static', filename='images/' ~ module.image_path) }}"
+                    alt="Module image"
+                    style="max-width: 300px;">
+            </div>
+        {% endif %}
+        <a href="{{ url_for('programs.detail', study_program_id=module.study_program.id) }}">
+            <p><strong>Study Program:</strong> {{ module.study_program.name }}</p>
+        </a>
     </div>
 
-    {% if module.image_path %}
-        <div>
-            <img
-                src="{{ url_for('static/images', filename=module.image_path) }}"
-                alt="Module image"
-                style="max-width: 300px;">
-        </div>
-    {% endif %}
     
-    <h3>Required Modules:</h3>
+    <h4>Required Modules:</h4>
     {% if module.requirements %}
     <ul>
         {% for req in module.requirements %}
-        <li>{{ req.required_module.name }}</li>
+        <a href="{{ url_for('module.detail', module_id=req.required_module.id) }}">
+            <li>{{ req.required_module.name }}</li></a>
         {% endfor %}
     </ul>
     {% else %}
         <p>This module has no requirements!</p>
     {% endif %}
 
-    <h3>This module is Required For Modules:</h3>
+    <h4>This module is Required For Modules:</h4>
     {% if module.required_for %}
     <ul>
         {% for req in module.required_for %}
-        <li>{{ req.module.name }}</li>
+        <a href="{{ url_for('module.detail', module_id=req.module.id)}}">
+            <li>{{ req.module.name }}</li></a>
         {% endfor %}
     </ul>
     {% else %}
         <p>This module is not required for other modules!</p>
     {% endif %}
 
-    <h3>This module assignments:</h3>
+    <h4>This module assignments:</h4>
     {% if module.assignments %}
     <ul>
         {% for assignment in module.assignments %}
@@ -56,18 +62,19 @@
         <p>This module has no assignments!</p>
     {% endif %}
 
-    <h3>Module Tests:</h3>
+    <h4>Module Tests:</h4>
     {% if module.tests %}
     <ul>
         {% for test in module.tests %}
-        <li>{{ test.name }} - {{ test.date }}</li>
+        <a href="{{ url_for('test.detail', test_id=test.id)}}">
+            <li>{{ test.name }}</li></a>
         {% endfor %}
     </ul>
     {% else %}
         <p>This module has no tests.</p>
     {% endif %}
 
-    <h3>Attendance Records:</h3>
+    <h4>Attendance Records:</h4>
     {% if module.attendances %}
     <ul>
         {% for attendance in module.attendances %}
@@ -79,7 +86,7 @@
     {% endif %}
 
     {% if module.grades %}
-    <h3>Grades</h3>
+    <h4>Grades</h4>
     <ul>
         {% for grade in module.grades %}
         <li>{{ grade.student.name }} - {{ grade.value }}</li>
@@ -88,7 +95,7 @@
     {% endif %}
 
     {% if module.schedule_items %}
-    <h3>Schedule</h3>
+    <h4>Schedule</h4>
     <ul>
         {% for item in module.schedule_items %}
         <li>{{ item.day }} {{ item.start_time }} - {{ item.end_time }} in {{ item.room }}</li>

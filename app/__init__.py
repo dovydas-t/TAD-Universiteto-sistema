@@ -60,4 +60,10 @@ def create_app(config_class=Config):
     from app.views.groups import bp as groups_bp
     app.register_blueprint(groups_bp, url_prefix='/groups')
 
+    from app.views.tests import bp as tests_bp
+    app.register_blueprint(tests_bp, url_prefix='/test')
+
+    from app.views.test_question import bp as test_question_bp
+    app.register_blueprint(test_question_bp, url_prefix="/test_question")
+
     return app
