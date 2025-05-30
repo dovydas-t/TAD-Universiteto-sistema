@@ -220,4 +220,3 @@ class UserService:
 
         grades = Grade.query.filter_by(student_id=student_id).all()
         return student, grades
-
