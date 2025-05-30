@@ -25,31 +25,6 @@
         </ul>
     </section>
 
-<section>
-    <h2>Grades</h2>
-    {% if module_grade_map %}
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Module</th>
-                    <th colspan="10">Grades</th>  <!-- Adjust colspan based on max number of grades expected -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for module_name, grades in module_grade_map.items() %}
-                <tr>
-                    <td>{{ module_name }}</td>
-                    {% for grade in grades %}
-                        <td>{{ grade }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No grades available for this student.</p>
-    {% endif %}
-</section>
     <p>
         <a href="{{ url_for('student.edit_student', student_id=student.id) }}">Edit student</a>
     </p>

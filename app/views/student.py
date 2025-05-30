@@ -18,21 +18,15 @@ def test():
 @bp.route('/detail/<int:student_id>', methods=['GET', 'POST'])
 @login_required
 def detail(student_id):
-    student, grades = UserService.get_student_and_student_grades(student_id)
+    student = UserService.get_user_profile(student_id)
 
     if not student:
         flash('Error: No student at ID: {{ student.id }})', 'error')
         return redirect(url_for('module.index'))
     
-    module_grade_map = defaultdict(list)
-    for grade in grades:
-        module = ModuleService.get_module_by_id(grade.module_id)
-        module_grade_map[module.name].append(grade.grade)
-    
     return render_template('student/student_detail.html',
                            title='Student Details',
-                           student=student,
-                           module_grade_map=module_grade_map
+                           student=student
                            )
 
 @bp.route('/edit/<int:student_id>', methods=['GET', 'POST'])

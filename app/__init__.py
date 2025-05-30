@@ -66,4 +66,7 @@ def create_app(config_class=Config):
     from app.views.test_question import bp as test_question_bp
     app.register_blueprint(test_question_bp, url_prefix="/test_question")
 
+    from app.views.grades import bp as grades_bp
+    app.register_blueprint(grades_bp, url_prefix="/grades")
+
     return app
