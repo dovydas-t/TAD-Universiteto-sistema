@@ -1,5 +1,13 @@
-<!-- templates/admin/dashboard.html -->
 {% extends "dashboard_base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Admin Menu</h2>
+    <div class="mb-3">
+        <button class="btn btn-success"> 
+            <a href="{{ url_for('faculty.add_faculty') }}">Add faculty</a>
+        </button>
+        <button class="btn btn-danger">Delete Faculty</button>
+    </div>
 
 {% block page_title %}Admin Dashboard{% endblock %}
 
