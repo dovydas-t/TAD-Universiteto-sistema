@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField
 from wtforms import StringField, SubmitField, DateField, SelectField, ValidationError
 from wtforms.validators import Length, Email, Optional, DataRequired
 from app.models.auth import AuthUser
@@ -20,6 +21,10 @@ class ProfileForm(FlaskForm):
         coerce=int, 
         validators=[DataRequired(message="Please select a study program")]
     )
+
+    profile_picture = FileField('Profile Picture', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
+    ])
     
     submit = SubmitField('Update Profile')
 

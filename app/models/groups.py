@@ -5,6 +5,7 @@ class Groups(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     code = db.Column(db.String(255))
     study_program_id = db.Column(db.Integer, db.ForeignKey('study_program.id'))
+    max_capacity = db.Column(db.Integer, nullable=False, default=5)
 
     study_program = db.relationship("StudyProgram", back_populates="groups")
     users = db.relationship("UserProfile", back_populates="group")
