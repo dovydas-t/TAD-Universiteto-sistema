@@ -10,34 +10,46 @@
         <ul>
             <li><strong>ID:</strong> {{ student.id }}</li>
             <li><strong>Name:</strong> {{ student.full_name }}</li>
+            <li><strong>Birth date:</strong> {{ student.birth_date }}</li>
+            <li><strong>First name:</strong> {{ student.email }}</li>
+            <li><strong>Last name:</strong> {{ student.email }}</li>
+            <li><strong>Age:</strong> {{ student.email }}</li>
             <li><strong>Email:</strong> {{ student.email }}</li>
+            <li><strong>Study Program:</strong> {{ student.study_program.name }}</li>
+            <li><strong>Group code:</strong> {{ student.group.code }}</li>
+            <li><strong>Role:</strong> {{ student.role.value }}</li>
+            <li><strong>Registration date:</strong> {{ student.created_at }}</li>
+            <li><strong>Last login:</strong> {{ student.last_login }}</li>
+
             <!-- Add more fields as needed -->
         </ul>
     </section>
 
-    <section>
-        <h2>Grades</h2>
-        {% if grades %}
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Module</th>
-                        <th>Grade</th>
-                    </tr>
-                </thead>
-                <tbody>
+<section>
+    <h2>Grades</h2>
+    {% if module_grade_map %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th colspan="10">Grades</th>  <!-- Adjust colspan based on max number of grades expected -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for module_name, grades in module_grade_map.items() %}
+                <tr>
+                    <td>{{ module_name }}</td>
                     {% for grade in grades %}
-                    <tr>
-                        <td>{{ grade.module.name }}</td>
-                        <td>{{ grade.grade }}</td>
-                    </tr>
+                        <td>{{ grade }}</td>
                     {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No grades available for this student.</p>
-        {% endif %}
-    </section>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No grades available for this student.</p>
+    {% endif %}
+</section>
 
     <p><a href="{{ url_for('module.index') }}">Back to Module Index</a></p>
     </div>
