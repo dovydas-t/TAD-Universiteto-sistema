@@ -33,7 +33,6 @@ class GroupsService:
         db.session.commit()
         return group
     
-
     @staticmethod
     def auto_assign_to_group(study_program_id: int) -> Optional[int]:
         """Auto-assign student to group with least members"""
@@ -58,6 +57,7 @@ class GroupsService:
         
         return best_group.id if best_group else None
     
-
-    
+    @staticmethod
+    def get_dropdown_choices():
+        return [(g.id, g.code) for g in db.session.query(Groups).order_by(Groups.code).all()]
         

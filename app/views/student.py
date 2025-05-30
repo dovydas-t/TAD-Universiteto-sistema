@@ -1,26 +1,59 @@
 from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import login_required, current_user
 from app.extensions import db
-from app.forms.hybrid_registration_form import HybridRegistrationForm
-from app.models.registration_request import RegistrationRequest
-from app.models.study_program import StudyProgram
-from app.models.module import Module
-from app.models.grade import Grade
-from app.models.groups import Groups
-from app.models.schedule_item import ScheduleItem
-from app.services.registration_service import RegistrationDecisionEngine
-from datetime import datetime
 from app.services.user_service import UserService
+from app.services.module_service import ModuleService
+from app.forms.student_form import StudentEditForm
+from app.utils.decorators import admin_or_teacher_role_required
+from collections import defaultdict
 # Create blueprint for student routes
 bp = Blueprint('student', __name__, url_prefix='/student')
 
 
-bp.route('')
+@bp.route('')
 def test():
     pass
     
 
+@bp.route('/detail/<int:student_id>', methods=['GET', 'POST'])
+@login_required
+def detail(student_id):
+    student, grades = UserService.get_student_and_student_grades(student_id)
 
+    if not student:
+        flash('Error: No student at ID: {{ student.id }})', 'error')
+        return redirect(url_for('module.index'))
+    
+    module_grade_map = defaultdict(list)
+    for grade in grades:
+        module = ModuleService.get_module_by_id(grade.module_id)
+        module_grade_map[module.name].append(grade.grade)
+    
+    return render_template('student/student_detail.html',
+                           title='Student Details',
+                           student=student,
+                           module_grade_map=module_grade_map
+                           )
+
+@bp.route('/edit/<int:student_id>', methods=['GET', 'POST'])
+def edit_student(student_id):
+    # print(f"Received student_id: {student_id} ({type(student_id)})")
+    student = UserService.get_user_profile(student_id)
+    print("Student found:", student)
+
+
+    if student is None:
+        flash("Student don't exist", 'error')
+        redirect(url_for('main.index'))
+
+    form = StudentEditForm(obj=student)
+
+    if form.validate_on_submit():
+        UserService.update_student_info_from_form(student_id, form)
+        flash('Student profile updated successfully.', 'success')
+        return redirect(url_for('main.index'))
+
+    return render_template('student/edit_student.html', form=form, student=student)
 
 
 
@@ -224,29 +257,18 @@ def test():
 #         return False
 
 
-def assign_student_to_group(student_id, study_program_id):
-    """Simple group assignment logic"""
-    try:
-        # Find available group for this study program
-        available_group = Groups.query.filter_by(
-            study_program_id=study_program_id
-        ).first()
-        
-        if available_group:
-            current_user.profile.group_id = available_group.id
-        
-    except Exception as e:
-        print(f"Group assignment failed: {str(e)}")
 
-@bp.route('/detail/<int:student_id>', methods=['GET', 'POST'])
-@login_required
-def detail(student_id):
-    student, grades = UserService.get_student_and_student_grades(student_id)
-    if not student:
-        flash('Error: No student at ID: {{ student.id }})', 'error')
-        return redirect(url_for('module.index'))
-    
-    return render_template('student/student_detail.html',
-                           title='Student Details',
-                           student=student,
-                           grades=grades)
+# #FIXME: not sure if this belong here
+# def assign_student_to_group(student_id, study_program_id):
+#     """Simple group assignment logic"""
+#     try:
+#         # Find available group for this study program
+#         available_group = Groups.query.filter_by(
+#             study_program_id=study_program_id
+#         ).first()
+        
+#         if available_group:
+#             current_user.profile.group_id = available_group.id
+        
+#     except Exception as e:
+#         print(f"Group assignment failed: {str(e)}")
