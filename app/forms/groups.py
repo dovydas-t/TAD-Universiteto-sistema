@@ -6,7 +6,9 @@ from wtforms.widgets import ListWidget, CheckboxInput
 class GroupForm(FlaskForm):
     study_program_id = SelectField('Study Program', coerce=int, validators=[DataRequired()])
     starting_year = IntegerField('Starting Year', validators=[DataRequired(), NumberRange(min=2000, max=2025)])
+    max_capacity=IntegerField("Max Capacity: ", validators=[DataRequired(), NumberRange(min=1, max=30)])
     code = StringField('Group Code', render_kw={'readonly': True})  # readonly so user cannot edit
+  
     submit = SubmitField('Create Group')
 
 class MultiCheckboxField(SelectMultipleField):

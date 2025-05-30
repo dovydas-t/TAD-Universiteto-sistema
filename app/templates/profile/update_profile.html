@@ -80,6 +80,22 @@
       </div>
 
 
+      <div class="form-group">
+        {{ form.profile_picture.label(class="form-label") }}
+        <div class="file-upload-area">
+          {{ form.profile_picture(class="file-input", accept="image/*") }}
+          <div class="file-upload-text">
+            <span class="file-icon">📷</span>
+            <span>Choose profile picture or drag and drop</span>
+            <small>JPG, PNG files only. Max 5MB.</small>
+          </div>
+        </div>
+        {% for error in form.profile_picture.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+
 
       <div class="form-actions">
         {{ form.submit(class="btn btn-primary btn-full") }}

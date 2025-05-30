@@ -70,10 +70,14 @@ def register():
 
             if study_program_id and study_program_id != 0:
                 user.profile.study_program_id = study_program_id
+                group_id = GroupsService.auto_assign_to_group(study_program_id)
+                
+                if group_id:
+                    user.profile.group_id = group_id
             
             # Generate default avatar URL using username only
             user.profile.profile_pic_path = generate_avatar_url(username)
-                
+            
             # Function to hash given password
             user.set_password(password)
             db.session.add(user)

@@ -35,6 +35,8 @@ def create_group():
         # Fetch existing group codes for the study program
         existing_group_codes = GroupsService.get_group_codes_by_study_program_id(study_program.id)
 
+       
+
         group_code = StudyProgramService.generate_group_code_for_study_program(study_program, form.starting_year.data, existing_group_codes)
 
         # Create new group

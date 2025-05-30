@@ -23,21 +23,20 @@
         
         {% block sidebar_user %}
         {% if current_user.is_authenticated %}
-            <div class="user-profile-section">
-                <div class="user-info">
-                    {{ user_avatar(current_user, 'medium') }}
-                    <div class="user-details">
-                        <h4>{{ current_user.profile.first_name or current_user.username }}</h4>
-                        <p class="user-role">{{ current_user.profile.role.value if current_user.profile.role else 'User' }}</p>
+              <div class="user-profile-section">
+                    <div class="user-info">
+                        {{ user_avatar(current_user, 'medium') }}
+                        <div class="user-details">
+                            <h4>{{ current_user.profile.first_name or current_user.username }}</h4>
+                            {% if current_user.profile.group %}
+                            <p class="user-group">{{ current_user.profile.group.code }}</p>
+                            {% endif %}
+                            <p class="user-role">{{ current_user.profile.role.value if current_user.profile.role else 'User' }}</p>          
+                                
                     </div>
-                </div>
-            </div>
-        {% endif %}
-        {% endblock %}
-        
-        {% block sidebar_nav %}
-
-                
+              </div>
+          </div>
+      {% endif %}         
                 <!-- Common links for all roles -->
                 <li class="nav-divider"></li>
                 <li><a href="{{ url_for('main.profile') }}" class="nav-link">👤 Profile</a></li>
