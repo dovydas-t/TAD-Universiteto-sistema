@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from app.extensions import db
 from app.services.user_service import UserService
 from app.services.module_service import ModuleService
+from app.forms.student_form import StudentEditForm
 from app.utils.decorators import admin_or_teacher_role_required
 from collections import defaultdict
 # Create blueprint for student routes
@@ -34,13 +35,25 @@ def detail(student_id):
                            module_grade_map=module_grade_map
                            )
 
-#TODO:
-# @bp.route('/edit_student/<int:student_id>' methods=['GET', 'POST'])
-# @admin_or_teacher_role_required
-# def edit_student(student_id):
-#     form = 
-#     student = UserService.get_user_profile(student_id)
+@bp.route('/edit/<int:student_id>', methods=['GET', 'POST'])
+def edit_student(student_id):
+    # print(f"Received student_id: {student_id} ({type(student_id)})")
+    student = UserService.get_user_profile(student_id)
+    print("Student found:", student)
 
+
+    if student is None:
+        flash("Student don't exist", 'error')
+        redirect(url_for('main.index'))
+
+    form = StudentEditForm(obj=student)
+
+    if form.validate_on_submit():
+        UserService.update_student_info_from_form(student_id, form)
+        flash('Student profile updated successfully.', 'success')
+        return redirect(url_for('main.index'))
+
+    return render_template('student/edit_student.html', form=form, student=student)
 
 
 

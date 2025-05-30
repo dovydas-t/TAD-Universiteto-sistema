@@ -15,16 +15,16 @@ class UserService:
     """Service class for user profile operations"""
     
     @staticmethod
-    def get_user_profile(user_id):
+    def get_user_profile(user_id: int) -> UserProfile:
         """Get user profile by user ID"""
         try:
-            return UserProfile.query.filter_by(user_id=user_id).first()
+            return UserProfile.query.filter_by(id=user_id).first()
         except Exception as e:
             logger.error(f"Error getting user profile: {str(e)}")
             return None
         
     @staticmethod
-    def get_all_teachers():
+    def get_all_teachers() -> UserProfile:
         """Get all teachers"""
         try:
             return UserProfile.query.filter_by(role=RoleEnum.Teacher).all()
@@ -49,7 +49,7 @@ class UserService:
         return UserProfile.query.filter_by(role=RoleEnum.Student, group_id=group_id).all()
 
     @staticmethod
-    def create_user_profile(user_id, profile_data):
+    def create_user_profile(user_id, profile_data: UserProfile):
         """Create user profile"""
         try:
             new_profile = UserProfile(
@@ -75,7 +75,7 @@ class UserService:
             return None
     
     @staticmethod
-    def update_user_profile(user_id, profile_data):
+    def update_user_profile(user_id, profile_data: UserProfile):
         """Update user profile"""
         try:
             profile = UserProfile.query.filter_by(user_id=user_id).first()
@@ -220,3 +220,17 @@ class UserService:
 
         grades = Grade.query.filter_by(student_id=student_id).all()
         return student, grades
+
+    @staticmethod
+    def update_student_info_from_form(student_id, form):
+        student = UserService.get_user_profile(student_id)
+        
+        student.first_name = form.first_name.data
+        student.last_name = form.last_name.data
+        student.birth_date = form.birth_date.data
+        student.email = form.email.data
+        student.study_program_id = form.study_program_id.data
+        student.group_id = form.group_id.data
+
+        db.session.commit()
+        return student

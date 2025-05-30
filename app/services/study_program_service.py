@@ -79,5 +79,7 @@ class StudyProgramService:
         
         return f"{base_code}-{next_group_number}"
 
-
+    @staticmethod
+    def get_dropdown_choices():
+        return [(sp.id, sp.name) for sp in db.session.query(StudyProgram).order_by(StudyProgram.name).all()]
     

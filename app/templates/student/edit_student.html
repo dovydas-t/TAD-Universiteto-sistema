@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Edit Student</h2>
+
+    <form method="POST" action="{{ url_for('student.edit_student', student_id=student.id) }}" class="auth-form">
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.first_name.label(class="form-label") }}
+        {{ form.first_name(class="form-control") }}
+        {% for error in form.first_name.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.last_name.label(class="form-label") }}
+        {{ form.last_name(class="form-control") }}
+        {% for error in form.last_name.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.birth_date.label(class="form-label") }}
+        {{ form.birth_date(class="form-control") }}
+        {% for error in form.birth_date.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-control") }}
+        {% for error in form.email.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.study_program_id.label(class="form-label") }}
+        {{ form.study_program_id(class="form-control", id="study_program_id") }}
+        {% for error in form.study_program_id.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.group_id.label(class="form-label") }}
+        {{ form.group_id(class="form-control", id="group_id", data_current=form.group_id.data) }}
+        {% for error in form.group_id.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group mt-3">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

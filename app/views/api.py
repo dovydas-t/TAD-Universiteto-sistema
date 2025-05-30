@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
+from app.utils.decorators import json_required
 from app.models.auth import AuthUser
 from app.services.faculty_service import FacultyService
-from app.utils.decorators import json_required
+from app.services.group_service import GroupsService
 
 bp = Blueprint('api', __name__)
 
@@ -57,3 +58,14 @@ def faculty_detail(faculty_id):
         'full_address': faculty.get_full_address(),
         'programs': [program.name for program in faculty.programs]  # optional
     })
+
+@bp.route('/groups/<int:study_program_id>', methods=['GET'])
+def get_groups_by_study_program(study_program_id):
+    groups = GroupsService.get_all_groups()
+
+    print("Requested study_program_id:", study_program_id)
+    for g in groups:
+        print("Group:", g.id, g.code, "Program ID:", g.study_program_id)
+        
+    filtered = [(g.id, g.code) for g in groups if g.study_program_id == study_program_id]
+    return jsonify(filtered)
