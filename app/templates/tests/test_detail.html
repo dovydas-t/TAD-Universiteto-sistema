@@ -1,28 +1,31 @@
 {% extends "base.html" %} {% block title %}Test Details{% endblock %} {% block
 content %}
 <div class="container fade-in">
-  <h1>{{ test.name }}</h1>
+  <h1>Test name: {{ test.name }}</h1>
 
   <div class="feature-card">
-    <h3>Module</h3>
-    <p>{{ test.module.name }}</p>
+    <h3>Test belong to module:</h3>
+    <a href="{{ url_for('module.detail', module_id=test.module.id)}}">
+      <p>{{ test.module.name }}</p></a>
   </div>
 
   <div class="feature-card">
-    <h3>Questions</h3>
+    <h3>Test questions:</h3>
     {% if test.questions %}
     <ul>
       {% for question in test.questions %}
-      <li>{{ question.question_text }}</li>
+      <a href="{{ url_for('test_question.detail', test_question_id=question.id) }}">
+        <li>{{ question.question_text }}</li></a>
       {% endfor %}
     </ul>
     {% else %}
     <p>No questions found for this test.</p>
     {% endif %}
+    <a href="{{ url_for('test_question.add_question', test_id=test.id )}}">Add new question to this test</a>
   </div>
 
   <div class="form-actions">
-    <a href="{{ url_for('main.tests') }}" class="btn btn-secondary"
+    <a href="{{ url_for('test.index') }}" class="btn btn-secondary"
       >Back to Tests</a
     >
   </div>

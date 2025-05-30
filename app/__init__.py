@@ -7,6 +7,8 @@ from app.models.auth import AuthUser
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.config['UPLOAD_FOLDER'] = 'app/static'
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     
     # Initialize extensions
     db.init_app(app)
@@ -55,9 +57,13 @@ def create_app(config_class=Config):
     from app.views.teacher import bp as teacher_bp
     app.register_blueprint(teacher_bp, url_prefix='/teacher')
 
-
-
     from app.views.groups import bp as groups_bp
     app.register_blueprint(groups_bp, url_prefix='/groups')
+
+    from app.views.tests import bp as tests_bp
+    app.register_blueprint(tests_bp, url_prefix='/test')
+
+    from app.views.test_question import bp as test_question_bp
+    app.register_blueprint(test_question_bp, url_prefix="/test_question")
 
     return app

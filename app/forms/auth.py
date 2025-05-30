@@ -8,8 +8,6 @@ from app.models.enum import RoleEnum
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    
     role = RadioField('I am registering as:', 
                      choices=[
                          ('Student', 'Student'),      # Match your enum values
