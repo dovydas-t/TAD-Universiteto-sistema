@@ -26,6 +26,14 @@
       </div>
 
       <div class="form-group">
+        {{ form.max_capacity.label }}
+        {{ form.max_capacity(class="form-control") }}
+        {% for error in form.max_capacity.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
         {{ form.code.label }}
         {{ form.code(class="form-control", id="code", readonly=True) }}
         {% for error in form.code.errors %}
