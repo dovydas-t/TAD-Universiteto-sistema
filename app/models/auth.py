@@ -9,10 +9,11 @@ class AuthUser(UserMixin, db.Model):
     username = db.Column(db.String((255)), unique=True, nullable=False)
     password_hash = db.Column(db.String((255)))
     
+
     failed_login_attempts = db.Column(db.Integer, default=0, nullable=False)
     last_failed_login = db.Column(db.DateTime, nullable=True)
     blocked_until = db.Column(db.DateTime, nullable=True)
-    
+   
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, nullable=True)
 
