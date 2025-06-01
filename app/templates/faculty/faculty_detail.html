@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %} Faculty Details {% endblock %} {%
-block content %}
+{% extends "dashboard_base.html" %} {% block title %} Faculty Details {% endblock %} {%
+block dashboard_content %}
 <div class="faculty-container">
   <h2>Faculty ID {{ faculty.id }}</h2>
   <p>Faculty name :{{ faculty.name }}</p>
@@ -21,4 +21,6 @@ block content %}
   <a href="{{ url_for('programs.add_program') }}"> Add new Study Program</a>
   {% endif %}
 </div>
+
+
 {% endblock %}

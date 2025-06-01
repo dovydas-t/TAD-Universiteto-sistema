@@ -1,22 +1,36 @@
 {% extends "dashboard_base.html" %}
 {% block title %} Faculties {% endblock %}
-
+{%block page_title%}All TAD University Faculties:{%endblock%}
 {% block dashboard_content %}
-<h1>All TAD University Faculties:</h1>
-<ul class="faculty-program-list">
-    {% if faculty_list %}
-        {% for faculty in faculty_list %}
-            <li>
-                <h2>
-                    <span>{{ faculty.name }}</span>
-                    <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">
-                     Details
-                    </a>
-                </h2>
-            </li>
-        {% endfor %}
-    {% else %}
-        <p>No Faculties</p>
-    {% endif %}
-</ul>
+
+
+<div class="dashboard-header">
+   
+</div>
+
+ <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Faculty Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for faculty in faculty_list %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ faculty.name }}</td>
+        <td>
+          <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}" class="btn btn-sm btn-primary">View</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4">No Faculties found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

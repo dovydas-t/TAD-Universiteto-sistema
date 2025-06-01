@@ -4,10 +4,7 @@ from app.models.module_requirement import ModuleRequirement
 from app.models.module import Module
 from app.models.grade import Grade
 from app.models.study_program import StudyProgram
-
-
 import re
-
 
 class StrongPassword:
     """Custom validator for strong passwords"""
@@ -40,6 +37,15 @@ class NoSpecialChars:
         if not re.match(r'^[a-zA-Z0-9_]+$', field.data):
             raise ValidationError(self.message)
 
+
+class CustomEmailValidator:
+    def __init__(self, message=None):
+        self.message = message or "Enter a valid email address."
+
+    def __call__(self, form, field):
+        pattern = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+        if not re.match(pattern, field.data or ''):
+            raise ValidationError(self.message)
         
 
 class ModuleRequirementsValidator:

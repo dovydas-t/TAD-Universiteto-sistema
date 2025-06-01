@@ -3,7 +3,7 @@
     {% set size_class = 'avatar-' + size %}
     {% if user.profile.profile_pic_path %}
         {% if user.profile.profile_pic_path.startswith('http') %}
-            <img src="{{ user.profile.profile_pic_path }}" alt="Profile Picture" class="{{ size_class }}">
+            <img src="{{user.profile.profile_pic_path }}?v={{ config['VERSION'] or random() }}" alt="Profile Picture" class="{{ size_class }}">
         {% else %}
             <img src="{{ url_for('static', filename=user.profile.profile_pic_path) }}" alt="Profile Picture" class="{{ size_class }}">
         {% endif %}

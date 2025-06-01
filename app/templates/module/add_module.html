@@ -1,8 +1,12 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "dashboard_base.html" %}
+{%block page_title%} Add Modules{%endblock%}
+{% block dashboard_content %}
+
+
 <div class="auth-container">
   <div class="auth-card">
-    <h2>New faculty</h2>
+    
+    <h2>Module</h2>
     <form
       method="POST"
       action="{{ url_for('module.add_module') }}"

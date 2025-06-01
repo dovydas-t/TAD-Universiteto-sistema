@@ -1,7 +1,10 @@
-{% extends "base.html" %} {% block title %}Group Details{% endblock %} {% block
-content %}
+{% extends "dashboard_base.html" %} {% block title %}Group Details{% endblock %} 
+
+{% block page_title %}Group {{ group.code }} Details{% endblock %} 
+{% block
+dashboard_content %}
+
 <div class="container fade-in">
-  <h1>Group: {{ group.code }}</h1>
 
   <div class="feature-card">
     <h3>Group belong to Study Program</h3>
@@ -9,7 +12,32 @@ content %}
   </div>
 
   <div class="feature-card">
-    <h3>Students in the group:</h3>
+    <h3>Students in the group:</h3><br>
+    <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Student Progam</th>
+        <th>Student Full Name</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for student in students %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ group.study_program.name }}</td>
+        <td>{{ student.full_name }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="3">No groups found.</td>
+      </tr>
+      {% endfor %}
+      <tr>
+      </tr>
+    </tbody>
+  </table>
+  </div>
     <button>
       <a
         href="{{ url_for('groups.edit_group', group_id=group.id) }}"
@@ -17,25 +45,33 @@ content %}
         Edit group
       </a>
     </button>
-    {% if students %}
-    <ul>
-      {% for student in students %}
-      <li>
-        <a href="{{ url_for('student.detail', student_id=student.id)}}">
-          {{ student.first_name }} {{ student.last_name }} ({{ student.full_name }})
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>No students assigned to this group.</p>
-    {% endif %}
-  </div>
-
-  <div class="form-actions">
-    <a href="{{ url_for('groups.index') }}" class="btn btn-secondary"
-      >Back to Groups</a
-    >
-  </div>
+      <a href="{{ url_for('groups.index') }}" class="btn btn-secondary"
+      >Back to Groups</a>
 </div>
 {% endblock %}
+
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Student Progam</th>
+        <th>Student Full Name</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for student in students %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ student.study_program.name }}</td>
+        <td>{{ student.full_name }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="3">No groups found.</td>
+      </tr>
+      {% endfor %}
+      <tr>
+      </tr>
+    </tbody>
+  </table>

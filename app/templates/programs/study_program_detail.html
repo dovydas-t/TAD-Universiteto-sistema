@@ -1,11 +1,9 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 
 {% block title %}Study Program Details{% endblock %}
-
-{% block content %}
+{% block page_title %}Study {{ study_program.name }} Program Details{% endblock %}
+{% block dashboard_content %}
 <div class="container fade-in">
-  <h1>{{ study_program.name }}</h1>
-
   <div class="feature-card">
     <h3>Faculty</h3>
     <p>{{ study_program.faculty.name }}</p>
