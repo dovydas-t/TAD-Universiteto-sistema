@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, RadioField ,SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from app.models.auth import AuthUser
+from app.utils.validators import StrongPassword
 from app.services.study_program_service import StudyProgramService
 from app.models.enum import RoleEnum
 
@@ -20,9 +21,9 @@ class RegistrationForm(FlaskForm):
     study_program_id = SelectField('Study Program', coerce=int)
     registration_code = StringField('Teacher Registration Code')
     
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(),StrongPassword()])
     password2 = PasswordField('Confirm Password', 
-                             validators=[DataRequired(), EqualTo('password')])
+                             validators=[DataRequired(), StrongPassword(), EqualTo('password')])
     submit = SubmitField('Register')
     
     def __init__(self, *args, **kwargs):

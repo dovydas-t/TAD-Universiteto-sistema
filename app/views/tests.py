@@ -8,8 +8,11 @@ bp = Blueprint('test', __name__)
 
 @bp.route('/')
 def index():    
-    return render_template('module/index.html',
-                           title='TAD University Modules')
+    return render_template('tests/tests.html',
+                           title='Test')
+
+# def add_test()
+
 
 @bp.route('/detail/<int:test_id>')
 def detail(test_id):

@@ -2,15 +2,13 @@
 {%block css%}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
 {%endblock%}
-
+{%block page_title%}Your Profile{%endblock%}
 {% block dashboard_content %}
 <div class="profile-container">
 {% from 'profile/macros.html' import user_avatar %}
 
     <div class="profile-info">
         <div class="profile-details">
-            <h1>Welcome back, {{ current_user.username }}</h1>
-            <h2>Your Profile</h2>
             <p>Profile Id: {{ current_user.profile.id }}</p>
             <p>Username: {{ current_user.username }}</p>
             <p>Role: {{ current_user.profile.role.value }}</p>
@@ -52,7 +50,7 @@
 
         <div class="profile-pic">
             <div>
-                {{ user_avatar(current_user, 'large') }}
+                {{ user_avatar(current_user, 'profile-view') }}
             </div>
         </div>
     </div>

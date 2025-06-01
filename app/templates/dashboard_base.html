@@ -2,6 +2,7 @@
 
 {%block navbar%} {%endblock%}
 {%block css%}
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_forms.css') }}"/>{%endblock%}
 
@@ -45,10 +46,12 @@
                 {% if current_user.profile.role.value == 'Admin' %}
                     <!-- Admin Navigation -->
                     <li><a href="{{ url_for('admin.admin_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
+                    
                     <li class="dropdown">
                         <div class="nav-link dropbtn">📚 Groups</div>
                         <div class="dropdown-content">
                             <a href="{{ url_for('groups.create_group') }}">Create Groups</a>
+                           <a href="{{ url_for('groups.index') }}">Groups List</a>
 
                         </div>
                     </li>
@@ -59,21 +62,48 @@
                             <a href="{{ url_for('faculty.index') }}">Faculties List</a>
                         </div>
                     </li>
+                    <li class="dropdown">
+                        <div class="nav-link dropbtn">🎓Study Programs</div>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('programs.add_program') }}">Add Study Program</a>
+                            <a href="{{ url_for('programs.index') }}">Study Programs List</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <div class="nav-link dropbtn">Modules</div>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('module.add_module') }}">Add Modules</a>
+                            <a href="{{ url_for('module.index') }}">Module List</a>
+                        </div>
+                    </li>
 
                     
                 {% elif current_user.profile.role.value == 'Teacher' %}
                     <!-- Teacher Navigation -->
                     <li><a href="{{ url_for('main.teacher_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-                    
-
+                    <li class="dropdown">
+                        <div class="nav-link dropbtn">Modules</div>
+                        <div class="dropdown-content">
+                            <a href=>Add Modules</a>
+                            <a href=>List Modules</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <div class="nav-link dropbtn">Test</div>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('test.index') }}">Add Tests</a>
+                            <a href=>List Tests</a>
+                        </div>
+                    </li>
                     
                     
                 {% elif current_user.profile.role.value == 'Student' %}
                     <!-- Student Navigation -->
-                    <li><a href="{{ url_for('main.student_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-
                     
-                    
+                   <li><a href="{{ url_for('main.student_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
+                    <li><a href="{{ url_for('groups.group_info') }}" class="nav-link">Group</a> </li>
+                    <li><a href="{{ url_for('student.academic_info') }}" class="nav-link">Academic Information</a></li>
+                    <li><a href="{{ url_for('student.my_modules') }}" class="nav-link">My Modules</a></li>
                 {% else %}
                     <!-- Default Navigation -->
                     <li><a href="{{ url_for('main.dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
@@ -83,6 +113,7 @@
 
                 <!-- Common links for all roles -->
                 <li class="nav-divider"></li>
+                
                 <li><a href="{{ url_for('main.profile') }}" class="nav-link">👤 Profile</a></li>
                 <li><a href="{{ url_for('auth.logout') }}" class="nav-link">🚪 Logout</a></li>
             </ul>

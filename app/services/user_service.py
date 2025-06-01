@@ -234,3 +234,4 @@ class UserService:
 
         db.session.commit()
         return student
+    

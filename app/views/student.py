@@ -1,6 +1,8 @@
 from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import login_required, current_user
 from app.extensions import db
+from app.models.module import Module
+from app.models.study_program import StudyProgram
 from app.services.user_service import UserService
 from app.services.module_service import ModuleService
 from app.forms.student_form import StudentEditForm
@@ -10,10 +12,40 @@ from collections import defaultdict
 bp = Blueprint('student', __name__, url_prefix='/student')
 
 
-@bp.route('')
-def test():
-    pass
+
+
+@bp.route('/academic-info')
+@login_required  # or @login_required if you don't have student_required decorator
+def academic_info():
+    """View student's academic information"""
+    student = current_user.profile
+    return render_template('student/academic_info.html', student=student)
+
+@bp.route('/modules')
+@login_required
+def my_modules():
+    """View all student's enrolled modules"""
+    # Get modules through enrollment or group assignment
+    # You'll need to adjust this based on how students are enrolled in modules
+    modules = Module.query.join(StudyProgram)\
+        .filter(StudyProgram.id == current_user.profile.study_program_id)\
+        .order_by(Module.semester.asc()).all()
     
+    # Group modules by semester
+    modules_by_semester = {}
+    for module in modules:
+        semester = module.semester.value if module.semester else 'Unknown'
+        if semester not in modules_by_semester:
+            modules_by_semester[semester] = []
+        modules_by_semester[semester].append(module)
+    
+    return render_template('student/student_modules.html', 
+                         modules_by_semester=modules_by_semester)
+
+@bp.route('/academic-info')
+@login_required  # or @login_required if you don't have student_required decorator
+def student_modules():
+    return render_template()
 
 @bp.route('/detail/<int:student_id>', methods=['GET', 'POST'])
 @login_required
@@ -26,8 +58,11 @@ def detail(student_id):
     
     return render_template('student/student_detail.html',
                            title='Student Details',
-                           student=student
+                           student_id=student.id,
+                           student=student,
+                           module_grade_map=module_grade_map
                            )
+
 
 @bp.route('/edit/<int:student_id>', methods=['GET', 'POST'])
 def edit_student(student_id):
@@ -48,6 +83,8 @@ def edit_student(student_id):
         return redirect(url_for('main.index'))
 
     return render_template('student/edit_student.html', form=form, student=student)
+
+
 
 
 

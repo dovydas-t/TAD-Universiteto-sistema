@@ -1,14 +1,12 @@
 {% extends "dashboard_base.html" %}
-{% block js %}
-<script src="{{ url_for('static', filename='js/list_dropdown.js') }}"></script>
-{% endblock %}
+
 {% block dashboard_content %}
 <div class="auth-container">
   <div class="auth-card">
     <h2>Update Profile</h2>
     <form
       method="POST"
-      action="{{ url_for('main.profile_update') }}"
+      action="{{ url_for('profile.profile_update') }}"
       class="auth-form"
     >
       {{ form.hidden_tag() }}

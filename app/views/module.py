@@ -50,5 +50,7 @@ def add_module():
         new_module = ModuleService.create_module_from_form(form)
         flash('Module added successfully!', 'success')
         return redirect(url_for('module.detail', module_id=new_module.id))
+    
+    
 
  

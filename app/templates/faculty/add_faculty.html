@@ -1,9 +1,9 @@
 {% extends "dashboard_base.html" %}
+{%block page_title%}New faculty{%endblock%}
 {% block dashboard_content %}
 
 <div class="auth-container">
   <div class="auth-card">
-    <h2>New faculty</h2>
     <form
       method="POST"
       action="{{ url_for('faculty.add_faculty') }}"

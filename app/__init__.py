@@ -1,12 +1,17 @@
 from flask import Flask
 from flask_login import user_logged_in
-from app.extensions import db, migrate, login_manager, csrf
+from app.extensions import db, migrate, login_manager, csrf, random
 from app.config import Config
 from app.models.auth import AuthUser
+
+
+def jinja_random():
+        return random.randint(0, 999999)
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.jinja_env.globals['random'] = jinja_random
     app.config['UPLOAD_FOLDER'] = 'app/static'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     
@@ -15,7 +20,8 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
-    
+
+
     # Register user loader
     @login_manager.user_loader
     def load_user(user_id):

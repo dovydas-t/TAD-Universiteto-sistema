@@ -15,31 +15,51 @@ bp = Blueprint('auth', __name__)
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    """User login"""
+    """User login with blocking mechanism"""
     if current_user.is_authenticated:
         return redirect(url_for('main.dashboard'))
     
     form = LoginForm()
     if form.validate_on_submit():
         user = AuthUser.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
-            if not user.is_active:
-                flash('Account is deactivated. Contact support.', 'error')
-                return redirect(url_for('auth.login'))
-            
-            login_user(user, remember=form.remember_me.data)
-
-            # Update last login
-            user.profile.last_login = db.func.current_timestamp()
-            db.session.commit()
-
-
-            next_page = request.args.get('next')
-
-            flash(f'Login successful! Welcome back, {user.username}!', 'success')
-            return redirect(next_page or url_for('main.dashboard'))
         
-        flash('Invalid username or password', 'error')
+        if user:
+            # NEW: Check if user is blocked
+            if user.is_blocked():
+                remaining_time = user.get_time_until_unblock()
+                flash(f'Account temporarily blocked due to failed login attempts. Try again in {remaining_time} minutes.', 'error')
+                return render_template('auth/login.html', title='Sign In', form=form)
+            
+            # Check password
+            if user.check_password(form.password.data):
+                # Check if account is active
+                if not user.is_active:
+                    flash('Account is deactivated. Contact support.', 'error')
+                    return redirect(url_for('auth.login'))
+                
+                # NEW: Record successful login and reset failed attempts
+                user.record_successful_login()
+                
+                login_user(user, remember=form.remember_me.data)
+
+                # Update last login in profile (keep your existing logic)
+                user.profile.last_login = db.func.current_timestamp()
+                db.session.commit()
+
+                next_page = request.args.get('next')
+                flash(f'Login successful! Welcome back, {user.username}!', 'success')
+                return redirect(next_page or url_for('main.dashboard'))
+            else:
+                # NEW: Wrong password - record failed attempt
+                user.record_failed_login()
+                if user.failed_login_attempts >= 3:
+                    flash('Too many failed attempts. Account temporarily blocked for 15 minutes.', 'error')
+                else:
+                    remaining_attempts = 3 - user.failed_login_attempts
+                    flash(f'Invalid password. {remaining_attempts} attempts remaining.', 'error')
+        else:
+            # User doesn't exist
+            flash('Invalid username or password', 'error')
     
     return render_template('auth/login.html', title='Sign In', form=form)
 
