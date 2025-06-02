@@ -1,9 +1,13 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
+from sqlalchemy import or_
 from app.utils.decorators import json_required
 from app.models.auth import AuthUser
 from app.services.faculty_service import FacultyService
 from app.services.group_service import GroupsService
+from app.utils.decorators import admin_or_teacher_role_required
+from app.models.profile import UserProfile
+from app.models.enum import RoleEnum
 
 bp = Blueprint('api', __name__)
 
@@ -69,3 +73,76 @@ def get_groups_by_study_program(study_program_id):
         
     filtered = [(g.id, g.code) for g in groups if g.study_program_id == study_program_id]
     return jsonify(filtered)
+
+@bp.route('users/list', methods=['GET'])
+@admin_or_teacher_role_required
+def user_list():
+    # Get and sanitize query parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    search = request.args.get('search', '', type=str).strip()
+    role = request.args.get('role', type=str)
+    group_id = request.args.get('group_id', type=int)
+    study_program_id = request.args.get('study_program_id', type=int)
+
+    # Limit per_page to accepted values only
+    if per_page not in [10, 25, 50, 100]:
+        per_page = 10
+
+    # Base query
+    query = UserProfile.query
+
+    # Search filter (name or email)
+    if search:
+        search_pattern = f"%{search}%"
+        query = query.filter(
+            or_(
+                UserProfile.first_name.ilike(search_pattern),
+                UserProfile.last_name.ilike(search_pattern),
+                UserProfile.email.ilike(search_pattern)
+            )
+        )
+
+    # Role filter
+    if role:
+        try:
+            role_enum = RoleEnum[role.capitalize()]
+            query = query.filter_by(role=role_enum)
+        except KeyError:
+            return jsonify({"error": "Invalid role specified"}), 400
+
+    # Group filter
+    if group_id:
+        query = query.filter_by(group_id=group_id)
+
+    # Study program filter
+    if study_program_id:
+        query = query.filter_by(study_program_id=study_program_id)
+
+    # Order and paginate
+    pagination = query.order_by(UserProfile.last_name.asc(), UserProfile.first_name.asc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    users = pagination.items
+
+    # Serialize
+    result = []
+    for user in users:
+        result.append({
+            "id": user.id,
+            "full_name": user.full_name,
+            "email": user.email,
+            "role": user.role.value,
+            "group_id": user.group_id,
+            "study_program_id": user.study_program_id,
+            "is_active": user.is_active,
+            "created_at": user.created_at.isoformat()
+        })
+
+    # Final response
+    return jsonify({
+        "total": pagination.total,
+        "page": page,
+        "per_page": per_page,
+        "users": result
+    })

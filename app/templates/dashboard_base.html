@@ -1,29 +1,30 @@
 {% extends "base.html" %}
-
-{%block navbar%} {%endblock%}
+{%block navbar%}
+{%endblock%}
 {%block css%}
-
-<link rel="stylesheet" href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/auth_forms.css') }}"/>{%endblock%}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_forms.css') }}"/>
+{%endblock%}
 
 {% block content %}
 
 {% from 'profile/macros.html' import user_avatar %}
 
-<div class="app-layout">
-    <aside class="sidebar">
+    <div class="app-layout">
+        <aside class="sidebar">
         
-        <div class="sidebar-header">
-            {% if current_user.profile.role == 'Student' or current_user.profile.role.value == 'Student' %}
-                <h3>Student Portal</h3>
-            {% elif current_user.profile.role == 'Teacher' or current_user.profile.role.value == 'Teacher' %}
-                <h3>Teacher Portal</h3>
-            {% elif current_user.profile.role == 'Admin' or current_user.profile.role.value == 'Admin' %}
-                <h3>Admin Portal</h3>
-            {% else %}
-                <h3>Portal</h3>
-            {% endif %}
-        </div>
+            <div class="sidebar-header">
+                {% if current_user.profile.role.value == 'Student' %}
+                    <h3>Student Portal</h3>
+                {% elif current_user.profile.role.value == 'Teacher' %}
+                    <h3>Teacher Portal</h3>
+                {% elif current_user.profile.role.value == 'Admin' %}
+                    <h3>Admin Portal</h3>
+                {% else %}
+                    <h3>Portal</h3>
+                {% endif %}
+            </div>
+
         {% block sidebar_user %}
         {% if current_user.is_authenticated %}
             <div class="user-profile-section">
@@ -79,7 +80,8 @@
                     <li class="dropdown">
                         <div class="nav-link dropbtn">Users</div>
                         <div class="dropdown-content">
-                        <a href="{{ url_for('admin.admin_blocked_users') }}">Blocked Users</a>
+                            <a href="{{ url_for('users.users_list')}}">All students</a>
+                            <a href="{{ url_for('admin.admin_blocked_users') }}">Blocked Users</a>
                            
 
                     </div>

@@ -11,6 +11,8 @@ from app.extensions import db
 from app.utils.generate_avatar_url import generate_avatar_url
 from app.utils.save_profile_picture import save_profile_picture
 from app.services.group_service import GroupsService
+from app.services.user_service import UserService
+from app.utils.decorators import admin_or_teacher_role_required
 
 bp = Blueprint('auth', __name__)
 
@@ -235,17 +237,15 @@ def logout():
 
     
 
-# @bp.route('/delete-user', methods=['GET', 'POST'])
-# @login_required
-# def delete_user():
-#     """Delete the current user account"""
-#     db.session.delete(current_user)
-#     db.session.commit()
-
-#     logout_user()
-#     flash('Your account has been deleted.', 'info')
-#     return redirect(url_for('main.index'))
-
+@bp.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
+@admin_or_teacher_role_required
+def delete_user(user_id):
+    """Delete user account"""
+    user = UserService.get_user_profile(user_id)
+    flash(f'User {user.full_name} has been deleted.', 'success')
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('users.users_list'))
 
 @bp.route('/request-user-delete', methods=['GET', 'POST'])
 @login_required

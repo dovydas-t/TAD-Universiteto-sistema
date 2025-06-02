@@ -75,6 +75,9 @@ def create_app(config_class=Config):
     from app.views.grades import bp as grades_bp
     app.register_blueprint(grades_bp, url_prefix="/grades")
 
+    from app.views.users import bp as users_bp
+    app.register_blueprint(users_bp, url_prefix='/users')
+
 
     @app.context_processor
     def inject_breadcrumbs():
