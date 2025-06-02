@@ -148,9 +148,10 @@ def choose_module():
         form.module_id.choices = [(m.id, m.name) for m in available_modules]
         if form.validate_on_submit():
             selected_module_id = form.module_id.data
-            if selected_module_id not in current_user.profile.modules:
+            selected_module= Module.query.get(selected_module_id)
+            if selected_module not in current_user.profile.modules:
                 current_user.profile.modules.append(selected_module_id)
-                ScheduleService.add_module_sessions_to_schedule(current_user.profile, selected_module_id)
+                ScheduleService.add_module_sessions_to_schedule(current_user.profile, selected_module)
                 flash('Module and its sessions added to your calendar!', 'success')
                 db.session.commit()
             else:
