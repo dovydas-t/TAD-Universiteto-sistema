@@ -110,11 +110,11 @@ def edit_group(group_id):
 @login_required
 def group_info():
     """View group information"""
-    if not current_user.profile.group:
+    if not current_user.profile.group_id:
         flash('You are not assigned to any group.', 'info')
         return redirect(url_for('main.student_dashboard'))
     
-    group = current_user.profile.group
+    group = current_user.profile.group_id
     
     # Get all students in this group
     group_members = UserProfile.query.filter_by(

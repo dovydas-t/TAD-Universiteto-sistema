@@ -15,7 +15,7 @@ try:
         db.session.execute(text('DELETE FROM `groups`'))      # <-- Then groups
         db.session.execute(text('DELETE FROM study_program'))
         db.session.execute(text('DELETE FROM faculty'))
-        db.session.execute(text('DELETE FROM auth_fluser'))
+        db.session.execute(text('DELETE FROM auth_user'))
         db.session.commit()
         print("All data deleted from module, user_profile, groups, study_program, faculty, and authuser tables.")
 except Exception as e:

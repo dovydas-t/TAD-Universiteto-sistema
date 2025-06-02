@@ -2,7 +2,9 @@ from app.extensions import db, Optional
 from app.models.groups import Groups
 from app.models.enum import  RoleEnum
 from app.models.profile import UserProfile
-
+from datetime import datetime
+from app.services.study_program_service import StudyProgramService
+from app.services.user_service import UserService
 
 class GroupsService:
     """Service class for module operations"""
@@ -22,6 +24,11 @@ class GroupsService:
         return [group.code for group in Groups.query.filter_by(study_program_id=study_program_id).all()]
     
     @staticmethod
+    def get_groups_by_study_program_id(study_program_id):
+        """Get all groups for a specific study program"""
+        return Groups.query.filter_by(study_program_id=study_program_id).all()
+
+    @staticmethod
     def create_group_from_form(form, code):
         """Create a new group from a form"""
         group = Groups(
@@ -34,28 +41,42 @@ class GroupsService:
         return group
     
     @staticmethod
-    def auto_assign_to_group(study_program_id: int) -> Optional[int]:
-        """Auto-assign student to group with least members"""
-        groups = Groups.query.filter_by(study_program_id=study_program_id).all()
+    def create_group_for_study_program(study_program_id: int) -> Groups: #Groups is 1 object
+        """Create a new group for a specific study program"""
+        current_year = datetime.now().year
+        existing_group_codes = GroupsService.get_group_codes_by_study_program_id(study_program_id)
+        study_program = StudyProgramService.get_study_program_by_id(study_program_id)
+        code = StudyProgramService.generate_group_code_for_study_program(study_program, current_year, existing_group_codes)
+
+        group = Groups(
+            study_program=study_program,
+            max_capacity=10,  # Default capacity, can be adjusted
+            code=code
+        )
+        db.session.add(group)
+        db.session.commit()
+        return group
+
+    @staticmethod
+    def auto_assign_to_group(study_program_id: int):
+        """Auto-assign student to a group; create new group if none exist or all are full."""
+        existing_groups = GroupsService.get_groups_by_study_program_id(study_program_id)
         
-        if not groups:
-            return None
-        
-        # Find group with least members and available spots
-        best_group = None
-        min_count = float('inf')
-        
-        for group in groups:
-            current_count = UserProfile.query.filter_by(
-                group_id=group.id,
-                role=RoleEnum.Student
-            ).count()
-            
-            if current_count < group.max_capacity and current_count < min_count:
-                min_count = current_count
-                best_group = group
-        
-        return best_group.id if best_group else None
+        if not existing_groups:
+            # No groups exist, create the first one
+            new_group = GroupsService.create_group_for_study_program(study_program_id)
+            return new_group.id
+
+        # Try to find a group with available capacity
+        for group in existing_groups:
+            students = UserService.get_students_by_group(group.id)
+            if len(students) < group.max_capacity:
+                return group.id
+
+        # All groups are full, create a new one
+        new_group = GroupsService.create_group_for_study_program(study_program_id)
+        return new_group.id
+
     
     @staticmethod
     def get_dropdown_choices():
