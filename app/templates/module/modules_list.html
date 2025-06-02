@@ -1,0 +1,42 @@
+{% extends "dashboard_base.html" %}
+{% block title %} Modules {% endblock %}
+{%block page_title%}All TAD University Modules:{%endblock%}
+{% block dashboard_content %}
+
+
+<div class="dashboard-header">
+   
+</div>
+
+ <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Module Name</th>
+        <th>Description</th>
+        <th>Semester</th>
+        <th>Credits</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for module in module_list %}
+        <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ module.name }}</td>
+        <td>{{module.description}}</td>
+        <td>{{module.semester.name}}</td>
+        <td>{{module.credits}}</td>
+        <td>
+          <a href="{{ url_for('module.detail', module_id=module.id) }}" class="btn btn-sm btn-primary">View</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4">No Modules found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

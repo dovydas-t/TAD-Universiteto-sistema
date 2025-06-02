@@ -1,0 +1,31 @@
+{% extends "dashboard_base.html" %}
+{%block page_title%}Blocked Users {%endblock%}
+{% block dashboard_content %}
+
+
+{% if blocked_users %}
+    
+    
+    {% for user in blocked_users %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <strong>{{ user.username }}</strong> - 
+            Failed attempts: {{ user.failed_login_attempts }} - 
+            Time remaining: {{ user.get_time_until_unblock() }} minutes
+            
+            <form method="POST" action="{{ url_for('admin.admin_unblock_user', user_id=user.id) }}" style="display: inline;">
+                  {{ form.hidden_tag() }}
+                    {{form.submit}}
+              
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+    <p><strong>{{ blocked_users|length }}</strong> user(s) currently blocked.</p><br>
+    
+    
+{% else %}
+    <div class="alert alert-success">No users are currently blocked.</div>
+{% endif %}
+<a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary mb-3">Back to Dashboard</a>
+{% endblock %}

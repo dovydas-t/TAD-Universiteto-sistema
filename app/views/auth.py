@@ -112,7 +112,8 @@ def register():
         
         return render_template('auth/register.html', title='Register', form=form)
     except Exception as e:
-        pass
+        print(f"{e}")
+        db.session.rollback()
 
 @bp.route('/profile-setup', methods=['GET', 'POST'])
 @login_required
@@ -152,7 +153,8 @@ def profile_setup():
         
         return render_template('auth/profile_setup.html', title='Complete Profile', form=form)
     except Exception as e:
-        pass
+        print(f"{e}")
+        db.session.rollback()
 
 @bp.route('/reset-password-request', methods=['GET', 'POST'])
 def reset_password_request():
@@ -174,7 +176,8 @@ def reset_password_request():
         
         return render_template('auth/reset_password_request.html', title='Reset Password', form=form)
     except Exception as e:
-        pass 
+        print(f"{e}")
+        db.session.rollback()
 
 
 @bp.route('/reset-password/<token>', methods=['GET', 'POST'])
@@ -198,18 +201,19 @@ def reset_password(token):
         
         return render_template('auth/reset_password.html', title='Reset Password', form=form)
     except Exception as e:
-        pass
+        print(f"{e}")
+        db.session.rollback()
 
 
-@bp.route('/verify-email/<token>')
-def verify_email(token):
-    """Verify email address"""
-    user = AuthUser.query.filter_by(email_verification_token=token).first()
-    if user and user.verify_email_token(token):
-        flash('Email verified successfully!', 'success')
-    else:
-        flash('Invalid verification token.', 'error')
-    return redirect(url_for('auth.login'))
+# @bp.route('/verify-email/<token>')
+# def verify_email(token):
+#     """Verify email address"""
+#     user = AuthUser.query.filter_by(email_verification_token=token).first()
+#     if user and user.verify_email_token(token):
+#         flash('Email verified successfully!', 'success')
+#     else:
+#         flash('Invalid verification token.', 'error')
+#     return redirect(url_for('auth.login'))
 
 
 @bp.route('/logout')
@@ -254,7 +258,12 @@ def request_user_delete():
 
         return render_template('auth/delete_user_request.html', title='Delete Account', form=form)
     except Exception as e:
-        print(f"--{e}")
+        print(f"{e}")
+        db.session.rollback()
+
+
+
+#--------------------------------------------------------------------------------
 # @bp.route('/reset-password/<token>', methods=['GET', 'POST'])
 # def reset_password(token):
 #     """Reset password with token"""

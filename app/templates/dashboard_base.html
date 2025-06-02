@@ -73,9 +73,17 @@
                         <div class="nav-link dropbtn">Modules</div>
                         <div class="dropdown-content">
                             <a href="{{ url_for('module.add_module') }}">Add Modules</a>
-                            <a href="{{ url_for('module.index') }}">Module List</a>
+                            <a href="{{ url_for('module.module_list') }}">Module List</a>
                         </div>
                     </li>
+
+                    <li class="dropdown">
+                        <div class="nav-link dropbtn">Users</div>
+                        <div class="dropdown-content">
+                          <a href="{{ url_for('admin.admin_blocked_users') }}">Blocked Users</a>
+                           
+
+                    </div>
 
                     
                 {% elif current_user.profile.role.value == 'Teacher' %}
@@ -84,14 +92,14 @@
                     <li class="dropdown">
                         <div class="nav-link dropbtn">Modules</div>
                         <div class="dropdown-content">
-                            <a href=>Add Modules</a>
-                            <a href=>List Modules</a>
+                            <a href="{{ url_for('module.add_module') }}">Add Modules</a>
+                            <a href="{{ url_for('module.module_list') }}">List Modules</a>
                         </div>
                     </li>
                     <li class="dropdown">
                         <div class="nav-link dropbtn">Test</div>
                         <div class="dropdown-content">
-                            <a href="{{ url_for('test.index') }}">Add Tests</a>
+                            <a href="{{ url_for('test.create_test') }}">Create Tests</a>
                             <a href=>List Tests</a>
                         </div>
                     </li>

@@ -1,8 +1,7 @@
-{% extends "base.html" %} {% block title %}Solve Test{% endblock %} {% block
-content %}
+{% extends "dashboard_base.html" %} {% block title %}Solve Test{% endblock %} 
+{%block page_title%}Solve: {{ test.name }} {%endblock%}
+{% block dashboard_content%}
 <div class="container fade-in">
-  <h1>Solve: {{ test.name }}</h1>
-
   <form
     method="POST"
     action="{{ url_for('main.test_solve', test_id=test.id) }}"

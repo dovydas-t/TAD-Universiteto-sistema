@@ -1,8 +1,7 @@
-{% extends "base.html" %} {% block title %}Test Details{% endblock %} {% block
-content %}
+{% extends "dashboard_base.html" %} {% block title %}Test Details{% endblock %} 
+{%block page_title%}Test name: {{ test.name }} {%endblock%}
+{% block dashboard_content %} 
 <div class="container fade-in">
-  <h1>Test name: {{ test.name }}</h1>
-
   <div class="feature-card">
     <h3>Test belong to module:</h3>
     <a href="{{ url_for('module.detail', module_id=test.module.id)}}">
@@ -10,19 +9,20 @@ content %}
   </div>
 
   <div class="feature-card">
-    <h3>Test questions:</h3>
+    <h3>Test questions:</h3><hr><br>
     {% if test.questions %}
     <ul>
       {% for question in test.questions %}
-      <a href="{{ url_for('test_question.detail', test_question_id=question.id) }}">
-        <li>{{ question.question_text }}</li></a>
+      <li><span>{{ question.question_text }}</span>
+        <a href="{{ url_for('test_question.detail', test_question_id=question.id) }}">
+        Details</a></li>
       {% endfor %}
     </ul>
     {% else %}
     <p>No questions found for this test.</p>
-    {% endif %}
+    {% endif %}<br>
     <a href="{{ url_for('test_question.add_question', test_id=test.id )}}">Add new question to this test</a>
-  </div>
+  </div><br>
 
   <div class="form-actions">
     <a href="{{ url_for('test.index') }}" class="btn btn-secondary"
