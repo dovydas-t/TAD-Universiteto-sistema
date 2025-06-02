@@ -181,7 +181,6 @@ def reset_password_request():
         print(f"{e}")
         db.session.rollback()
 
-
 @bp.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     """Reset password with token"""

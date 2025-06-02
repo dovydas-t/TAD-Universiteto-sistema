@@ -51,5 +51,6 @@ def add_faculty():
         FacultyService.add_faculty(new_faculty)
         flash('Faculty added successfully!', 'success')
         return redirect(url_for('faculty.detail', faculty_id=new_faculty.id))
+    
     if request.method == 'GET':
         return render_template('faculty/add_faculty.html', form=form, title='Add Faculty')
