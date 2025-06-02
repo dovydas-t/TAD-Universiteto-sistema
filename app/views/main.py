@@ -59,18 +59,23 @@ def dashboard():
     """User dashboard"""
 
     """User dashboard - redirects based on role"""
-    if not current_user.profile:
-        flash('Profile not found. Please contact administrator.', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    # Redirect based on user role
-       # Redirect based on user role
-    if current_user.profile.role == RoleEnum.Admin:
-        return redirect(url_for('admin.admin_dashboard'))
-    elif current_user.profile.role == RoleEnum.Teacher:
-        return redirect(url_for('main.teacher_dashboard'))
-    else:  # Default to student dashboard (no role check needed)
-        return redirect(url_for('main.student_dashboard'))
+    try:
+        if not current_user.profile:
+            flash('Profile not found. Please contact administrator.', 'error')
+            return redirect(url_for('auth.logout'))
+        
+        # Redirect based on user role
+        # Redirect based on user role
+        if current_user.profile.role == RoleEnum.Admin:
+            return redirect(url_for('admin.admin_dashboard'))
+        elif current_user.profile.role == RoleEnum.Teacher:
+            return redirect(url_for('main.teacher_dashboard'))
+        else:  # Default to student dashboard (no role check needed)
+            return redirect(url_for('main.student_dashboard'))
+    except Exception as e:
+        print(f"{e}")
+        return redirect(url_for('main.index'))
+
 
 @bp.route('/teacher/dashboard')
 @teacher_status_required

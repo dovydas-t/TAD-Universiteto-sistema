@@ -12,6 +12,8 @@ from app.models.test_question import TestQuestion
 from app.models.answer_option import AnswerOption
 from app.models.grade import Grade
 from app.models.groups import Groups
+from app.models.session import Session
+from app.models.module import Module
 
 __all__ = ['AuthUser',
            'UserProfile',
@@ -26,4 +28,7 @@ __all__ = ['AuthUser',
            'TestQuestion',
            'AnswerOption',
            'Grade',
-           'Groups']
+           'Groups',
+           'Session',
+           'Modules'
+           ]
