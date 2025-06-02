@@ -74,3 +74,8 @@ class ModuleService:
         req = ModuleRequirement(module_id=module_id, required_module_id=required_module_id)
         db.session.add(req)
         db.session.commit()
+
+    @staticmethod
+    def get_all_modules_except(module_id):
+        """Get all modules except the one with the given ID."""
+        return Module.query.filter(Module.id != module_id).all()

@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
-from app.extensions import db
-from wtforms import StringField, TextAreaField, IntegerField, SelectField, SelectMultipleField, FileField, SubmitField
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, FileField, SubmitField
 from wtforms.validators import DataRequired, Length, NumberRange
 from app.models.enum import SemesterEnum
 
@@ -17,9 +16,6 @@ class ModuleForm(FlaskForm):
     
     study_program_id = SelectField("Study Program", coerce=int, validators=[DataRequired()])
     
-    prerequisites = SelectMultipleField("Prerequisite Modules", coerce=int)
-    
-    
     image_path = FileField("Image")  # Use Flask-Uploads or Flask-Dropzone to handle file saving
     
     submit = SubmitField("Save")
@@ -27,10 +23,12 @@ class ModuleForm(FlaskForm):
     def set_study_program_choices(self, study_programs):
         """Dynamically populate choices."""
         self.study_program_id.choices = [(sp.id, sp.name) for sp in study_programs]
-    
-    def set_prerequisite_choices(self, modules):
-        self.prerequisites.choices = [(m.id, m.name) for m in modules]
 
-class ChooseModule(FlaskForm):
-    module_id = SelectField("Module: ", coerce=int, validators=[DataRequired()])
-    submit = SubmitField("Choose Module")
+class AddModuleRequirementForm(FlaskForm):
+    requirement_id = SelectField("Select Required Module", coerce=int, validators=[DataRequired()])
+    submit = SubmitField("Add Requirement")
+
+    def set_module_choices(self, modules):
+        """Dynamically populate required module choices."""
+        self.requirement_id.choices = [(-1, 'Select a module')] + [(module.id, module.name) for module in modules]
+
