@@ -1,40 +1,43 @@
 {% extends "base.html" %} {% block content %}
+<!-- Hero Photo Section -->
+<div class="photo-container">
+  <img
+    src="{{ url_for('static', filename='images/homepagephoto.jpg') }}"
+    alt="Homepage Photo"
+    class="background-photo"
+  />
 
-<div class="hero-section">
-  <h1>TAD - University</h1>
-  <p>Your personal dashboard</p>
-
-  {% if not current_user.is_authenticated %}
-  <div class="hero-buttons">
-    <a href="{{ url_for('auth.register') }}" class="btn btn-primary"
-      >Get Started</a>
-    <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Sign In</a>
+  <!-- TEXT BOXES OVER PHOTO -->
+  <div class="photo-overlay">
+    <h1 class="photo-title">Pursue your own path in life</h1>
+    <p class="photo-subtitle">Study for yourself and your future</p>
+    <p class="photo-subtitle">
+      Applications for university studies are now open
+    </p>
+    <div class="hero-buttons">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary">More</a>
+    </div>
   </div>
-  {% else %}
-    <p>Welcome back, {{ current_user.username }}!</p>
-    {% if current_user.profile.role.value %}
-      <div class="hero-buttons">
-        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">View {{ current_user.profile.role.value }} Dashboard</a>
-      </div>
-    {% endif %}
-  {% endif %}
+
+  <!-- Features -->
+  <div class="features">
+    <div class="feature-card">
+      <h3>Study Programs</h3>
+      <p>Access informational page f.e.: study_programs_information.html</p>
+      <a href="{{ url_for('programs.index') }}">
+        Find the right study program for you
+      </a>
+    </div>
+    <div class="feature-card">
+      <h3>Modules</h3>
+      <p>Access informational page f.e.: modules_information.html</p>
+      <a href="{{ url_for('module.index') }}">About Modules</a>
+    </div>
+    <div class="feature-card">
+      <h3>Faculties</h3>
+      <p>Access informational page f.e.: faculty_information.html</p>
+      <a href="{{ url_for('faculty.index') }}">About Faculties</a>
+    </div>
+  </div>
+  {% endblock %}
 </div>
-<div class="features">
-  <div class="feature-card">
-    <h3>Study Programs</h3>
-    <p>Access informational page f.e.: study_programs_information.html</p>
-    <a href="{{ url_for('programs.index') }}">Find the right study program for you</a>
-  </div>
-  <div class="feature-card">
-    <h3>Modules</h3>
-    <p>Access informational page f.e.: modules_information.html</p>
-    <a href="{{ url_for('module.index') }}">About Modules</a>
-  </div>
-  <div class="feature-card">
-    <h3>Faculties</h3>
-    <p>Access informational page f.e.: faculty_information.html</p>
-    <a href="{{ url_for('faculty.index') }}">About Faculties</a>
-
-  </div>
-</div>
-{% endblock %}
