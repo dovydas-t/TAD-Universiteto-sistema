@@ -1,0 +1,14 @@
+{% extends "dashboard_base.html" %}
+{%block page_title%}Choose Module{%endblock%}
+{% block dashboard_content %}
+
+
+    <form
+        method="POST"
+        action="{{ url_for('module.add_requirement', module_id=module.id) }}">
+        {{ form.hidden_tag() }}
+        {{ form.requirement_id.label }} {{ form.requirement_id() }}
+        {{ form.submit() }}
+    </form>
+
+{% endblock %}

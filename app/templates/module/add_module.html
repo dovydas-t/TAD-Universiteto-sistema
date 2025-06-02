@@ -54,14 +54,6 @@
         </div>
 
         <div class="mb-3">
-            {{ form.prerequisites.label }}<br>
-            {{ form.prerequisites(multiple=True) }}
-            {% for error in form.image_path.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <div class="mb-3">
             {{ form.image_path.label(class="form-label") }}
             {{ form.image_path(class="form-input") }}
             {% for error in form.image_path.errors %}
