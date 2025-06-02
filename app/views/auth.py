@@ -1,4 +1,5 @@
 from datetime import datetime
+from MySQLdb import IntegrityError
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required, user_logged_in
 from app.forms.auth import LoginForm, RegistrationForm, PasswordForm, EnterEmailForm
@@ -67,39 +68,40 @@ def login():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration - Step 1"""
-    try:
-        if current_user.is_authenticated:
-            return redirect(url_for('main.index'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
         
-        form = RegistrationForm()
-        if form.validate_on_submit():
-            # Get data from form
-            username = form.username.data
-            study_program_id = form.study_program_id.data
-            password = form.password.data
-            password2 = form.password2.data
-            
-            role_value = form.role.data  # This will be 'Student' or 'Teacher'
-            
-            # Convert string to enum
-            role = RoleEnum(role_value)  # Direct conversion since values match
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        # Get data from form
+        username = form.username.data
+        study_program_id = form.study_program_id.data
+        password = form.password.data
+        password2 = form.password2.data
+        
+        role_value = form.role.data  # This will be 'Student' or 'Teacher'
+        
+        # Convert string to enum
+        role = RoleEnum(role_value)  # Direct conversion since values match
 
-            # Create user and user.profile and save user
-            user = AuthUser(username=username)  
-            user.profile = UserProfile(role=role)
+        # Create user and user.profile and save user
+        user = AuthUser(username=username)  
+        user.profile = UserProfile(role=role)
 
-            if study_program_id and study_program_id != 0:
-                user.profile.study_program_id = study_program_id
-                group_id = GroupsService.auto_assign_to_group(study_program_id)
-                
-                if group_id:
-                    user.profile.group_id = group_id
+        if study_program_id and study_program_id != 0:
+            user.profile.study_program_id = study_program_id
+            group_id = GroupsService.auto_assign_to_group(study_program_id)
             
-            # Generate default avatar URL using username only
-            user.profile.profile_pic_path = generate_avatar_url(username)
-            
-            # Function to hash given password
-            user.set_password(password)
+            if group_id:
+                user.profile.group_id = group_id
+        
+        # Generate default avatar URL using username only
+        user.profile.profile_pic_path = generate_avatar_url(username)
+        
+        # Function to hash given password
+        user.set_password(password)
+        try:
+            # Add user and profile to the session and commit
             db.session.add(user)
             db.session.add(user.profile)
             db.session.commit()
@@ -110,51 +112,51 @@ def register():
             flash('Account created! Please complete your profile.', 'info')
             return redirect(url_for('auth.profile_setup'))  # Redirect to step 2
         
-        return render_template('auth/register.html', title='Register', form=form)
-    except Exception as e:
-        print(f"{e}")
-        db.session.rollback()
+        except IntegrityError as e:
+            db.session.rollback()
+            if "Duplicate entry" in str(e.orig):
+                flash("This email is already in use. Please choose a different one.", "danger")
+            else:
+                flash("A database integrity error occurred.", "danger")
+            return render_template('auth/profile_setup.html')
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"Unexpected error: {e}")
+            flash("An unexpected error occurred.", "danger")
+            return render_template('auth/profile_setup.html')
+    
+    return render_template('auth/register.html', title='Register', form=form)
 
 @bp.route('/profile-setup', methods=['GET', 'POST'])
 @login_required
 def profile_setup():
-
     """User registration - Step 2: Profile Setup"""
-    try:
-        # Check if profile is already complete
-        if current_user.profile.email and current_user.profile.first_name and current_user.profile.last_name:
-            return redirect(url_for('main.dashboard'))
+    form = ProfileSetupForm()
+    if form.validate_on_submit():
+        # Update profile with all details including email
+        current_user.profile.email = form.email.data
+        current_user.profile.first_name = form.first_name.data
+        current_user.profile.last_name = form.last_name.data
+        current_user.profile.birth_date = form.birth_date.data
         
-        form = ProfileSetupForm()
-        if form.validate_on_submit():
-            # Update profile with all details including email
-            current_user.profile.email = form.email.data
-            current_user.profile.first_name = form.first_name.data
-            current_user.profile.last_name = form.last_name.data
-            current_user.profile.birth_date = form.birth_date.data
-            
-            # Update avatar URL to use email now
-            current_user.profile.profile_pic_path = generate_avatar_url(
-                current_user.username, 
-                form.email.data
-            )
-            
-            # Handle profile picture upload if provided
-            if form.profile_picture.data:
-                filename = save_profile_picture(form.profile_picture.data, current_user.username)
-                current_user.profile.profile_pic_path = filename
-            
-           
-            
-            db.session.commit()
-            
-            flash('Profile completed successfully!', 'success')
-            return redirect(url_for('main.dashboard'))
+        # Update avatar URL to use email now
+        current_user.profile.profile_pic_path = generate_avatar_url(
+            current_user.username, 
+            form.email.data
+        )
         
-        return render_template('auth/profile_setup.html', title='Complete Profile', form=form)
-    except Exception as e:
-        print(f"{e}")
-        db.session.rollback()
+        # Handle profile picture upload if provided
+        if form.profile_picture.data:
+            filename = save_profile_picture(form.profile_picture.data, current_user.username)
+            current_user.profile.profile_pic_path = filename
+                    
+        db.session.commit()
+        
+        flash('Profile completed successfully!', 'success')
+        return redirect(url_for('main.dashboard'))
+    
+    return render_template('auth/profile_setup.html', title='Complete Profile', form=form)
 
 @bp.route('/reset-password-request', methods=['GET', 'POST'])
 def reset_password_request():

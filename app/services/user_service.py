@@ -15,6 +15,14 @@ class UserService:
     """Service class for user profile operations"""
     
     @staticmethod
+    def check_email_exists(email: str) -> bool:
+        """Check if email already exists in the database"""
+        email = UserProfile.query.filter_by(email=email).first()
+        if email:
+            logger.info(f"Email {email} already exists.")
+            return True
+
+    @staticmethod
     def get_user_profile(user_id: int) -> UserProfile:
         """Get user profile by user ID"""
         try:

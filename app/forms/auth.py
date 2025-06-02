@@ -46,7 +46,7 @@ class RegistrationForm(FlaskForm):
         user = AuthUser.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username already exists.')
-
+    
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
