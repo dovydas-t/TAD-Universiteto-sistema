@@ -4,7 +4,8 @@ from app.extensions import db
 from app.models.module import Module
 from app.models.study_program import StudyProgram
 from app.forms.module import ModuleForm, AddModuleRequirementForm
-from app.forms.module import ModuleForm, ChooseModule
+from app.forms.module import ModuleForm
+from app.forms.choose_module import ChooseModule 
 from app.services.module_service import ModuleService
 from app.services.study_program_service import StudyProgramService
 from app.utils.decorators import admin_required, admin_or_teacher_role_required
