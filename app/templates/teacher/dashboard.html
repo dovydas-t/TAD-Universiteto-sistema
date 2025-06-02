@@ -1,43 +1,16 @@
-{% extends "base.html" %} {% block title %}Teacher Dashboard{% endblock %} {%
-block content %}
-<div class="dashboard fade-in">
-  <div class="dashboard-header">
-    <h1>Teacher Dashboard</h1>
-    <p>Welcome back, {{ current_user.profile.full_name }}!</p>
-  </div>
+{% extends "dashboard_base.html" %}
 
-  <div class="dashboard-grid">
-    <div class="dashboard-card">
-      <h3>My Modules</h3>
-      <p>Manage your modules and assignments.</p>
-      <a href="{{ url_for('teacher.modules') }}" class="btn btn-primary"
-        >View Modules</a
-      >
-    </div>
+{% block page_title %}Teacher Dashboard{% endblock %}
 
+{% block dashboard_content %}
+<div class="dashboard-grid">
     <div class="dashboard-card">
-      <h3>Student Attendance</h3>
-      <p>Mark and review attendance records.</p>
-      <a href="{{ url_for('teacher.attendance') }}" class="btn btn-primary"
-        >Manage Attendance</a
-      >
+        <div class="card-header">
+            <h3>Welcome Teacher {{ current_user.username }}</h3>
+        </div>
+        <div class="card-content">
+            <p>Teacher dashboard content goes here.</p>
+        </div>
     </div>
-
-    <div class="dashboard-card">
-      <h3>Grades & Feedback</h3>
-      <p>Review and assign grades.</p>
-      <a href="{{ url_for('teacher.grades') }}" class="btn btn-primary"
-        >View Grades</a
-      >
-    </div>
-
-    <div class="dashboard-card">
-      <h3>Profile</h3>
-      <p>Update your profile information.</p>
-      <a href="{{ url_for('main.profile') }}" class="btn btn-primary"
-        >Edit Profile</a
-      >
-    </div>
-  </div>
 </div>
 {% endblock %}

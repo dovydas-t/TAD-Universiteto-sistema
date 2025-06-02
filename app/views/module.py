@@ -4,7 +4,7 @@ from app.models.module import Module
 from app.forms.module import ModuleForm
 from app.services.module_service import ModuleService
 from app.services.study_program_service import StudyProgramService
-from app.utils.decorators import admin_required
+from app.utils.decorators import admin_required, admin_or_teacher_role_required
 
 bp = Blueprint('module', __name__)
 
@@ -27,7 +27,7 @@ def detail(module_id):
                            module=module)
 
 @bp.route('add_module', methods=['GET', 'POST'])
-@admin_required
+@admin_or_teacher_role_required
 def add_module():
     """Add a new module"""
     form = ModuleForm()
@@ -50,5 +50,23 @@ def add_module():
         new_module = ModuleService.create_module_from_form(form)
         flash('Module added successfully!', 'success')
         return redirect(url_for('module.detail', module_id=new_module.id))
+    
+
+@bp.route('module_list', methods=['GET', 'POST'])
+@login_required
+def module_list():
+
+    module_list = ModuleService.get_all_modules() or []
+    module_names = [module.name for module in module_list]
+
+    if not module_list:
+        return render_template('module/no_module.html',
+                               title='No Modules Available')
+    
+    return render_template('module/modules_list.html',
+                           title='TAD University Modules',
+                           module_list=module_list,
+                           module_names=module_names)
+    
 
  

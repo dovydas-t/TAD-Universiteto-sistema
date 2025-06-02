@@ -1,0 +1,32 @@
+{%extends "dashboard_base.html"%}
+{%block page_title%}Academic Profile {%endblock%}
+{%block dashboard_content%}  
+<div class="dashboard-card">
+        <div class="card-content">
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Student ID:</label>
+                    <span>{{ student.id }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Full Name:</label>
+                    <span>{{ student.full_name or (student.first_name + ' ' + student.last_name) or 'Not Set' }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Study Program:</label>
+                    <span>{{ student.study_program.name }}</span>
+                </div>
+                {% if student.group %}
+                <div class="info-item">
+                    <label>Group:</label>
+                    <span>{{ student.group.code }}</span>
+                </div>
+                {% endif %}
+                <div class="info-item">
+                    <label>Email:</label>
+                    <span>{{ student.email or 'Not Set' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}

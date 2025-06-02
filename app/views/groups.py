@@ -2,7 +2,8 @@ from flask import Blueprint, flash, request, redirect, render_template, url_for
 from flask_login import login_required, current_user
 from app.utils.decorators import admin_required
 from app.forms.groups import GroupForm, EditGroupForm
-from app.models import Groups
+from app.models.enum import RoleEnum
+from app.models.profile import UserProfile
 from app.services.study_program_service import StudyProgramService
 from app.services.group_service import GroupsService
 from app.services.user_service import UserService
@@ -14,7 +15,7 @@ bp = Blueprint('groups', __name__)
 @admin_or_teacher_role_required
 def index():
     groups = GroupsService.get_all_groups()
-    return render_template('groups/groups.html', groups=groups)
+    return render_template('groups/groups_list.html', groups=groups)
 
 @bp.route('/create_group', methods=['GET', 'POST'])
 @admin_required
@@ -100,5 +101,27 @@ def edit_group(group_id):
     return render_template(
         'groups/edit_group.html',
         group=group,
-        form=form
+        group_id=group_id,
+        form=form,
+        
     )
+
+@bp.route('/group-info')
+@login_required
+def group_info():
+    """View group information"""
+    if not current_user.profile.group_id:
+        flash('You are not assigned to any group.', 'info')
+        return redirect(url_for('main.student_dashboard'))
+    
+    group = current_user.profile.group_id
+    
+    # Get all students in this group
+    group_members = UserProfile.query.filter_by(
+        group_id=group.id,
+        role=RoleEnum.Student
+    ).all()
+    
+    return render_template('groups/groups_info.html',
+                         group=group,
+                         group_members=group_members)

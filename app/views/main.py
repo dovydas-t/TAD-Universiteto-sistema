@@ -71,21 +71,6 @@ def dashboard():
         return redirect(url_for('main.teacher_dashboard'))
     else:  # Default to student dashboard (no role check needed)
         return redirect(url_for('main.student_dashboard'))
-    
-
-
-# @bp.route('/admin_dashboard')
-# @admin_required
-# def admin_dashboard():
-
-
-#     # total_students = UserProfile.query.filter_by(role=RoleEnum.Student).count()
-#     # total_teachers = UserProfile.query.filter_by(role=RoleEnum.Teacher).count()
-#     # study_programs = StudyProgram.query.all()
-#     """                  total_students=total_students,
-#                          total_teachers=total_teachers,
-#                          study_programs=study_programs"""
-#     return render_template('dashboard_base.html')
 
 @bp.route('/teacher/dashboard')
 @teacher_status_required

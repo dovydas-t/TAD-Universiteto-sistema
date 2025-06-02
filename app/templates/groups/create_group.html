@@ -1,8 +1,9 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "dashboard_base.html" %}
+{%block page_title%}Create new Group {%endblock%}
+
+{% block dashboard_content%}
 <div class="auth-container">
   <div class="auth-card">
-    <h2>Create new Group</h2>
     <form
       method="POST"
       action="{{ url_for('groups.create_group') }}"
@@ -10,32 +11,32 @@
       {{ form.hidden_tag() }}
 
        <div class="form-group">
-        {{ form.study_program_id.label }}
-        {{ form.study_program_id(class="form-control", id="study_program_id") }}
+        {{ form.study_program_id.label(class= "form-label") }}
+        {{ form.study_program_id(class="form-input", id="study_program_id") }}
         {% for error in form.study_program_id.errors %}
           <div class="form-error">{{ error }}</div>
         {% endfor %}
       </div>
 
       <div class="form-group">
-        {{ form.starting_year.label }}
-        {{ form.starting_year(class="form-control", id="starting_year") }}
+        {{ form.starting_year.label(class="form-label") }}
+        {{ form.starting_year(class="form-input", id="starting_year") }}
         {% for error in form.starting_year.errors %}
           <div class="form-error">{{ error }}</div>
         {% endfor %}
       </div>
 
       <div class="form-group">
-        {{ form.max_capacity.label }}
-        {{ form.max_capacity(class="form-control") }}
+        {{ form.max_capacity.label(class="form-label") }}
+        {{ form.max_capacity(class="form-input") }}
         {% for error in form.max_capacity.errors %}
           <div class="form-error">{{ error }}</div>
         {% endfor %}
       </div>
 
       <div class="form-group">
-        {{ form.code.label }}
-        {{ form.code(class="form-control", id="code", readonly=True) }}
+        {{ form.code.label(class="form-label") }}
+        {{ form.code(class="form-input", id="code", readonly=True) }}
         {% for error in form.code.errors %}
           <div class="form-error">{{ error }}</div>
         {% endfor %}

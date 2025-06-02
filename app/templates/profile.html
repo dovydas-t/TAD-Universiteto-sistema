@@ -1,48 +1,63 @@
 {% extends "dashboard_base.html" %}
 {%block css%}
-    
-    <link rel="stylesheet"
-      href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
-    
-    
-    {%endblock%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
+{%endblock%}
+{%block page_title%}Your Profile{%endblock%}
 {% block dashboard_content %}
-
-
-
 <div class="profile-container">
- {% from 'profile/macros.html' import user_avatar %}
-  
-  <div class="profile-info">
-    <div class="profile-details">
-      <h1>Welcome back, {{ current_user.username }}</h1>
-      <h2>Your Profile</h2>
-      <p>Profile ID: {{ current_user.profile.id }}</p>
-      <p>Full name: {{ current_user.profile.full_name }}</p>
-      <p>First name: {{ current_user.profile.first_name or 'Not Set' }}</p>
-      <p>Last name: {{ current_user.profile.last_name or 'Not Set' }}</p>
-      <p>Birth date: {{ current_user.profile.birth_date or 'Not Set' }}</p>
-      <p>Email: {{ current_user.profile.email or 'Not Set' }}</p>
-      <p>Created at: {{ current_user.profile.created_at }}</p>
-      <p>Last login: {{ current_user.profile.last_login }}</p>
+{% from 'profile/macros.html' import user_avatar %}
+
+    <div class="profile-info">
+        <div class="profile-details">
+            <p>Profile Id: {{ current_user.profile.id }}</p>
+            <p>Username: {{ current_user.username }}</p>
+            <p>Role: {{ current_user.profile.role.value }}</p>
+            
+            <!-- Student-specific information -->
+            {% if current_user.profile.role.value == 'Student' %}
+                <p>Group ID: {{ current_user.profile.group_id or 'Not Assigned' }}</p>
+                {% if current_user.profile.group %}
+                    <p>Group Code: {{ current_user.profile.group.code }}</p>
+                {% else %}
+                    <p>Group Code: Not Assigned</p>
+                {% endif %}
+                {% if current_user.profile.study_program %}
+                    <p>Study Program: {{ current_user.profile.study_program.name }}</p>
+                {% endif %}
+            {% elif current_user.profile.role.value == 'Teacher' %}
+                <p>Department: {{ current_user.profile.department or 'Not Set' }}</p>
+                <!-- Add other teacher-specific fields -->
+            {% elif current_user.profile.role.value == 'Admin' %}
+                <p>Admin Level: System Administrator</p>
+                <!-- Add other admin-specific fields -->
+            {% endif %}
+            
+            <!-- Common profile information -->
+            <p>Full name: {{ current_user.profile.full_name or 'Not Set' }}</p>
+            <p>First name: {{ current_user.profile.first_name or 'Not Set' }}</p>
+            <p>Last name: {{ current_user.profile.last_name or 'Not Set' }}</p>
+            <p>Birth date: {{ current_user.profile.birth_date or 'Not Set' }}</p>
+            <p>Email: {{ current_user.profile.email or 'Not Set' }}</p>
+            
+            {% if current_user.profile.created_at %}
+                <p>Created at: {{ current_user.profile.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            {% endif %}
+            
+            {% if current_user.profile.last_login %}
+                <p>Last login: {{ current_user.profile.last_login.strftime('%Y-%m-%d %H:%M') }}</p>
+            {% endif %}
+        </div>
+
+        <div class="profile-pic">
+            <div>
+                {{ user_avatar(current_user, 'profile-view') }}
+            </div>
+        </div>
     </div>
     
-    <div class="profile-pic">
-      {% if current_user.profile.profile_pic_path %}
-      <div>
-        {{ user_avatar(current_user, 'large') }}  
-      </div>
-      {% endif %}
-    </div> 
-  </div>
-  
-
-  <div class="auth-links">
-    <div class="form-actions">
-      <a href="{{ url_for('auth.request_user_delete') }}" class="btn btn-primary">Delete User</a>
-      <a href="{{ url_for('main.profile_update') }}" class="btn btn-primary">Update User</a>
+    <!-- Edit Profile Button -->
+    <div class="profile-actions">
+        <a href="{{ url_for('profile.profile_update') }}" class="btn btn-primary">Edit Profile</a>
     </div>
-  </div>
 </div>
-
 {% endblock %}

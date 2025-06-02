@@ -1,26 +1,26 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 
 {% block title %}Study Program Details{% endblock %}
-
-{% block content %}
+{% block page_title %}Study {{ study_program.name }} Program Details{% endblock %}
+{% block dashboard_content %}
 <div class="container fade-in">
-  <h1>{{ study_program.name }}</h1>
-
   <div class="feature-card">
-    <h3>Faculty</h3>
+    <h3>Faculty</h3><hr><br>
     <p>{{ study_program.faculty.name }}</p>
     <p>Study program description</p>
-    <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">Check information about faculty</a>
-  </section>
+    <a href="{{ url_for('faculty.detail', faculty_id=faculty.id) }}">Check information about faculty</a><br>
+  </section><br>
 
   <section>
-    <h2>Modules for the Study Program</h2>
+    <h3>Modules for the Study Program</h3><hr><br>
     {% if modules %}
       <ul>
         {% for module in modules %}
           <li>
+             
+            <span>{{module}}</span>
             <a href="{{ url_for('module.detail', module_id=module.id) }}">
-              {{ module.name }}
+            Details
             </a>
           </li>
         {% endfor %}
@@ -29,10 +29,10 @@
       <p>This Study Program has no modules available.</p>
     {% endif %}
     <a href="{{ url_for('module.add_module', study_program_id=study_program.id) }}">Add a new Module</a>
-  </section>
+  </section><br>
 
   <section>
-    <h2>Groups in this Study Program</h2>
+    <h3>Groups in this Study Program</h3><hr><br>
     {% if groups %}
       <ul>
         {% for group in groups %}
@@ -43,10 +43,10 @@
       <p>No groups are assigned to this Study Program.</p>
     {% endif %}
       <a href="{{ url_for('groups.create_group', study_program_id=study_program.id) }}">Create a new Group for the Module</a>
-  </section>
+  </section><br>
 
   <section>
-    <h2>Students in this Study Program</h2>
+    <h3>Students in this Study Program</h3><hr><br>
     {% if users %}
       <ul>
         {% for user in users %}
@@ -56,6 +56,6 @@
     {% else %}
       <p>No students are currently enrolled in this Study Program.</p>
     {% endif %}
-  </section>
+  </section><br>
 </div>
 {% endblock %}

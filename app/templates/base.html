@@ -13,6 +13,11 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
     {% endblock %} {% block head %}{% endblock %}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/auth_forms.css') }}"
+    />
+    {% endblock %} {% block head %}{% endblock %}
   </head>
 
   <body>
@@ -125,8 +130,10 @@
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}
     <script src="{{ url_for('static', filename='js/group_form.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/student_edit.js') }}"></script>
 
-    {% block scripts %}{% endblock %}
+    {% endblock %}
   </body>
 </html>

@@ -34,7 +34,7 @@ def profile_update():
 
         if not user_changed:
             flash("No changes detected.", "info")
-            return redirect(url_for('profile'))
+            return redirect(url_for('main.profile'))
 
         # Check if username or email changed (affects avatar)
         username_changed = form.username.data != current_user.username
@@ -56,13 +56,13 @@ def profile_update():
         elif username_changed or email_changed:
             # Only regenerate avatar if username/email changed and no new picture uploaded
             current_user.profile.profile_pic_path = generate_avatar_url(
-                form.username.data, 
-                form.email.data
+                current_user.username, 
+                current_user.profile.email
             )
         # If neither condition is met, keep the existing profile_pic_path
 
         db.session.commit()
         flash("Profile updated successfully!", "success")
-        return redirect(url_for('profile'))
+        return redirect(url_for('main.profile'))
     
     return render_template("profile/update_profile.html", form=form)

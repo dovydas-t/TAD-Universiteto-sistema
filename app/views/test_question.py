@@ -42,8 +42,7 @@ def add_question(test_id):
         flash('Question and answers added successfully!', 'success')
         return redirect(url_for('test.detail', test_id=test_id))
     
-    if request.method == 'GET':
-        return render_template('test_question/add_question.html', form=form, test_id=test_id)
+    return render_template('test_question/add_question.html', form=form, test_id=test_id)
 
 
 @bp.route('/edit_question/<int:test_question_id>', methods=['GET', 'POST'])
