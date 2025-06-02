@@ -243,3 +243,12 @@ class UserService:
         db.session.commit()
         return student
     
+    @staticmethod
+    def update_user_group(user_id, group_id):
+        """Update user's group"""
+        user_profile = UserService.get_user_profile(user_id)
+        if user_profile:
+            user_profile.group_id = group_id
+            db.session.commit()
+            return None
+        return None

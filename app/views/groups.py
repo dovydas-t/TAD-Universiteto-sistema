@@ -106,6 +106,39 @@ def edit_group(group_id):
         
     )
 
+@bp.route('/delete_group/<int:group_id>', methods=['GET', 'POST'])
+def delete_group(group_id):
+    """Delete a group"""
+    group = GroupsService.get_group_by_id(group_id)
+    students = UserService.get_students_by_group(group_id)
+
+    if not group:
+        flash('Group not found.', 'error')
+        return redirect(url_for('groups.index'))
+    
+    GroupsService.delete_group(group_id)
+    flash('Group deleted successfully.', 'success')
+
+    if students:
+    # If there are students in the group, reassign them to new groups
+        flash(f"Group has {len(students)} students assigned. Reassigning students...", 'warning')
+
+        # Reassign students to new groups
+        for student in students:
+            new_group_id = GroupsService.auto_assign_to_group(student.study_program_id)
+            UserService.update_user_group(student.id, new_group_id)
+            print(f"Debug: Student {student.full_name} assigned to new group {new_group_id}")
+        flash('Students have been reassigned to new groups.', 'success')
+
+    return redirect(url_for('groups.index'))
+    
+    
+
+
+
+    
+    
+
 @bp.route('/group-info')
 @login_required
 def group_info():
