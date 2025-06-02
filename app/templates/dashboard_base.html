@@ -111,7 +111,9 @@
                    <li><a href="{{ url_for('main.student_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
                     <li><a href="{{ url_for('groups.group_info') }}" class="nav-link">Group</a> </li>
                     <li><a href="{{ url_for('student.academic_info') }}" class="nav-link">Academic Information</a></li>
+                    <li><a href="{{ url_for('module.choose_module') }}" class="nav-link">Choose Module</a></li>
                     <li><a href="{{ url_for('student.my_modules') }}" class="nav-link">My Modules</a></li>
+                    <li><a href="{{ url_for('student.my_calendar') }}" class="nav-link">My Calendar</a></li>
                 {% else %}
                     <!-- Default Navigation -->
                     <li><a href="{{ url_for('main.dashboard') }}" class="nav-link">🏠 Dashboard</a></li>

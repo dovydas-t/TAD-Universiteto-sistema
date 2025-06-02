@@ -1,18 +1,16 @@
 from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import login_required, current_user
 from app.extensions import db
+from app.forms.student_form import StudentEditForm
 from app.models.module import Module
 from app.models.study_program import StudyProgram
+from app.models.schedule_item import ScheduleItem
 from app.services.user_service import UserService
-from app.services.module_service import ModuleService
-from app.forms.student_form import StudentEditForm
-from app.utils.decorators import admin_or_teacher_role_required
-from collections import defaultdict
-# Create blueprint for student routes
+
+
+
+
 bp = Blueprint('student', __name__, url_prefix='/student')
-
-
-
 
 @bp.route('/academic-info')
 @login_required  # or @login_required if you don't have student_required decorator
@@ -39,8 +37,17 @@ def my_modules():
             modules_by_semester[semester] = []
         modules_by_semester[semester].append(module)
     
-    return render_template('student/student_modules.html', 
-                         modules_by_semester=modules_by_semester)
+    return render_template(
+    'student/student_modules.html',
+    modules_by_semester=modules_by_semester,
+    student=current_user.profile)
+
+@bp.route('/my_calendar')
+@login_required
+def my_calendar():
+    # Get all schedule items for the current user, ordered by date
+    schedule_items = ScheduleItem.query.filter_by(user_id=current_user.profile.id).order_by(ScheduleItem.date).all()
+    return render_template('schedule/schedule.html', schedule_items=schedule_items)
 
 @bp.route('/academic-info')
 @login_required  # or @login_required if you don't have student_required decorator
@@ -53,15 +60,21 @@ def detail(student_id):
     student = UserService.get_user_profile(student_id)
 
     if not student:
-        flash('Error: No student at ID: {{ student.id }})', 'error')
+        flash(f'Error: No student at ID: {student_id}', 'error')
         return redirect(url_for('module.index'))
-    
-    return render_template('student/student_detail.html',
-                           title='Student Details',
-                           student_id=student.id,
-                           student=student,
-                           module_grade_map=module_grade_map
-                           )
+
+    # Example: Build a module-to-grade mapping
+    module_grade_map = {}
+    for grade in student.grades:
+        module_grade_map[grade.module_id] = grade.value  # or grade.grade, depending on your model
+
+    return render_template(
+        'student/student_detail.html',
+        title='Student Details',
+        student_id=student.id,
+        student=student,
+        module_grade_map=module_grade_map
+    )
 
 
 @bp.route('/edit/<int:student_id>', methods=['GET', 'POST'])

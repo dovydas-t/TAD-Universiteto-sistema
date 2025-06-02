@@ -25,3 +25,4 @@ class Module(db.Model):
     attendances = db.relationship("Attendance", back_populates="module")
     grades = db.relationship("Grade", back_populates="module")
     schedule_items = db.relationship("ScheduleItem", back_populates="module")
+    sessions = db.relationship("Session", back_populates="module")
