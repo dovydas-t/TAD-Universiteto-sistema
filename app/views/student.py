@@ -6,6 +6,7 @@ from app.models.module import Module
 from app.models.study_program import StudyProgram
 from app.models.schedule_item import ScheduleItem
 from app.services.user_service import UserService
+from app.utils.decorators import admin_or_teacher_role_required
 
 
 
@@ -97,6 +98,10 @@ def edit_student(student_id):
 
     return render_template('student/edit_student.html', form=form, student=student)
 
+
+@bp.route('/list', methods=['GET'])
+@admin_or_teacher_role_required
+def user_list():
 
 
 

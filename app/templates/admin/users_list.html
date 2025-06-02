@@ -1,0 +1,87 @@
+{% extends "dashboard_base.html" %}
+{% from 'profile/macros.html' import user_avatar %}
+
+{% block page_title %}User List{% endblock %}
+
+{% block dashboard_content %}
+<h1>User List</h1>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search name or email">
+    <select id="role">
+      <option value="">All Roles</option>
+      <option value="student">Student</option>
+      <option value="teacher">Teacher</option>
+      <option value="admin">Admin</option>
+    </select>
+    <input type="number" id="group_id" placeholder="Group ID" min="1">
+    <input type="number" id="study_program_id" placeholder="Program ID" min="1">
+    <button onclick="fetchUsers()">Search</button>
+  </div>
+
+  <table id="users-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Group ID</th>
+        <th>Program ID</th>
+        <th>Active</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function fetchUsers(page = 1, per_page = 10) {
+      const search = document.getElementById('search').value;
+      const role = document.getElementById('role').value;
+      const group_id = document.getElementById('group_id').value;
+      const study_program_id = document.getElementById('study_program_id').value;
+
+      const params = new URLSearchParams({ page, per_page });
+      if (search) params.append('search', search);
+      if (role) params.append('role', role);
+      if (group_id) params.append('group_id', group_id);
+      if (study_program_id) params.append('study_program_id', study_program_id);
+
+      const response = await fetch(`/api/users/list?${params.toString()}`, {
+        headers: {
+          // Add your token or session cookie header here if needed
+          // 'Authorization': 'Bearer YOUR_TOKEN'
+        }
+      });
+
+      if (!response.ok) {
+        alert('Failed to fetch user list');
+        return;
+      }
+
+      const data = await response.json();
+      const tbody = document.querySelector('#users-table tbody');
+      tbody.innerHTML = '';
+
+      data.users.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${user.id}</td>
+          <td>${user.full_name}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>${user.group_id ?? ''}</td>
+          <td>${user.study_program_id ?? ''}</td>
+          <td>${user.is_active ? 'Yes' : 'No'}</td>
+          <td>${new Date(user.created_at).toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Load initial users
+    fetchUsers();
+  </script>
+{% endblock %}
+
