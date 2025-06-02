@@ -75,4 +75,21 @@ def create_app(config_class=Config):
     from app.views.grades import bp as grades_bp
     app.register_blueprint(grades_bp, url_prefix="/grades")
 
+    from app.views.grades import bp as grades_bp
+    app.register_blueprint(grades_bp, url_prefix="/grades")
+
+    @app.context_processor
+    def inject_breadcrumbs():
+        from flask import request
+        # Get the current URL path and split it
+        path = request.path.strip('/').split('/')
+        # Create breadcrumb parts
+        breadcrumbs = [{'name': 'Home', 'url': '/'}]
+        if path != ['']:
+            for i in range(len(path)):
+                name = path[i].replace('-', ' ').capitalize()
+                url = '/' + '/'.join(path[:i + 1])
+                breadcrumbs.append({'name': name, 'url': url})
+        return dict(breadcrumbs=breadcrumbs)
+
     return app

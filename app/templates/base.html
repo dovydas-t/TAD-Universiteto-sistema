@@ -5,34 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{% if title %}{{ title }} - {% endif %}Dashboard</title>
-    
+
     <!-- Custom CSS -->
-   {% block css %}
+    {% block css %}
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    {% endblock %} {% block head %}{% endblock %}
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/auth_forms.css') }}"
     />
-    {% endblock %}
-
-
-    {% block head %}{% endblock %}
+    {% endblock %} {% block head %}{% endblock %}
   </head>
 
   <body>
-   {% from 'profile/macros.html' import user_avatar %} 
-    {%block navbar%}
-    <!-- Navigation -->
+    {% from 'profile/macros.html' import user_avatar %}
+
+    <!-- Navigation (full width) -->
+    {% block navbar %}
     <nav class="navbar">
       <div class="nav-container">
-        <a href="{{ url_for('main.index') }}" class="nav-brand">Dashboard</a>
-
+        <a href="{{ url_for('main.index') }}" class="nav-brand">
+          <img
+            src="{{ url_for('static', filename='tadlogo.png') }}"
+            alt="TAD University Logo"
+            class="navbar-logo"
+            style="height: 50px; vertical-align: middle"
+          />
+        </a>
         <ul class="nav-menu">
           <li>
-            <a href="{{ url_for('main.index') }}" class="nav-link">Home</a>
+            <a
+              href="{{ url_for('main.index') }}"
+              class="nav-link {% if request.endpoint == 'main.index' %}nav-link--active{% endif %}"
+              >Home</a
+            >
           </li>
           {% if current_user.is_authenticated %}
           <li>
@@ -44,9 +53,9 @@
             <a href="{{ url_for('main.profile') }}" class="nav-link">Profile</a>
           </li>
           <li>
-            <a href="{{ url_for('auth.logout') }}" class="nav-link"
-              >Logout ({{ current_user.username }})</a
-            >
+            <a href="{{ url_for('auth.logout') }}" class="nav-link">
+              Logout ({{ current_user.username }})
+            </a>
           </li>
           {% else %}
           <li>
@@ -60,11 +69,26 @@
           {% endif %}
         </ul>
       </div>
+      <!-- nav-container -->
     </nav>
-    {%endblock%}
+    {% endblock %}
+
+    <!-- Breadcrumbs -->
+    {% if request.endpoint != 'main.index' and breadcrumbs %}
+    <div class="breadcrumb-container">
+      <div class="page-inner">
+        <nav class="breadcrumb">
+          {% for crumb in breadcrumbs %} {% if not loop.last %}
+          <a href="{{ crumb.url }}">{{ crumb.name }}</a> &gt; {% else %}
+          <span>{{ crumb.name }}</span>
+          {% endif %} {% endfor %}
+        </nav>
+      </div>
+    </div>
+    {% endif %}
 
     <!-- Flash Messages -->
-    <div class="container">
+    <div class="page-inner">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %}
       <div class="messages">
@@ -79,16 +103,32 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container">{% block content %}{% endblock %}</main>
+    <main class="page-inner">{% block content %}{% endblock %}</main>
 
-    <!-- Footer -->
+    <!-- Footer (full width) -->
     <footer class="footer">
-      <div class="container">
-        <p>&copy; 2024 Dashboard. All rights reserved.</p>
+      <div class="container footer-container">
+        <!-- Left side: contact details -->
+        <div class="footer-left">
+          <p><strong>TAD University</strong></p>
+          <p>42 Dreamy Avenue, Pixie Hollow, Neverland</p>
+          <p>Phone: +123 456 789</p>
+          <p>
+            Email:
+            <a href="mailto:info@taduniversity.com">info@taduniversity.com</a>
+          </p>
+        </div>
+
+        <!-- Right side: buttons -->
+        <div class="footer-right">
+          <a href="#" class="footer-btn">Accessibility</a>
+          <a href="#" class="footer-btn">Privacy</a>
+          <a href="#" class="footer-btn">Media</a>
+        </div>
       </div>
     </footer>
 
-    <!-- Custom JS -->
+    <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     {% block scripts %}
     <script src="{{ url_for('static', filename='js/group_form.js') }}"></script>
