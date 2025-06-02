@@ -99,9 +99,9 @@ def edit_student(student_id):
     return render_template('student/edit_student.html', form=form, student=student)
 
 
-@bp.route('/list', methods=['GET'])
-@admin_or_teacher_role_required
-def user_list():
+# @bp.route('/list', methods=['GET'])
+# @admin_or_teacher_role_required
+# def user_list():
 
 
 
