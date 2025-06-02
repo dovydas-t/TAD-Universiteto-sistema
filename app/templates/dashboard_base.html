@@ -46,7 +46,6 @@
                 {% if current_user.profile.role.value == 'Admin' %}
                     <!-- Admin Navigation -->
                     <li><a href="{{ url_for('admin.admin_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-                    
                     <li class="dropdown">
                         <div class="nav-link dropbtn">📚 Groups</div>
                         <div class="dropdown-content">
@@ -80,7 +79,7 @@
                     <li class="dropdown">
                         <div class="nav-link dropbtn">Users</div>
                         <div class="dropdown-content">
-                          <a href="{{ url_for('admin.admin_blocked_users') }}">Blocked Users</a>
+                        <a href="{{ url_for('admin.admin_blocked_users') }}">Blocked Users</a>
                            
 
                     </div>
@@ -102,7 +101,9 @@
                             <a href="{{ url_for('test.create_test') }}">Create Tests</a>
                             <a href=>List Tests</a>
                         </div>
+                        
                     </li>
+                    <li><a href="{{url_for('main.add_session')}}" class="nav-link">Add Session</a></li>
                     
                     
                 {% elif current_user.profile.role.value == 'Student' %}
@@ -117,7 +118,7 @@
                 {% else %}
                     <!-- Default Navigation -->
                     <li><a href="{{ url_for('main.dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-            
+                    
                     
                 {% endif %}
 

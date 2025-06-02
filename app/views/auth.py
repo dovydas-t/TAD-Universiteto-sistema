@@ -17,57 +17,62 @@ bp = Blueprint('auth', __name__)
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     """User login with blocking mechanism"""
-    if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))
-    
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = AuthUser.query.filter_by(username=form.username.data).first()
+    try:
+        if current_user.is_authenticated:
+            return redirect(url_for('main.dashboard'))
         
-        if user:
-            # NEW: Check if user is blocked
-            if user.is_blocked():
-                remaining_time = user.get_time_until_unblock()
-                flash(f'Account temporarily blocked due to failed login attempts. Try again in {remaining_time} minutes.', 'error')
-                return render_template('auth/login.html', title='Sign In', form=form)
+        form = LoginForm()
+        if form.validate_on_submit():
+            user = AuthUser.query.filter_by(username=form.username.data).first()
             
-            # Check password
-            if user.check_password(form.password.data):
-                # Check if account is active
-                if not user.is_active:
-                    flash('Account is deactivated. Contact support.', 'error')
-                    return redirect(url_for('auth.login'))
+            if user:
+                # NEW: Check if user is blocked
+                if user.is_blocked():
+                    remaining_time = user.get_time_until_unblock()
+                    flash(f'Account temporarily blocked due to failed login attempts. Try again in {remaining_time} minutes.', 'error')
+                    return render_template('auth/login.html', title='Sign In', form=form)
                 
-                # NEW: Record successful login and reset failed attempts
-                user.record_successful_login()
-                
-                login_user(user, remember=form.remember_me.data)
+                # Check password
+                if user.check_password(form.password.data):
+                    # Check if account is active
+                    if not user.is_active:
+                        flash('Account is deactivated. Contact support.', 'error')
+                        return redirect(url_for('auth.login'))
+                    
+                    # NEW: Record successful login and reset failed attempts
+                    user.record_successful_login()
+                    
+                    login_user(user, remember=form.remember_me.data)
 
-                # Update last login in profile (keep your existing logic)
-                user.profile.last_login = db.func.current_timestamp()
-                db.session.commit()
+                    # Update last login in profile (keep your existing logic)
+                    user.profile.last_login = db.func.current_timestamp()
+                    db.session.commit()
 
-                next_page = request.args.get('next')
-                flash(f'Login successful! Welcome back, {user.username}!', 'success')
-                return redirect(next_page or url_for('main.dashboard'))
-            else:
-                # NEW: Wrong password - record failed attempt
-                user.record_failed_login()
-                if user.failed_login_attempts >= 3:
-                    flash('Too many failed attempts. Account temporarily blocked for 15 minutes.', 'error')
+                    next_page = request.args.get('next')
+                    flash(f'Login successful! Welcome back, {user.username}!', 'success')
+                    return redirect(next_page or url_for('main.dashboard'))
                 else:
-                    remaining_attempts = 3 - user.failed_login_attempts
-                    flash(f'Invalid password. {remaining_attempts} attempts remaining.', 'error')
-        else:
-            # User doesn't exist
-            flash('Invalid username or password', 'error')
-    
-    return render_template('auth/login.html', title='Sign In', form=form)
+                    # NEW: Wrong password - record failed attempt
+                    user.record_failed_login()
+                    if user.failed_login_attempts >= 3:
+                        flash('Too many failed attempts. Account temporarily blocked for 15 minutes.', 'error')
+                    else:
+                        remaining_attempts = 3 - user.failed_login_attempts
+                        flash(f'Invalid password. {remaining_attempts} attempts remaining.', 'error')
+            else:
+                # User doesn't exist
+                flash('Invalid username or password', 'error')
+        
+        return render_template('auth/login.html', title='Sign In', form=form)
+    except Exception as e:
+        print(f"{e}")
+        return render_template('auth/login.html', title='Sign In', form=form)
 
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration - Step 1"""
+
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
         
@@ -134,27 +139,31 @@ def profile_setup():
     """User registration - Step 2: Profile Setup"""
     form = ProfileSetupForm()
     if form.validate_on_submit():
-        # Update profile with all details including email
-        current_user.profile.email = form.email.data
-        current_user.profile.first_name = form.first_name.data
-        current_user.profile.last_name = form.last_name.data
-        current_user.profile.birth_date = form.birth_date.data
-        
-        # Update avatar URL to use email now
-        current_user.profile.profile_pic_path = generate_avatar_url(
-            current_user.username, 
-            form.email.data
-        )
-        
-        # Handle profile picture upload if provided
-        if form.profile_picture.data:
-            filename = save_profile_picture(form.profile_picture.data, current_user.username)
-            current_user.profile.profile_pic_path = filename
-                    
-        db.session.commit()
-        
-        flash('Profile completed successfully!', 'success')
-        return redirect(url_for('main.dashboard'))
+        try:
+            # Update profile with all details including email
+            current_user.profile.email = form.email.data
+            current_user.profile.first_name = form.first_name.data
+            current_user.profile.last_name = form.last_name.data
+            current_user.profile.birth_date = form.birth_date.data
+            
+            # Update avatar URL to use email now
+            current_user.profile.profile_pic_path = generate_avatar_url(
+                current_user.username, 
+                form.email.data
+            )
+            
+            # Handle profile picture upload if provided
+            if form.profile_picture.data:
+                filename = save_profile_picture(form.profile_picture.data, current_user.username)
+                current_user.profile.profile_pic_path = filename
+                        
+            db.session.commit()
+            
+            flash('Profile completed successfully!', 'success')
+            return redirect(url_for('main.dashboard'))
+        except Exception as e:
+            print(f"{e}")
+            
     
     return render_template('auth/profile_setup.html', title='Complete Profile', form=form)
 
@@ -220,14 +229,11 @@ def reset_password(token):
 @bp.route('/logout')
 @login_required
 def logout():
+    logout_user()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('main.index'))
+
     
-    """User logout"""
-    try:
-        logout_user()
-        flash('You have been logged out.', 'info')
-        return redirect(url_for('main.index'))
-    except Exception as e:
-        print(f"--{e}")
 
 # @bp.route('/delete-user', methods=['GET', 'POST'])
 # @login_required
