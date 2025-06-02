@@ -1,5 +1,8 @@
 from flask import Blueprint, flash, request, redirect, render_template, url_for
 from flask_login import login_required, current_user
+from app.extensions import db
+from app.forms.user_unblock_form import UnblockUserForm
+from app.models.auth import AuthUser
 from app.utils.decorators import admin_required
 
 from app.models.profile import UserProfile
@@ -62,6 +65,32 @@ def admin_dashboard():
                            modules=modules,
                            study_programs=study_programs,
                            teachers=teachers)
+
+@bp.route('/admin/blocked-users')
+@login_required
+@admin_required
+def admin_blocked_users():
+    """Show blocked users"""
+    blocked_users = AuthUser.query.filter(AuthUser.blocked_until.isnot(None)).all()
+    currently_blocked = [user for user in blocked_users if user.is_blocked()]
+
+    form = UnblockUserForm()
+
+    return render_template('auth/blocked_users.html', blocked_users=currently_blocked, form=form)
+
+@bp.route('/admin/unblock/<int:user_id>', methods=['POST'])
+@login_required
+@admin_required
+def admin_unblock_user(user_id):
+    """Unblock a user"""
+    user = AuthUser.query.get_or_404(user_id)
+    user.failed_login_attempts = 0
+    user.blocked_until = None
+    user.last_failed_login = None
+    db.session.commit()
+    flash(f'User "{user.username}" unblocked.', 'success')
+    return redirect(url_for('admin.admin_blocked_users'))
+
 
 @bp.route('/menu')
 @admin_required

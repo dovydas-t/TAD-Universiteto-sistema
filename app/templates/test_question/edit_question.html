@@ -1,6 +1,6 @@
-{% extends "base.html" %}
-{% block title %}Edit Question and it's answer options {% endblock %}
-{% block content %}
+{% extends "dashboard_base.html" %}
+{%block page_title%}Edit Question and it's answer options {%endblock%}
+{% block dashboard_content %}
 <form
   method="POST"
   action="{{ url_for('test_question.edit_question', test_question_id=test_question_id) }}">

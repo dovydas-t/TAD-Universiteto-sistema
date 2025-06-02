@@ -20,7 +20,7 @@ university-management-system/
 │   │   ├── test_question.py          # TestQuestion model
 │   │   ├── answer_option.py          # AnswerOption model
 │   │   ├── grade.py                  # Grade model
-│   │   └── user.py                   # Legacy user model (may need refactoring)
+│   │   └── profile.py                   # Legacy user model (may need refactoring)
 │   ├── views/ # Routes
 │   │   ├── __init__.py
 │   │   ├── auth.py        # Handle AuthUser operations

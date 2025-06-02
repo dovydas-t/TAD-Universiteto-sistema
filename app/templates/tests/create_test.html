@@ -1,0 +1,22 @@
+{%extends "dashboard_base.html"%}
+
+{%block page_title%}Create Test{%endblock%}
+{% block dashboard_content %}
+
+<div>
+    <form method="POST" action="{{ url_for('test.create_test') }}">
+        {{ form.hidden_tag() }}
+        {{ form.name.label(class="form-label") }} {{ form.name(class="form-input") }}
+        {% for field in form %}
+         {% for error in field.errors %}
+        <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+        {% endfor %}
+        
+        {{ form.module_id.label(class="form-label") }} {{ form.module_id(class="form-input") }}
+        {{ form.submit() }}
+    </form>
+
+</div>
+
+{%endblock%}
