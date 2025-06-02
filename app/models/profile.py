@@ -1,5 +1,7 @@
 from app.extensions import db
 from app.models.enum import RoleEnum
+from app.models.enrolled_modules import enrolled_modules
+from app.models.completed_modules import completed_modules
 
 class UserProfile(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('auth_user.id'), primary_key=True)
@@ -37,6 +39,18 @@ class UserProfile(db.Model):
     group = db.relationship("Groups", back_populates="users")
     attendances = db.relationship("Attendance", back_populates="student")
     grades = db.relationship("Grade", back_populates="student")
+    schedule_items = db.relationship("ScheduleItem", back_populates="user")
+    modules = db.relationship(
+        'Module',
+        secondary=enrolled_modules,
+        backref='enrolled_users'
+    )
+    completed_modules = db.relationship(
+        'Module',
+        secondary=completed_modules,
+        backref='completed_by_users'
+    )
+ 
     
     def __init__(self, role=RoleEnum.Student, **kwargs):
         super(UserProfile, self).__init__(**kwargs)
