@@ -8,6 +8,8 @@ from app.services.group_service import GroupsService
 from app.utils.decorators import admin_or_teacher_role_required
 from app.models.profile import UserProfile
 from app.models.enum import RoleEnum
+from app.services.test_question_service import TestQuestionService
+
 
 bp = Blueprint('api', __name__)
 
@@ -146,3 +148,27 @@ def user_list():
         "per_page": per_page,
         "users": result
     })
+
+@bp.route('/test/question/<int:question_id>', methods=['GET'])
+def get_question(question_id):
+    """Get question details by ID"""
+    question = TestQuestionService.get_test_question_by_id(question_id)
+    return jsonify({
+        "id": question.id,
+        "text": question.question_text,
+        "answers": [
+            {"id": ao.id, "text": ao.option_text}
+            for ao in question.answer_options
+        ]
+    })
+
+@bp.route('/test/submit', methods=['POST'])
+def submit_answer():
+    """Submit an answer to a test question"""
+    data = request.json
+    question_id = data.get('question_id')
+    selected_answer_id = data.get('selected_answers', [])
+
+    # Optional: Validate or store selected answers here
+    print(f"User answered question {question_id} with answers {selected_answer_id}")
+    return jsonify({"success": True})

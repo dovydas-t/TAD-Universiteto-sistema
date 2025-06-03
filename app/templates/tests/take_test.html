@@ -1,0 +1,57 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Solve Test{% endblock %} 
+{%block page_title%}Solve: {{ test.name }}{%endblock%}
+{% block dashboard_content%}
+    <h1>{{ test.name }}</h1>
+    <div id="question-box">Loading question...</div>
+    <button id="next-button" onclick="submitAnswer()">Next Question</button>
+
+    <script>
+        const questions = {{ questions|tojson }};
+        let currentIndex = 0;
+
+        function loadQuestion() {
+            const question = questions[currentIndex];
+            fetch(`/api/test/question/${question.id}`)
+                .then(res => res.json())
+                .then(data => {
+                    let html = `<h3>Question ${currentIndex + 1}:</h3><p>${data.text}</p><form id="question-form">`;
+                    data.answers.forEach(answer => {
+                        html += `
+                            <label>
+                                <input type="checkbox" name="answer" value="${answer.id}"> ${answer.text}
+                            </label><br>
+                        `;
+                    });
+                    html += `</form>`;
+                    document.getElementById("question-box").innerHTML = html;
+                });
+        }
+
+        function submitAnswer() {
+            const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
+            const selectedAnswers = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            const questionId = questions[currentIndex].id;
+
+            fetch("/api/test/submit", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    question_id: questionId,
+                    selected_answers: selectedAnswers
+                })
+            }).then(() => {
+                currentIndex++;
+                if (currentIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    document.getElementById("question-box").innerHTML = "<h2>Test complete!</h2>";
+                    document.getElementById("next-button").style.display = "none";
+                }
+            });
+        }
+
+        loadQuestion();
+    </script>
+
+{% endblock %}
