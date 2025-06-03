@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from flask_login import login_required, current_user
 from sqlalchemy import or_
 from app.utils.decorators import json_required
@@ -9,6 +9,8 @@ from app.utils.decorators import admin_or_teacher_role_required
 from app.models.profile import UserProfile
 from app.models.enum import RoleEnum
 from app.services.test_question_service import TestQuestionService
+from app.services.test_service import TestService
+from app.services.grade_service import GradeService
 
 
 bp = Blueprint('api', __name__)
@@ -165,10 +167,43 @@ def get_question(question_id):
 @bp.route('/test/submit', methods=['POST'])
 def submit_answer():
     """Submit an answer to a test question"""
+    print('Headers:', request.headers)
+    print('Content-Type:', request.content_type)
+    print('Raw Data:', request.data)
     data = request.json
+    print(f"Received data: {data}")
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
     question_id = data.get('question_id')
-    selected_answer_id = data.get('selected_answers', [])
+    selected_answers = data.get('selected_answers', [])
+
+    if question_id is None or not isinstance(selected_answers, list):
+        return jsonify({"error": "Invalid input data"}), 400
 
     # Optional: Validate or store selected answers here
-    print(f"User answered question {question_id} with answers {selected_answer_id}")
+    submitted = session.get('submitted_answers', {})
+    submitted[str(question_id)] = selected_answers
+    session['submitted_answers'] = submitted
+    print(f"User answered question {question_id} with answers {selected_answers}")
     return jsonify({"success": True})
+
+@bp.route("/test/finish/<int:test_id>", methods=["POST"])
+@login_required
+def finish_test(test_id):
+    try:
+        submitted = session.pop("submitted_answers", {})  # Clear after use
+
+        correct_count = 0
+        for question_id, selected_answers in submitted.items():
+            if TestQuestionService.check_submitted_answer(int(question_id), selected_answers):
+                correct_count += 1
+
+        grade = TestService.calculate_grade(correct_count, total_questions=len(submitted))
+        GradeService.add_grade_for_student(current_user.id, test_id, grade)
+
+        return jsonify({"grade": grade})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "An error occurred while finishing the test"}), 500

@@ -35,3 +35,15 @@ class TestService:
         db.session.delete(test)
         db.session.commit()
         return True
+
+    @staticmethod
+    def calculate_grade(correct_count: int, total_questions: int) -> float:
+        if total_questions == 0:
+            return 0.0
+        # Simple percentage score (0 to 100)
+        score_percent = (correct_count / total_questions) * 100
+
+        # Optional: Convert to 0-10 scale
+        grade = round(score_percent / 10, 2)  # e.g. 85% -> 8.5
+
+        return grade
