@@ -1,6 +1,4 @@
 from flask import Blueprint, flash, request, redirect, render_template, url_for
-from app.extensions import db, datetime
-from flask import Blueprint, request, redirect, render_template,flash,url_for
 from flask_login import login_required, current_user
 from app.utils.decorators import admin_required
 
@@ -8,8 +6,6 @@ from app.models.study_program import StudyProgram
 from app.services.study_program_service import StudyProgramService
 
 from app.models.study_program import StudyProgram
-from app.models.module import Module
-from app.models.grade import Grade
 from app.services.faculty_service import FacultyService
 
 from app.forms.study_program import StudyProgramForm

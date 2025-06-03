@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 {% block title %}Add Question and its answer options {% endblock %}
-{% block content %}
+{% block dashboard_content %}
 <form
   method="POST"
   action="{{ url_for('test_question.add_question', test_id=test_id) }}">

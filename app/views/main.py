@@ -58,48 +58,6 @@ def profile_update():
 
     return render_template("profile/update_profile.html", form=form)
 
-@bp.route('/dashboard')
-@login_required
-def dashboard():
-    """User dashboard"""
-
-    """User dashboard - redirects based on role"""
-    try:
-        if not current_user.profile:
-            flash('Profile not found. Please contact administrator.', 'error')
-            return redirect(url_for('auth.logout'))
-        
-        # Redirect based on user role
-        # Redirect based on user role
-        if current_user.profile.role == RoleEnum.Admin:
-            return redirect(url_for('admin.admin_dashboard'))
-        elif current_user.profile.role == RoleEnum.Teacher:
-            return redirect(url_for('main.teacher_dashboard'))
-        else:  # Default to student dashboard (no role check needed)
-            return redirect(url_for('main.student_dashboard'))
-    except Exception as e:
-        print(f"{e}")
-        return redirect(url_for('main.index'))
-
-
-@bp.route('/teacher/dashboard')
-@teacher_status_required
-def teacher_dashboard():
-    """Teacher dashboard"""
-    teacher_profile = current_user.profile
-    return render_template('teacher/dashboard.html', teacher=teacher_profile)
-
-@bp.route('/student/dashboard')
-@login_required  # Only login required, not role-specific
-def student_dashboard():
-    """Student dashboard - default for all users"""
-    student_profile = current_user.profile
-    study_program = student_profile.study_program if student_profile.study_program_id else None
-    
-    return render_template('student/dashboard.html', 
-                         student=student_profile,
-                         study_program=study_program)
-
 
 @bp.route('/privacy')
 def privacy():

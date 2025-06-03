@@ -24,6 +24,8 @@ def student_grades(student_id):
     return render_template('grades/grades.html',
                            module_grade_map=module_grade_map)
 
+
+
 @bp.route('/assign', methods=['POST'])
 def assign():
     pass
