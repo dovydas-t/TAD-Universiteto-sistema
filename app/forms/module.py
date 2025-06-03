@@ -23,3 +23,12 @@ class ModuleForm(FlaskForm):
     def set_study_program_choices(self, study_programs):
         """Dynamically populate choices."""
         self.study_program_id.choices = [(sp.id, sp.name) for sp in study_programs]
+
+class AddModuleRequirementForm(FlaskForm):
+    requirement_id = SelectField("Select Required Module", coerce=int, validators=[DataRequired()])
+    submit = SubmitField("Add Requirement")
+
+    def set_module_choices(self, modules):
+        """Dynamically populate required module choices."""
+        self.requirement_id.choices = [(-1, 'Select a module')] + [(module.id, module.name) for module in modules]
+

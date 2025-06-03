@@ -1,5 +1,6 @@
 from app.extensions import db
 from app.models.module import Module
+from app.models.module_requirement import ModuleRequirement
 from app.models.enum import SemesterEnum
 
 class ModuleService:
@@ -68,3 +69,13 @@ class ModuleService:
             study_program_id=form.study_program_id.data,
             image_path=image_path
         )
+    @staticmethod
+    def add_prerequisite(module_id, required_module_id):
+        req = ModuleRequirement(module_id=module_id, required_module_id=required_module_id)
+        db.session.add(req)
+        db.session.commit()
+
+    @staticmethod
+    def get_all_modules_except(module_id):
+        """Get all modules except the one with the given ID."""
+        return Module.query.filter(Module.id != module_id).all()

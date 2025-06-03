@@ -1,0 +1,127 @@
+{% extends "dashboard_base.html" %}
+{% from 'profile/macros.html' import user_avatar %}
+
+{% block page_title %}User List{% endblock %}
+
+{% block dashboard_content %}
+<h1>User List</h1>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search name or email">
+    <select id="role">
+      <option value="">All Roles</option>
+      <option value="student">Student</option>
+      <option value="teacher">Teacher</option>
+      <option value="admin">Admin</option>
+    </select>
+    <input type="number" id="group_id" placeholder="Group ID" min="1">
+    <input type="number" id="study_program_id" placeholder="Program ID" min="1">
+    <button onclick="fetchUsers()">Search</button>
+
+    <div class="pagination-controls">
+        <label for="per_page">Users per page:</label>
+        <select id="per_page" onchange="fetchUsers(1)">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+
+        <button onclick="changePage(-1)">Previous</button>
+        <span id="page-info">Page 1</span>
+        <button onclick="changePage(1)">Next</button>
+    </div>
+
+
+  </div>
+
+  <table id="users-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Group ID</th>
+        <th>Program ID</th>
+        <th>Active</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+<script>
+  let currentPage = 1;
+
+  async function fetchUsers(page = 1, per_page = null) {
+    currentPage = page;
+    if (!per_page) {
+      per_page = document.getElementById('per_page').value;
+    }
+
+    const search = document.getElementById('search').value;
+    const role = document.getElementById('role').value;
+    const group_id = document.getElementById('group_id').value;
+    const study_program_id = document.getElementById('study_program_id').value;
+
+    const params = new URLSearchParams({ page, per_page });
+    if (search) params.append('search', search);
+    if (role) params.append('role', role);
+    if (group_id) params.append('group_id', group_id);
+    if (study_program_id) params.append('study_program_id', study_program_id);
+
+    const response = await fetch(`/api/users/list?${params.toString()}`);
+
+    if (!response.ok) {
+      alert('Failed to fetch user list');
+      return;
+    }
+
+    const data = await response.json();
+    const tbody = document.querySelector('#users-table tbody');
+    tbody.innerHTML = '';
+
+    if (data.users.length === 0) {
+      const row = document.createElement('tr');
+      row.innerHTML = '<td colspan="8" style="text-align:center;">No users found</td>';
+      tbody.appendChild(row);
+    } else {
+      data.users.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${user.id}</td>
+          <td>${user.full_name}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>${user.group_id ?? ''}</td>
+          <td>${user.study_program_id ?? ''}</td>
+          <td>${user.is_active ? 'Yes' : 'No'}</td>
+          <td>${new Date(user.created_at).toLocaleString()}</td>
+          <td><a href="/student/detail/${user.id}">Details</a></td>
+          <td><a href="/auth/delete_user/${user.id}">Delete user</a></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Update pagination info
+    document.getElementById('page-info').innerText = `Page ${currentPage}`;
+
+    // Disable "Previous" if on first page
+    document.querySelector('button[onclick="changePage(-1)"]').disabled = (currentPage <= 1);
+  }
+
+  function changePage(delta) {
+    const per_page = document.getElementById('per_page').value;
+    const newPage = currentPage + delta;
+    if (newPage < 1) return;
+    fetchUsers(newPage, per_page);
+  }
+
+  // Load initial users
+  fetchUsers();
+</script>
+
+{% endblock %}
+

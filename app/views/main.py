@@ -1,9 +1,14 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
-from app.forms.profile import ProfileForm
 from app.extensions import db
+from app.forms.profile import ProfileForm
+from app.forms.session_form import SessionForm
 from app.models.enum import RoleEnum
-from app.utils.decorators import admin_required, teacher_status_required
+from app.models.module import Module
+from app.models.session import Session
+
+
+from app.utils.decorators import admin_required, teacher_status_required, admin_or_teacher_role_required
 
 bp = Blueprint('main', __name__)
 
@@ -59,18 +64,23 @@ def dashboard():
     """User dashboard"""
 
     """User dashboard - redirects based on role"""
-    if not current_user.profile:
-        flash('Profile not found. Please contact administrator.', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    # Redirect based on user role
-       # Redirect based on user role
-    if current_user.profile.role == RoleEnum.Admin:
-        return redirect(url_for('admin.admin_dashboard'))
-    elif current_user.profile.role == RoleEnum.Teacher:
-        return redirect(url_for('main.teacher_dashboard'))
-    else:  # Default to student dashboard (no role check needed)
-        return redirect(url_for('main.student_dashboard'))
+    try:
+        if not current_user.profile:
+            flash('Profile not found. Please contact administrator.', 'error')
+            return redirect(url_for('auth.logout'))
+        
+        # Redirect based on user role
+        # Redirect based on user role
+        if current_user.profile.role == RoleEnum.Admin:
+            return redirect(url_for('admin.admin_dashboard'))
+        elif current_user.profile.role == RoleEnum.Teacher:
+            return redirect(url_for('main.teacher_dashboard'))
+        else:  # Default to student dashboard (no role check needed)
+            return redirect(url_for('main.student_dashboard'))
+    except Exception as e:
+        print(f"{e}")
+        return redirect(url_for('main.index'))
+
 
 @bp.route('/teacher/dashboard')
 @teacher_status_required
@@ -89,6 +99,30 @@ def student_dashboard():
     return render_template('student/dashboard.html', 
                          student=student_profile,
                          study_program=study_program)
+
+
+
+
+@bp.route('/add_session', methods=['GET', 'POST'])
+@admin_or_teacher_role_required
+def add_session():
+    try:
+        form = SessionForm()
+        form.module_id.choices = [(m.id, m.name) for m in Module.query.all()]
+        if form.validate_on_submit():
+            session = Session(
+                module_id=form.module_id.data,
+                type=form.type.data,
+                date=form.date.data
+            )
+            db.session.add(session)
+            db.session.commit()
+            flash('Session added!', 'success')
+            return redirect(url_for('main.add_session'))
+        return render_template('session/add_session.html', form=form)
+    except Exception as e:
+        print(f"{e}")
+        db.session.rollback()
 
 
 @bp.route('/privacy')

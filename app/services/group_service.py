@@ -82,3 +82,12 @@ class GroupsService:
     def get_dropdown_choices():
         return [(g.id, g.code) for g in db.session.query(Groups).order_by(Groups.code).all()]
         
+    @staticmethod
+    def delete_group(group_id: int):
+        """Delete a group by its ID"""
+        group = GroupsService.get_group_by_id(group_id)
+        if not group:
+            return False
+        
+        db.session.delete(group)
+        db.session.commit()

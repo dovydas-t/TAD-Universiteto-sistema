@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 
 {% block title %}Module Details{% endblock %}
 
@@ -29,7 +29,7 @@
         <a href="{{ url_for('student.edit_student', student_id=student.id) }}">Edit student</a>
     </p>
     <p>
-        <a href="{{ url_for('module.index') }}">Back to Module Index</a>
+        <a href="{{ url_for('users.users_list') }}">Back to users list</a>
     </p>
     </div>
 </div>

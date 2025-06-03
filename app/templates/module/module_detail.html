@@ -29,6 +29,7 @@
     <hr>
     <br>
     <h4>Required Modules:</h4>
+    <a href="{{ url_for('module.add_requirement', module_id=module.id)}}">Add new requirement for this module</a>
     {% if module.requirements %}
     <ul>
         {% for req in module.requirements %}
