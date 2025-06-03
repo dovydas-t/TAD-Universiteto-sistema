@@ -28,7 +28,7 @@ def dashboard():
         elif current_user.profile.role == RoleEnum.Teacher:
             return redirect(url_for('dashboard.teacher_dashboard'))
         else:  # Default to student dashboard (no role check needed)
-            return redirect(url_for('dashboar.student_dashboard'))
+            return redirect(url_for('dashboard.student_dashboard'))
     except Exception as e:
         print(f"{e}")
         return redirect(url_for('main.index'))
