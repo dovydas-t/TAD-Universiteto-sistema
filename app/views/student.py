@@ -11,7 +11,8 @@ from app.forms.choosemodule import ChooseModule
 from app.services.user_service import UserService
 from app.services.group_service import GroupsService
 from app.services.schedule_service import ScheduleService
-
+from app.services.module_service import ModuleService
+from collections import defaultdict
 
 
 
@@ -25,6 +26,7 @@ def academic_info():
     """View student's academic information"""
     student = current_user.profile
     return render_template('student/academic_info.html', student=student)
+
 
 @bp.route('/modules')
 @login_required
@@ -49,6 +51,49 @@ def my_modules():
     modules_by_semester=modules_by_semester,
     student=current_user.profile)
 
+
+
+@bp.route('/choose_module', methods=['GET', 'POST'])
+@login_required
+def choose_module():
+    try:
+        form = ChooseModule()
+        
+        study_program_id = current_user.profile.study_program_id
+        study_program = StudyProgram.query.get(study_program_id)
+        modules=Module.query.filter_by(study_program_id=study_program_id).all()
+        
+
+        # Assume current_user.completed_modules is a list of completed module IDs
+        completed_module_ids = {m.id for m in current_user.profile.completed_modules}
+
+        # Only allow modules where all requirements are completed
+        available_modules = []
+        for module in modules:
+            required_ids = [req.required_module_id for req in module.requirements]
+            if all(rid in completed_module_ids for rid in required_ids):
+                available_modules.append(module)
+
+        form.module_id.choices = [(m.id, m.name) for m in available_modules]
+        if form.validate_on_submit():
+            selected_module_id = form.module_id.data
+            selected_module= Module.query.get(selected_module_id)
+            if selected_module not in current_user.profile.modules:
+                current_user.profile.modules.append(selected_module_id)
+                ScheduleService.add_module_sessions_to_schedule(current_user.profile, selected_module)
+                flash('Module and its sessions added to your calendar!', 'success')
+                db.session.commit()
+            else:
+                flash('You are already enrolled in this module.', 'warning')
+            return redirect(url_for('student.my_modules'))
+
+        return render_template('module/choose_module.html', form=form, study_program_name=study_program.name)
+    
+    except Exception as e:
+        print(f"{e}")
+        return render_template('module/choose_module.html', form=form, study_program_name=study_program.name)
+
+
 @bp.route('/my_calendar')
 @login_required
 def my_calendar():
@@ -56,10 +101,6 @@ def my_calendar():
     schedule_items = ScheduleItem.query.filter_by(user_id=current_user.profile.id).order_by(ScheduleItem.date).all()
     return render_template('schedule/schedule.html', schedule_items=schedule_items)
 
-@bp.route('/academic-info')
-@login_required  # or @login_required if you don't have student_required decorator
-def student_modules():
-    return render_template()
 
 @bp.route('/detail/<int:student_id>', methods=['GET', 'POST'])
 @login_required
@@ -127,46 +168,28 @@ def group_info():
 
 
 
-@bp.route('/choose_module', methods=['GET', 'POST'])
+@bp.route('/my_grades', methods=['GET'])
 @login_required
-def choose_module():
-    try:
-        form = ChooseModule()
-        
-        study_program_id = current_user.profile.study_program_id
-        study_program = StudyProgram.query.get(study_program_id)
-        modules=Module.query.filter_by(study_program_id=study_program_id).all()
-        
+def student_grades():
+    # Ensure only students can access this view
+    if current_user.profile.role.value != 'Student':
+        flash("Access denied.", 'error')
+        return redirect(url_for('dashboard.dashboard'))
 
-        # Assume current_user.completed_modules is a list of completed module IDs
-        completed_module_ids = {m.id for m in current_user.profile.completed_modules}
+    student_id = current_user.profile.id
+    student, grades = UserService.get_student_and_student_grades(student_id)
 
-        # Only allow modules where all requirements are completed
-        available_modules = []
-        for module in modules:
-            required_ids = [req.required_module_id for req in module.requirements]
-            if all(rid in completed_module_ids for rid in required_ids):
-                available_modules.append(module)
-
-        form.module_id.choices = [(m.id, m.name) for m in available_modules]
-        if form.validate_on_submit():
-            selected_module_id = form.module_id.data
-            selected_module= Module.query.get(selected_module_id)
-            if selected_module not in current_user.profile.modules:
-                current_user.profile.modules.append(selected_module_id)
-                ScheduleService.add_module_sessions_to_schedule(current_user.profile, selected_module)
-                flash('Module and its sessions added to your calendar!', 'success')
-                db.session.commit()
-            else:
-                flash('You are already enrolled in this module.', 'warning')
-            return redirect(url_for('student.my_modules'))
-
-        return render_template('module/choose_module.html', form=form, study_program_name=study_program.name)
+    if not student:
+        flash("Error. Student doesn't exist.", 'error')
+        return redirect(url_for('dashboard.dashboard'))
     
-    except Exception as e:
-        print(f"{e}")
-        return render_template('module/choose_module.html', form=form, study_program_name=study_program.name)
+    module_grade_map = defaultdict(list)
+    for grade in grades:
+        module = ModuleService.get_module_by_id(grade.module_id)
+        module_grade_map[module.name].append(grade.grade)
 
+    return render_template('grades/grades.html',
+                           module_grade_map=module_grade_map)
 
 
 # #FIXME: not sure if this belong here
