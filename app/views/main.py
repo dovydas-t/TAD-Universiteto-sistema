@@ -101,30 +101,6 @@ def student_dashboard():
                          study_program=study_program)
 
 
-
-
-@bp.route('/add_session', methods=['GET', 'POST'])
-@admin_or_teacher_role_required
-def add_session():
-    try:
-        form = SessionForm()
-        form.module_id.choices = [(m.id, m.name) for m in Module.query.all()]
-        if form.validate_on_submit():
-            session = Session(
-                module_id=form.module_id.data,
-                type=form.type.data,
-                date=form.date.data
-            )
-            db.session.add(session)
-            db.session.commit()
-            flash('Session added!', 'success')
-            return redirect(url_for('main.add_session'))
-        return render_template('session/add_session.html', form=form)
-    except Exception as e:
-        print(f"{e}")
-        db.session.rollback()
-
-
 @bp.route('/privacy')
 def privacy():
     return render_template('admin/privacy.html')

@@ -140,9 +140,17 @@ user_avatar %}
           {% elif current_user.profile.role.value == 'Teacher' %}
           <li>
             <a href="{{ url_for('main.teacher_dashboard') }}" class="nav-link"
-              >Dashboard</a
-            >
+              >Dashboard</a>            
           </li>
+         
+            <li class="dropdown">
+            <div class="nav-link dropbtn">Sessions</div>
+            <div class="dropdown-content">
+             <a href="{{ url_for('session.add_session') }}">Create</a>
+             <a href="{{ url_for('session.session_list') }}">List</a>
+            </div>
+          </li>
+          
           <li class="dropdown">
             <div class="nav-link dropbtn">Modules</div>
             <div class="dropdown-content">
@@ -157,6 +165,8 @@ user_avatar %}
               <a href="#">List Tests</a>
             </div>
           </li>
+          
+
           {% elif current_user.profile.role.value == 'Student' %}
           <li>
             <a href="{{ url_for('main.student_dashboard') }}" class="nav-link"

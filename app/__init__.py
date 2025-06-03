@@ -77,6 +77,9 @@ def create_app(config_class=Config):
 
     from app.views.users import bp as users_bp
     app.register_blueprint(users_bp, url_prefix='/users')
+    
+    from app.views.session import bp as session_bp
+    app.register_blueprint(session_bp, url_prefix='/session')
 
 
     @app.context_processor

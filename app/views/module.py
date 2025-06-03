@@ -45,29 +45,37 @@ def add_module():
     try:
         form = ModuleForm()
         # Set choices first
-        study_programs = StudyProgramService.get_all_study_programs()
-        if not study_programs:
-            flash('No study programs available. Please add a study program first.', 'warning')
-            return redirect(url_for('study_program.add_study_program'))
+
+        if current_user.profile.role.value == 'Teacher':
+            if not current_user.profile.study_program:
+                flash('You are not assigned to any study program. Please contact admin.', 'danger')
+                return redirect(url_for('module.index'))
+            study_programs = [current_user.profile.study_program]
+        else:
+            study_programs = StudyProgramService.get_all_study_programs()
         
+        study_programs = [sp for sp in study_programs if sp is not None]    
         form.set_study_program_choices(study_programs)
-        all_modules = Module.query.all()
-        form.set_prerequisite_choices(all_modules)
 
         if request.method == 'GET':
             study_program_id = request.args.get('study_program_id')
+            
             if study_program_id:
                 form.study_program_id.data = int(study_program_id)
             return render_template('module/add_module.html', form=form, title='Add Module')
 
         if form.validate_on_submit():
             new_module = ModuleService.create_module_from_form(form)
-            for prereq_id in form.prerequisites.data:
-                ModuleService.add_prerequisite(new_module.id, prereq_id)
-            flash('Module added successfully!', 'success')
-            return redirect(url_for('module.detail', module_id=new_module.id))
+        if current_user.profile.role.value == 'Teacher':
+            new_module.teachers.append(current_user.profile)
+            new_module.created_by = current_user.profile  # <-- set creator
+            db.session.commit()
+        flash('Module added successfully!', 'success')
+        return redirect(url_for('module.detail', module_id=new_module.id))
     except Exception as e:
         print(f"{e}")
+        db.session.rollback()
+        return render_template('module/add_module.html', form=form, title='Add Module')
     
 
 @bp.route('module_list', methods=['GET', 'POST'])
@@ -76,7 +84,11 @@ def module_list():
 
     try: 
 
-        module_list = ModuleService.get_all_modules() or []
+        if current_user.profile.role.value == 'Teacher':
+            # Only modules created by this teacher
+            module_list = Module.query.filter_by(created_by_id=current_user.profile.id).all()
+        else:
+            module_list = ModuleService.get_all_modules() or []
         module_names = [module.name for module in module_list]
 
         if not module_list:

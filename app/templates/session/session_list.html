@@ -1,0 +1,25 @@
+{%extends "dashboard_base.html"%}
+{%block dashboard_content%}
+{%if sessions%}
+<table>
+  <tr>
+    <th>Module</th>
+    <th>Date</th>
+    <th>Type</th>
+    <th>Actions</th>
+  </tr>
+  {% for session in sessions %}
+  <tr>
+    <td>{{ session.module.name }}</td>
+    <td>{{ session.date.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ session.type }}</td>
+    <td>
+      <a href="{{ url_for('session.edit_session', session_id=session.id) }}">Edit</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{%else%}
+<p>No sessions found.</p>
+{% endif %}
+{%endblock%}
