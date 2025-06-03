@@ -29,7 +29,7 @@ def profile_update():
             form.email.data != current_user.profile.email or
             form.birth_date.data != current_user.profile.birth_date or
             form.study_program_id.data != current_user.profile.study_program_id or
-            bool(form.profile_picture.data)  # Just check if a file was uploaded
+            bool(form.profile_picture.data) # Just check if a file was uploaded
         )
 
         if not user_changed:
