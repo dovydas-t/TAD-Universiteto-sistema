@@ -192,10 +192,12 @@
               >Academic Information</a
             >
           </li>
-          <li>
-            <a href="{{ url_for('student.my_modules') }}" class="nav-link"
-              >My Modules</a
-            >
+            <li class="dropdown">
+            <div class="nav-link dropbtn">Test</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('module.choose_module') }}">Choose Modules</a>
+             <a href="{{ url_for('student.my_modules') }}">My Modules</a>
+            </div>
           </li>
           {% else %}
           <li>
