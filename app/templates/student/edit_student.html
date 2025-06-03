@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 
-{% block content %}
+{% block dashboard_content %}
 <div class="auth-container">
   <div class="auth-card">
     <h2>Edit Student</h2>
@@ -10,7 +10,7 @@
 
       <div class="form-group">
         {{ form.first_name.label(class="form-label") }}
-        {{ form.first_name(class="form-control") }}
+        {{ form.first_name(class="form-control", placeholder=student.first_name) }}
         {% for error in form.first_name.errors %}
           <div class="text-danger">{{ error }}</div>
         {% endfor %}
@@ -18,7 +18,7 @@
 
       <div class="form-group">
         {{ form.last_name.label(class="form-label") }}
-        {{ form.last_name(class="form-control") }}
+        {{ form.last_name(class="form-control", placeholder=student.last_name) }}
         {% for error in form.last_name.errors %}
           <div class="text-danger">{{ error }}</div>
         {% endfor %}
@@ -26,7 +26,7 @@
 
       <div class="form-group">
         {{ form.birth_date.label(class="form-label") }}
-        {{ form.birth_date(class="form-control") }}
+        {{ form.birth_date(class="form-control", placeholder=student.birth_date) }}
         {% for error in form.birth_date.errors %}
           <div class="text-danger">{{ error }}</div>
         {% endfor %}
@@ -34,7 +34,7 @@
 
       <div class="form-group">
         {{ form.email.label(class="form-label") }}
-        {{ form.email(class="form-control") }}
+        {{ form.email(class="form-control", placeholder="Enter email address") }}
         {% for error in form.email.errors %}
           <div class="text-danger">{{ error }}</div>
         {% endfor %}

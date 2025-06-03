@@ -14,6 +14,7 @@ bp = Blueprint('test', __name__)
 def index():    
     return render_template('tests/tests.html',
                            title='Test')
+
 @bp.route('/test/create',  methods=['GET','POST'])
 def create_test():
     form = TestForm()
