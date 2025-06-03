@@ -7,14 +7,17 @@ from app.models.study_program import StudyProgram
 from app.models.schedule_item import ScheduleItem
 from app.models.profile import UserProfile
 from app.models.enum import RoleEnum
+from app.forms.choosemodule import ChooseModule
 from app.services.user_service import UserService
 from app.services.group_service import GroupsService
+from app.services.schedule_service import ScheduleService
 
 
 
 
 
 bp = Blueprint('student', __name__, url_prefix='/student')
+
 
 @bp.route('/academic-info')
 @login_required  # or @login_required if you don't have student_required decorator
@@ -121,6 +124,50 @@ def group_info():
     return render_template('groups/groups_info.html',
                          group=group,
                          group_members=group_members)
+
+
+
+@bp.route('/choose_module', methods=['GET', 'POST'])
+@login_required
+def choose_module():
+    try:
+        form = ChooseModule()
+        
+        study_program_id = current_user.profile.study_program_id
+        study_program = StudyProgram.query.get(study_program_id)
+        modules=Module.query.filter_by(study_program_id=study_program_id).all()
+        
+
+        # Assume current_user.completed_modules is a list of completed module IDs
+        completed_module_ids = {m.id for m in current_user.profile.completed_modules}
+
+        # Only allow modules where all requirements are completed
+        available_modules = []
+        for module in modules:
+            required_ids = [req.required_module_id for req in module.requirements]
+            if all(rid in completed_module_ids for rid in required_ids):
+                available_modules.append(module)
+
+        form.module_id.choices = [(m.id, m.name) for m in available_modules]
+        if form.validate_on_submit():
+            selected_module_id = form.module_id.data
+            selected_module= Module.query.get(selected_module_id)
+            if selected_module not in current_user.profile.modules:
+                current_user.profile.modules.append(selected_module_id)
+                ScheduleService.add_module_sessions_to_schedule(current_user.profile, selected_module)
+                flash('Module and its sessions added to your calendar!', 'success')
+                db.session.commit()
+            else:
+                flash('You are already enrolled in this module.', 'warning')
+            return redirect(url_for('student.my_modules'))
+
+        return render_template('module/choose_module.html', form=form, study_program_name=study_program.name)
+    
+    except Exception as e:
+        print(f"{e}")
+        return render_template('module/choose_module.html', form=form, study_program_name=study_program.name)
+
+
 
 # #FIXME: not sure if this belong here
 # def assign_student_to_group(student_id, study_program_id):

@@ -11,6 +11,7 @@ from app.utils.decorators import admin_required, teacher_status_required
 bp = Blueprint('dashboard', __name__)
 
 @bp.route('/')
+@bp.route('/dashboard')
 @login_required
 def dashboard():
     """User dashboard"""
@@ -27,12 +28,12 @@ def dashboard():
         elif current_user.profile.role == RoleEnum.Teacher:
             return redirect(url_for('dashboard.teacher_dashboard'))
         else:  # Default to student dashboard (no role check needed)
-            return redirect(url_for('dashboard.student_dashboard'))
+            return redirect(url_for('dashboar.student_dashboard'))
     except Exception as e:
         print(f"{e}")
         return redirect(url_for('main.index'))
 
-@bp.route('/admin', methods=['GET'])
+@bp.route('/admin_dashboard', methods=['GET'])
 @admin_required
 def admin_dashboard():
     try:
@@ -57,14 +58,14 @@ def admin_dashboard():
                             study_programs=study_programs,
                             teachers=teachers)
 
-@bp.route('/teacher')
+@bp.route('/teacher_dashboard')
 @teacher_status_required
 def teacher_dashboard():
     """Teacher dashboard"""
     teacher_profile = current_user.profile
     return render_template('teacher/dashboard.html', teacher=teacher_profile)
 
-@bp.route('/student')
+@bp.route('/student_dashboard')
 @login_required  # Only login required, not role-specific
 def student_dashboard():
     """Student dashboard - default for all users"""

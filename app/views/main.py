@@ -59,8 +59,6 @@ def profile_update():
     return render_template("profile/update_profile.html", form=form)
 
 
-
-
 @bp.route('/privacy')
 def privacy():
     return render_template('admin/privacy.html')
