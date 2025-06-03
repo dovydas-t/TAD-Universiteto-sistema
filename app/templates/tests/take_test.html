@@ -1,57 +1,101 @@
 {% extends "dashboard_base.html" %}
 {% block title %}Solve Test{% endblock %} 
-{%block page_title%}Solve: {{ test.name }}{%endblock%}
-{% block dashboard_content%}
+{% block page_title %}Solve: {{ test.name }}{% endblock %}
+{% block dashboard_content %}
     <h1>{{ test.name }}</h1>
     <div id="question-box">Loading question...</div>
     <button id="next-button" onclick="submitAnswer()">Next Question</button>
 
     <script>
-        const questions = {{ questions|tojson }};
+        const test_id = {{ test.id | tojson }};
+        const questions = {{ questions | tojson }};
         let currentIndex = 0;
 
         function loadQuestion() {
             const question = questions[currentIndex];
-            fetch(`/api/test/question/${question.id}`)
-                .then(res => res.json())
-                .then(data => {
-                    let html = `<h3>Question ${currentIndex + 1}:</h3><p>${data.text}</p><form id="question-form">`;
-                    data.answers.forEach(answer => {
-                        html += `
-                            <label>
-                                <input type="checkbox" name="answer" value="${answer.id}"> ${answer.text}
-                            </label><br>
-                        `;
-                    });
-                    html += `</form>`;
-                    document.getElementById("question-box").innerHTML = html;
+            fetch(`/api/test/question/${question.id}`, {
+                credentials: "include"
+            })
+            .then(res => res.json())
+            .then(data => {
+                let html = `<h3>Question ${currentIndex + 1}:</h3><p>${data.text}</p><form id="question-form">`;
+                data.answers.forEach(answer => {
+                    html += `
+                        <label>
+                            <input type="checkbox" name="answer" value="${answer.id}"> ${answer.text}
+                        </label><br>
+                    `;
                 });
+                html += `</form>`;
+                document.getElementById("question-box").innerHTML = html;
+            })
+            .catch(err => {
+                console.error("Failed to load question:", err);
+                document.getElementById("question-box").innerHTML = `<p>Error loading question.</p>`;
+            });
         }
 
         function submitAnswer() {
             const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
             const selectedAnswers = Array.from(checkboxes).map(cb => parseInt(cb.value));
-            const questionId = questions[currentIndex].id;
 
+            const questionId = questions[currentIndex].id; // Access before incrementing
+            console.log('Submitting:', {
+                question_id: questionId,
+                selected_answers: selectedAnswers
+            });
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             fetch("/api/test/submit", {
                 method: "POST",
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
                 body: JSON.stringify({
                     question_id: questionId,
                     selected_answers: selectedAnswers
                 })
-            }).then(() => {
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Submit failed");
+                return res.json().catch(() => ({})); // Safe if no JSON response
+            })
+            .then(() => {
                 currentIndex++;
                 if (currentIndex < questions.length) {
                     loadQuestion();
                 } else {
-                    document.getElementById("question-box").innerHTML = "<h2>Test complete!</h2>";
-                    document.getElementById("next-button").style.display = "none";
+                    console.log("Finished all questions, submitting test_id:", test_id);
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    fetch(`/api/test/finish/${test_id}`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        credentials: "include"
+                    })
+                    .then(res => {
+                        if (!res.ok) throw new Error("Finish failed");
+                        return res.json();
+                    })
+                    .then(data => {
+                        document.getElementById("question-box").innerHTML = `<h2>Test complete! Grade: ${data.grade}</h2>`;
+                        document.getElementById("next-button").style.display = "none";
+                    })
+                    .catch(err => {
+                        console.error("Error finishing test:", err);
+                        document.getElementById("question-box").innerHTML = `<p>Error submitting test.</p>`;
+                    });
                 }
+            })
+            .catch(err => {
+                console.error("Error submitting answer:", err);
+                alert("There was an error submitting your answer.");
             });
         }
 
         loadQuestion();
     </script>
-
 {% endblock %}
