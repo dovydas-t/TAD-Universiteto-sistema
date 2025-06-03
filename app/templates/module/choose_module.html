@@ -1,0 +1,12 @@
+{% extends "dashboard_base.html" %}
+{%block page_title%}Choose {{ study_program_name }} Modules{%endblock%}
+{% block dashboard_content %}
+
+
+    <form method="POST" >
+        {{ form.hidden_tag() }}
+        {{ form.module_id.label }} {{ form.module_id() }}
+        {{ form.submit() }}
+    </form>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Admin Menu</h2>
+
+    <!-- Action buttons moved to the top -->
+    <div class="mb-3">
+        <button class="btn btn-success">Add Faculty</button>
+        <button class="btn btn-danger">Delete Faculty</button>
+    </div>
+
+    <!-- Faculty list -->
+    <div class="list-group">
+        {% for faculty in faculties %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{ faculty.name }}</span>
+            <button 
+                class="btn btn-primary btn-sm view-details-btn"
+                data-name="{{ faculty.name }}"
+                data-description="{{ faculty.description }}"
+                data-dean="{{ faculty.dean }}"
+            >
+                Faculty Details
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Selected faculty info card -->
+    <div id="faculty-info" class="card mt-4" style="display: none;">
+        <div class="card-body">
+            <h5 class="card-title" id="faculty-name"></h5>
+            <p class="card-text" id="faculty-description"></p>
+        </div>
+    </div>
+</div>
+<!-- Load JS file -->
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+{% endblock %}

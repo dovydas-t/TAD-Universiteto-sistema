@@ -1,0 +1,74 @@
+{% extends "dashboard_base.html" %}
+{%block page_title%} Add Modules{%endblock%}
+{% block dashboard_content %}
+
+
+<div class="auth-container">
+  <div class="auth-card">
+    
+    <h2>Module</h2>
+    <form
+      method="POST"
+      action="{{ url_for('module.add_module') }}"
+      class="auth-form">
+      {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-input", placeholder="Enter module name") }}
+            {% for error in form.name.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-input", placeholder="Enter module description") }}
+            {% for error in form.description.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.credits.label(class="form-label") }}
+            {{ form.credits(class="form-input", placeholder="Enter number of credits") }}
+            {% for error in form.credits.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.semester.label(class="form-label") }}
+            {{ form.semester(class="form-input") }}
+            {% for error in form.semester.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.study_program_id.label(class="form-label") }}
+            {{ form.study_program_id(class="form-input", placeholder="Enter Study Program ID") }}
+            {% for error in form.study_program_id.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.image_path.label(class="form-label") }}
+            {{ form.image_path(class="form-input") }}
+            {% for error in form.image_path.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+
+      <div class="form-actions">
+        {{ form.submit(class="btn btn-primary btn-full") }}
+        <a href="{{ url_for('module.index') }}" class="btn btn-secondary">Cancel</a>
+
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

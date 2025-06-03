@@ -1,37 +1,40 @@
 {% extends "base.html" %} {% block content %}
-<div class="hero-section">
-  <h1>Welcome</h1>
-  <p>Your personal dashboard</p>
+<!-- Hero Photo Section -->
+<div class="photo-container">
+  <img
+    src="{{ url_for('static', filename='images/homepagephoto.jpg') }}"
+    alt="Homepage Photo"
+    class="background-photo"
+  />
 
-  {% if not current_user.is_authenticated %}
-  <div class="hero-buttons">
-    <a href="{{ url_for('auth.register') }}" class="btn btn-primary"
-      >Get Started</a
-    >
-    <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Sign In</a>
+  <!-- TEXT BOXES OVER PHOTO -->
+  <div class="photo-overlay">
+    <h1 class="photo-title">Pursue your own path in life</h1>
+    <p class="photo-subtitle">2025 admissions open</p>
+    <div class="hero-buttons">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Apply</a>
+    </div>
   </div>
-  {% else %}
-  <div class="hero-buttons">
-    <p>Welcome back, {{ current_user.username }}!</p>
-    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary"
-      >View Dashboard</a
-    >
-  </div>
-  {% endif %}
-</div>
 
-<div class="features">
-  <div class="feature-card">
-    <h3>Dashboard</h3>
-    <p>Access your personal dashboard and manage your account</p>
+  <!-- Features -->
+  <div class="features">
+    <div class="feature-card">
+      <h3>Study Programs</h3>
+      <p>Access informational page f.e.: study_programs_information.html</p>
+      <a href="{{ url_for('programs.index') }}">
+        Find the right study program for you
+      </a>
+    </div>
+    <div class="feature-card">
+      <h3>Modules</h3>
+      <p>Access informational page f.e.: modules_information.html</p>
+      <a href="{{ url_for('module.index') }}">About Modules</a>
+    </div>
+    <div class="feature-card">
+      <h3>Faculties</h3>
+      <p>Access informational page f.e.: faculty_information.html</p>
+      <a href="{{ url_for('faculty.index') }}">About Faculties</a>
+    </div>
   </div>
-  <div class="feature-card">
-    <h3>Profile</h3>
-    <p>Update your personal information and preferences</p>
-  </div>
-  <div class="feature-card">
-    <h3>Security</h3>
-    <p>Your data is protected with industry-standard security</p>
-  </div>
+  {% endblock %}
 </div>
-{% endblock %}

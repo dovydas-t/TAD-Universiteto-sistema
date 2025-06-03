@@ -1,0 +1,33 @@
+{% extends "dashboard_base.html" %} {% block title %}Test Question Details{% endblock %} {% block
+dashboard_content %}
+<div class="container fade-in">
+  <h1>{{ question }}</h1>
+
+  <div class="feature-card">
+    <h3>Question belong to Test:</h3>
+    <a href="{{ url_for('test.detail', test_id=question.test.id)}}">
+      <p>{{ question.test.name }}</p></a>
+  </div>
+
+  <div class="feature-card">
+    <h3>Question and answer Options:</h3>
+    {{ question.question_text }}
+    {% if question.answer_options %}
+    <ul>
+      {% for answer in question.answer_options %}
+        {% if answer.is_correct == 1 %}
+          <li><strong>{{ answer.option_text }}</strong></li>
+        {% else %}
+          <li>{{ answer.option_text }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Test has no answer options added.</p>
+  {% endif %}
+</div>
+    <a href="{{ url_for('test_question.edit_question', test_question_id=question.id )}}">
+        Edit Question
+    </a>
+</div>
+{% endblock %}

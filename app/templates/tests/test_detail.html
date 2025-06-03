@@ -1,0 +1,33 @@
+{% extends "dashboard_base.html" %} {% block title %}Test Details{% endblock %} 
+{%block page_title%}Test name: {{ test.name }} {%endblock%}
+{% block dashboard_content %} 
+<div class="container fade-in">
+  <div class="feature-card">
+    <h3>Test belong to module:</h3>
+    <a href="{{ url_for('module.detail', module_id=test.module.id)}}">
+      <p>{{ test.module.name }}</p></a>
+  </div>
+
+  <div class="feature-card">
+    <h3>Test questions:</h3><hr><br>
+    {% if test.questions %}
+    <ul>
+      {% for question in test.questions %}
+      <li><span>{{ question.question_text }}</span>
+        <a href="{{ url_for('test_question.detail', test_question_id=question.id) }}">
+        Details</a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No questions found for this test.</p>
+    {% endif %}<br>
+    <a href="{{ url_for('test_question.add_question', test_id=test.id )}}">Add new question to this test</a>
+  </div><br>
+
+  <div class="form-actions">
+    <a href="{{ url_for('test.index') }}" class="btn btn-secondary"
+      >Back to Tests</a
+    >
+  </div>
+</div>
+{% endblock %}

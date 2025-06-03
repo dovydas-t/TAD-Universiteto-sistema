@@ -1,0 +1,31 @@
+{% extends "dashboard_base.html" %} {% block title %} Faculty Details {% endblock %} 
+{%block page_title%}Faculty ID {{ faculty.id }} {%endblock%}
+
+{% block dashboard_content %}
+
+<div class="faculty-container">
+ 
+  <p><strong>Faculty name :</strong> {{ faculty.name }}</p>
+  <p><strong>Faculty address :</strong> {{ faculty.get_full_address() }}</p>
+  <p><strong>Faculty description :</strong> {{ faculty.description }}</p><br>
+  <h1>Faculty Programs:</h1><hr><br>
+  {% if study_programs_list %}
+  <ul>
+    {% for program in study_programs_list %}
+    <li>
+      <span>{{ program.name }}</span>
+      <a href="{{ url_for('programs.detail', study_program_id=program.id) }}">
+        Details</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p><strong>No Study Programs for this faculty</strong></p><br>
+
+  <a href="{{ url_for('programs.add_program') }}"> Add new Study Program</a>
+  {% endif %}
+</div>
+
+
+{% endblock %}

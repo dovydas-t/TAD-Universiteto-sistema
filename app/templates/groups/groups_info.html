@@ -1,0 +1,73 @@
+{% extends "dashboard_base.html" %}
+
+{% block page_title %}My Group - {{ group.code }}{% endblock %}
+
+{% block dashboard_content %} 
+{% if group %}
+<div class="dashboard-card">
+    <div class="card-content">
+        <div class="group-summary">
+            <p><strong>Group Code:</strong> {{ group.code }}</p>
+            <p><strong>Study Program:</strong> {{ group.study_program.name  }}</p>
+            <p><strong>Group Members:</strong> {{ group_members|length }} students</p>
+        </div><br><br>
+        
+        <div class="members-section">
+            <h4>Group Members</h4>
+            {% if group_members %}
+            <div class="table-responsive">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in group_members %}
+                        <tr {% if student == current_user.profile %}class="current-user"{% endif %}>
+                            <td>
+                                {% if student.first_name and student.last_name %}
+                                {{ student.first_name }} {{ student.last_name }}
+                                {% else %}
+                                {{ student.user.username }}
+                                {% endif %}
+                                {% if student == current_user.profile %}
+                                <span class="you-badge">You</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if student.email %}
+                                <a href="mailto:{{ student.email }}">{{ student.email }}</a>
+                                {% else %}
+                                <span class="text-muted">Not available</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No other students in this group.</p>
+            {% endif %}
+        </div><br><br>
+        
+        <div class="group-actions">
+            <a href="{{ url_for('dashboard.student_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="dashboard-card">
+    <div class="card-content">
+        <div class="empty-state">
+            <h3>No Group Assigned</h3>
+            <p>You are not assigned to any group yet.</p>
+            <a href="{{ url_for('dashboard.student_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

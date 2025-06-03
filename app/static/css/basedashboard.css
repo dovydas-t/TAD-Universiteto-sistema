@@ -1,0 +1,674 @@
+/* BASICS ***********************************************/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: "Josefin Sans", "Avenir Next", Avenir, "Helvetica Neue",
+    Helvetica, "Segoe UI", Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  color: #000;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+/* NAV BAR ***********************************************/
+
+.navbar {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000;
+  padding: 0.5rem 0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  height: 30px;
+}
+
+.nav-container {
+  max-width: 70%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-brand {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 0.5rem 1.7rem;
+  border: 1.5px solid black;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: "Josefin Sans", "Avenir Next", Avenir, "Helvetica Neue",
+    Helvetica, "Segoe UI", Ubuntu, Cantarell, sans-serif;
+  text-transform: lowercase;
+}
+
+.nav-link:hover {
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+}
+
+.nav-link--active {
+  background-color: black !important;
+  color: white !important;
+}
+
+/* Additional logout button styling (matches the nav-link style) */
+.nav-link.logout-btn {
+  background-color: white;
+  color: black;
+  border: 1.5px solid black;
+}
+
+.nav-link.logout-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+/* SIDEBAR ***********************************************/
+
+.nav-link,
+.sidebar-nav .nav-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: "Josefin Sans", "Avenir Next", Avenir, "Helvetica Neue",
+    Helvetica, "Segoe UI", Ubuntu, Cantarell, sans-serif;
+  text-transform: lowercase;
+}
+
+.nav-link:hover,
+.sidebar-nav .nav-link:hover,
+.nav-link--active {
+  background-color: black;
+  color: white;
+  border-color: black;
+}
+
+.navbar,
+.sidebar {
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.sidebar {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  top: 60px;
+  width: 100%;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.nav-container,
+.sidebar-container {
+  max-width: 70%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-nav ul.nav-menu {
+  display: flex;
+  gap: 0.3rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+.main-content {
+  margin-top: 120px;
+  padding: 2rem 0;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  padding: 12px 20px;
+  color: #bdc3c7;
+  transition: all 0.3s ease;
+}
+
+.dropbtn:hover {
+  background: #34495e;
+  color: white;
+}
+
+.dropdown-content {
+  display: none;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: white;
+  min-width: 160px;
+  z-index: 9999;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+}
+.dropdown-content a:hover {
+  background: #f1f1f1;
+}
+
+/* Show dropdown-content when hovering over .dropdown */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* BREADCRUMB CONTAINER ***********************************************/
+.breadcrumb-container {
+  background-color: #f2f2f2;
+  padding: 0.2rem 14.5rem;
+  font-size: 0.7rem;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 1rem;
+  color: #000000;
+  font-family: "Josefin Sans", "Avenir Next", Avenir, "Helvetica Neue",
+    Helvetica, "Segoe UI", Ubuntu, Cantarell, sans-serif;
+}
+
+.breadcrumb a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.7rem;
+}
+
+.breadcrumb span {
+  font-weight: 500;
+  font-size: 0.7rem;
+  color: #000;
+}
+
+/* User Profile Section ***********************************************/
+.user-profile-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-details h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white;
+}
+
+.user-role {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  color: #bdc3c7;
+  text-transform: capitalize;
+}
+
+/* Navigation Styles ***********************************************/
+.sidebar-nav {
+  padding: 1rem 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  font-size: 0.95rem;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-left-color: white;
+  font-weight: 500;
+}
+
+/* Main Content Area ***********************************************/
+.main-content {
+  flex: 1;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+}
+
+.content-header {
+  background: white;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.content-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+/* Alert Messages ***********************************************/
+.alert {
+  width: 70%;
+  margin: 1rem auto; /* Center it horizontally */
+  padding: 0.75rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+}
+
+.alert-success {
+  color: #00ff3c;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-info {
+  color: #00d9ff;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+
+.alert-warning {
+  color: #ffbf00;
+  background-color: #fff3cd;
+  border-color: #ffc400;
+}
+
+.alert-error,
+.alert-danger {
+  color: #ff0019;
+  background-color: #f8d7da;
+  border-color: #ff0019;
+}
+
+/* Profile Container (for your existing profile page) ***********************************************/
+.profile-container {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.profile-info {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.profile-details {
+  flex: 1;
+}
+
+.profile-details h1 {
+  margin: 0 0 0.4rem 0;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+.profile-details h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.profile-details p {
+  margin: 0.5rem 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.profile-pic {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Avatar Sizes ***********************************************/
+.avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-medium {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+}
+
+/* Buttons ***********************************************/
+.profile-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1.5rem 0;
+  border-top: 1px solid #e9ecef;
+  margin-top: 2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Mobile Responsive ***********************************************/
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .content-header {
+    padding: 1rem;
+  }
+}
+
+/* Mobile Menu Button ***********************************************/
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* FOOTER ***********************************************/
+
+.footer {
+  background-color: #000;
+  color: white;
+  text-align: left;
+  padding: 1rem 0;
+  width: 100%;
+  margin-top: auto;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 70%;
+  margin: 0 auto;
+}
+
+.footer-left {
+  flex: 1;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.footer-left p {
+  margin-bottom: 0.2rem;
+}
+
+.footer-right {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.footer-btn {
+  display: inline-block;
+  padding: 0.4rem 0.7rem;
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  text-decoration: none !important;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: "Josefin Sans", "Avenir Next", Avenir, "Helvetica Neue",
+    Helvetica, "Segoe UI", Ubuntu, Cantarell, sans-serif;
+  text-transform: lowercase;
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+}
+
+.footer-btn:hover {
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+.footer a {
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-left a:hover {
+  color: #ff00be;
+}
+
+/* RESPONSIVE MEDIA QUERY ***********************************************/
+
+@media (max-width: 768px) {
+  .app-layout {
+    max-width: 95%;
+  }
+
+  .sidebar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .sidebar-nav ul.nav-menu {
+    flex-direction: column;
+  }
+
+  .footer-container {
+    max-width: 95%;
+  }
+}

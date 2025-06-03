@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateField, ValidationError
-from wtforms.validators import Length, Email, Optional
+from flask_wtf.file import FileAllowed, FileField
+from wtforms import StringField, SubmitField, DateField, SelectField, ValidationError
+from wtforms.validators import Length, Email, Optional, DataRequired
 from app.models.auth import AuthUser
 from app.models.profile import UserProfile
-
+from app.services.study_program_service import StudyProgramService
 from flask_login import current_user
 
 
@@ -14,7 +15,26 @@ class ProfileForm(FlaskForm):
     last_name = StringField('Last Name', validators=[Length(max=50), Optional()])
     email = StringField('Email', validators=[Length(min=6, max=35), Email(), Optional()])
     birth_date = DateField('Birth Date (YYYY-MM-DD)', format='%Y-%m-%d', validators=[Optional()])
+    
+    study_program_id = SelectField(
+        'Study Program:', 
+        coerce=int, 
+        validators=[DataRequired(message="Please select a study program")]
+    )
+
+    profile_picture = FileField('Profile Picture', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
+    ])
+    
     submit = SubmitField('Update Profile')
+
+    
+    def __init__(self, user=None, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.study_program_id.choices = [(sp.id, sp.name) for sp in StudyProgramService.get_all_study_programs()]
+    # FIXME Palikti sita dali init arba perkelti i route
+        if user:
+            self.study_program_id.data = user.profile.study_program_id
 
 #Functions execute when from is being submitted
     def validate_username(self, field):
@@ -28,3 +48,4 @@ class ProfileForm(FlaskForm):
             user = UserProfile.query.filter_by(email=email_field.data).first()
             if user:
                 raise ValidationError('Email is already in use.')
+    

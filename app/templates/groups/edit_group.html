@@ -1,0 +1,43 @@
+{% extends "dashboard_base.html" %}
+{% block dashboard_content %}
+<div class="auth-container">
+  <div class="auth-card">
+    
+    <h1>Edit to Group: {{ group.code }}</h1>
+    
+    <form
+      method="POST"
+      action="{{ url_for('groups.edit_group', group_id=group.id) }}"
+      class="auth-form">
+      {{ form.hidden_tag() }}
+
+        <div>
+          {{ form.teacher_id.label (class="form-label") }}<br>
+          {{ form.teacher_id(class="form-input") }}
+        </div>
+
+        <h3>Select Students</h3>
+        <div>
+          <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Students</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for subfield in form.students %}
+          <tr>
+            <td> {{ subfield() }}</td>
+            <td>{{ subfield.label.text }} </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+          </table>
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+      </form>
+  </div>
+</div>
+{% endblock %}

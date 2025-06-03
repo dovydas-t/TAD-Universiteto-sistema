@@ -1,6 +1,8 @@
 from app.extensions import db
 from app.models.enum import RoleEnum
-
+from app.models.enrolled_modules import enrolled_modules
+from app.models.completed_modules import completed_modules
+from app.models.module_teachers import module_teachers
 class UserProfile(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('auth_user.id'), primary_key=True)
 
@@ -15,7 +17,7 @@ class UserProfile(db.Model):
 
 
     is_active = db.Column(db.Boolean, default=True)
-    study_program_id = db.Column(db.Integer, db.ForeignKey('study_program.id'))
+    study_program_id = db.Column(db.Integer, db.ForeignKey('study_program.id'), nullable=True)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
 
     #user role setting
@@ -37,7 +39,30 @@ class UserProfile(db.Model):
     group = db.relationship("Groups", back_populates="users")
     attendances = db.relationship("Attendance", back_populates="student")
     grades = db.relationship("Grade", back_populates="student")
+    schedule_items = db.relationship("ScheduleItem", back_populates="user")
+    
+    modules = db.relationship(
+        'Module',
+        secondary=enrolled_modules,
+        back_populates='enrolled_users'
+    )
 
+    completed_modules = db.relationship(
+        'Module',
+        secondary=completed_modules,
+        back_populates='completed_by_users'
+    )
+    created_modules = db.relationship('Module', back_populates='created_by')
+    teaching_modules = db.relationship(
+    'Module',
+    secondary=module_teachers,
+    back_populates='teachers'
+    )
+ 
+    
+    def __init__(self, role=RoleEnum.Student, **kwargs):
+        super(UserProfile, self).__init__(**kwargs)
+        self.role = role
 
     def __repr__(self):
         return f"UserProfile('{self.id}', '{self.created_at}')"
@@ -46,3 +71,6 @@ class UserProfile(db.Model):
     def full_name(self):
         """Get user's full name"""  
         return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
+
+    
+

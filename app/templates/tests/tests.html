@@ -1,0 +1,33 @@
+{% extends "dashboard_base.html" %} {% block title %}Tests{% endblock %} 
+{%block page_title%}Tests{%endblock%}
+{% block dashboard_content %}
+
+<div class="dashboard fade-in">
+  <div class="dashboard-header">
+    <p>Explore available tests for your modules.</p>
+  </div><br>
+
+  <div class="dashboard-grid">
+    {% for test in tests %}
+    <div class="dashboard-card">
+      <h3>{{ test.name }}</h3>
+      <p><strong>Module:</strong> {{ test.module.name }}</p>
+      <div class="form-actions">
+        <a
+          href="{{ url_for('test.detail', test_id=test.id) }}"
+          class="btn btn-primary"
+          >View Details</a
+        >
+        <a
+          href="{{ url_for('test.take_test', test_id=test.id) }}"
+          class="btn btn-secondary"
+          >Solve Test</a
+        >
+      </div>
+    </div>
+    {% else %}
+    <p>No tests found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

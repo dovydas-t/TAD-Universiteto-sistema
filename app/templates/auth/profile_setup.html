@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="step-indicator">
+      <div class="step completed">
+        <span class="step-number">✓</span>
+        <span class="step-label">Account</span>
+      </div>
+      <div class="step-line completed"></div>
+      <div class="step active">
+        <span class="step-number">2</span>
+        <span class="step-label">Profile</span>
+      </div>
+    </div>
+
+    <h2>Complete Your Profile</h2>
+    <p class="text-muted">Step 2 of 2: Personal information</p>
+    
+    <form method="POST" enctype="multipart/form-data" class="auth-form">
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-input", placeholder="your.email@example.com") }}
+        {% for error in form.email.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          {{ form.first_name.label(class="form-label") }}
+          {{ form.first_name(class="form-input", placeholder="First name") }}
+          {% for error in form.first_name.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div class="form-group">
+          {{ form.last_name.label(class="form-label") }}
+          {{ form.last_name(class="form-input", placeholder="Last name") }}
+          {% for error in form.last_name.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        {{ form.birth_date.label(class="form-label") }}
+        {{ form.birth_date(class="form-input") }}
+        {% for error in form.birth_date.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.profile_picture.label(class="form-label") }}
+        <div class="file-upload-area">
+          {{ form.profile_picture(class="file-input", accept="image/*") }}
+          <div class="file-upload-text">
+            <span class="file-icon">📷</span>
+            <span>Choose profile picture or drag and drop</span>
+            <small>JPG, PNG files only. Max 5MB.</small>
+          </div>
+        </div>
+        {% for error in form.profile_picture.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-actions">
+        {{ form.submit(class="btn btn-primary btn-full") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// File upload preview
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.querySelector('input[type="file"]');
+    const uploadArea = document.querySelector('.file-upload-area');
+    const uploadText = document.querySelector('.file-upload-text');
+    
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                uploadText.innerHTML = `
+                    <span class="file-icon">✓</span>
+                    <span>Selected: ${fileName}</span>
+                    <small>Click to change</small>
+                `;
+                uploadArea.classList.add('file-selected');
+            }
+        });
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                const fileName = files[0].name;
+                uploadText.innerHTML = `
+                    <span class="file-icon">✓</span>
+                    <span>Selected: ${fileName}</span>
+                    <small>Click to change</small>
+                `;
+                uploadArea.classList.add('file-selected');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

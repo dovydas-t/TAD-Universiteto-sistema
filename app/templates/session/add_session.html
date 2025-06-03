@@ -1,0 +1,11 @@
+{% extends "dashboard_base.html" %}
+{% block dashboard_content %}
+<h2>Add Session</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>{{ form.module_id.label(class="form-label") }} {{ form.module_id(class="form-input") }}</div>
+    <div>{{ form.type.label(class="form-label") }} {{ form.type(class="form-input") }}</div>
+    <div>{{ form.date.label(class="form-label") }} {{ form.date(class="form-input", type="datetime-local") }}</div>
+    <div>{{ form.submit(class="btn btn-secondary") }}</div>
+</form>
+{% endblock %}

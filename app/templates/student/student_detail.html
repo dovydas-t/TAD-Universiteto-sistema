@@ -1,0 +1,36 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Module Details{% endblock %}
+
+{% block dashboard_content %}
+<div class="module-container">
+    <div class="module-information-container">
+         <section>
+        <h2>Student Information</h2>
+        <ul>
+            <li><strong>ID:</strong> {{ student.id }}</li>
+            <li><strong>Name:</strong> {{ student.full_name }}</li>
+            <li><strong>Birth date:</strong> {{ student.birth_date }}</li>
+            <li><strong>First name:</strong> {{ student.email }}</li>
+            <li><strong>Last name:</strong> {{ student.email }}</li>
+            <li><strong>Age:</strong> {{ student.email }}</li>
+            <li><strong>Email:</strong> {{ student.email }}</li>
+            <li><strong>Study Program:</strong> {{ student.study_program.name }}</li>
+            <li><strong>Group code:</strong> {{ student.group.code }}</li>
+            <li><strong>Role:</strong> {{ student.role.value }}</li>
+            <li><strong>Registration date:</strong> {{ student.created_at }}</li>
+            <li><strong>Last login:</strong> {{ student.last_login }}</li>
+
+            <!-- Add more fields as needed -->
+        </ul>
+    </section>
+
+    <p>
+        <a href="{{ url_for('student.edit_student', student_id=student.id) }}">Edit student</a>
+    </p>
+    <p>
+        <a href="{{ url_for('users.users_list') }}">Back to users list</a>
+    </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "dashboard_base.html" %}
+{% block page_title %}My Calendar{% endblock %}
+{% block dashboard_content %}
+<div class="dashboard fade-in">
+  <div class="dashboard-header">
+    <h1>Schedule</h1>
+    <p>View your personal course schedule and upcoming sessions.</p>
+  </div>
+
+  {% if schedule_items %}
+  <table class="feature-card">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Module</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in schedule_items %}
+      <tr>
+        <td>{{ item.date.strftime('%B %d, %Y at %I:%M %p') }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.module.name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No schedule items found.</p>
+  {% endif %}
+</div>
+{% endblock %}

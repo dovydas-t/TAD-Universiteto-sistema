@@ -21,7 +21,7 @@ def admin_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         if current_user.profile.role != RoleEnum.Admin:
-            return jsonify({'error', 'Admin privileges required'}), 403
+            return jsonify({'error': 'Admin privileges required'}), 403
         return f(*args, **kwargs)
     return decorated_function
 
@@ -31,7 +31,17 @@ def teacher_status_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         if current_user.profile.role != RoleEnum.Teacher:
-            return jsonify({'error', 'Teacher privileges required'}), 403
+            return jsonify({'error': 'Teacher privileges required'}), 403
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_or_teacher_role_required(f):
+    """Decorator to require admin or teacher privileges"""
+    @wraps(f)
+    @login_required
+    def decorated_function(*args, **kwargs):
+        if current_user.profile.role not in [RoleEnum.Admin, RoleEnum.Teacher]:
+            return jsonify({'error': 'Admin or Teacher privileges required'}), 403
         return f(*args, **kwargs)
     return decorated_function
 

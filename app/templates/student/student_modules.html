@@ -1,0 +1,59 @@
+
+{% extends "dashboard_base.html" %}
+{% block page_title %}My Modules{% endblock %}
+
+{% block dashboard_content %}
+<div class="dashboard-header">
+    <h1>My Modules</h1>
+    <p>All modules in your study program</p>
+</div>
+
+{% for semester, modules in modules_by_semester.items() %}
+<div class="dashboard-card">
+    <div class="card-header">
+        <h3>{{ semester }} Semester</h3>
+    </div>
+    <div class="card-content">
+        <div class="modules-grid">
+            {% for module in modules %}
+            <div class="module-card">
+                {% if module.image_path %}
+                <div class="module-image">
+                    <img src="{{ module.image_path }}" alt="{{ module.name }}">
+                </div>
+                {% endif %}
+                <div class="module-info">
+                    <h4>{{ module.name }}</h4>
+                    {% if module.description %}
+                    <p class="module-description">
+                        {{ module.description[:150] }}{% if module.description|length > 150 %}...{% endif %}
+                    </p>
+                    {% endif %}
+                    <div class="module-meta">
+                        <span class="credits">{{ module.credits }} Credits</span>
+                        <span class="semester">{{ semester }} Semester</span>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <a href="{{ url_for('student.detail', student_id=student.id) }}" 
+                       class="btn btn-primary btn-sm">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% if not modules_by_semester %}
+<div class="dashboard-card">
+    <div class="card-content">
+        <div class="empty-state">
+            <h3>No Modules Found</h3>
+            <p>No modules are available for your study program yet.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
