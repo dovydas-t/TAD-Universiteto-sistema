@@ -5,10 +5,10 @@ from app.utils.decorators import teacher_status_required
 
 bp = Blueprint('teacher', __name__)
 
-@bp.route('/', methods=['GET'])
-@login_required
+@bp.route('/teacher/dashboard')
 @teacher_status_required
-def dashboard():
-    """Teacher dashboard"""    
-    return render_template('teacher/dashboard.html', title='Teacher Dashboard')
+def teacher_dashboard():
+    """Teacher dashboard"""
+    teacher_profile = current_user.profile
+    return render_template('teacher/dashboard.html', teacher=teacher_profile)
 

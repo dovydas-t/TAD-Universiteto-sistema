@@ -21,7 +21,7 @@ def login():
     """User login with blocking mechanism"""
     try:
         if current_user.is_authenticated:
-            return redirect(url_for('main.dashboard'))
+            return redirect(url_for('dashboard.dashboard'))
         
         form = LoginForm()
         if form.validate_on_submit():
@@ -52,7 +52,7 @@ def login():
 
                     next_page = request.args.get('next')
                     flash(f'Login successful! Welcome back, {user.username}!', 'success')
-                    return redirect(next_page or url_for('main.dashboard'))
+                    return redirect(next_page or url_for('dashboard.dashboard'))
                 else:
                     # NEW: Wrong password - record failed attempt
                     user.record_failed_login()
@@ -162,7 +162,7 @@ def profile_setup():
             db.session.commit()
             
             flash('Profile completed successfully!', 'success')
-            return redirect(url_for('main.dashboard'))
+            return redirect(url_for('dashboard.dashboard'))
         except Exception as e:
             print(f"{e}")
             
