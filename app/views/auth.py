@@ -52,7 +52,7 @@ def login():
 
                     next_page = request.args.get('next')
                     flash(f'Login successful! Welcome back, {user.username}!', 'success')
-                    return redirect(next_page or url_for('dashboard.dashboard'))
+                    return redirect(next_page or url_for('main.index'))
                 else:
                     # NEW: Wrong password - record failed attempt
                     user.record_failed_login()
