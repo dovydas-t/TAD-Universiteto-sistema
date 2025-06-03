@@ -14,12 +14,12 @@
       <p><strong>Module:</strong> {{ test.module.name }}</p>
       <div class="form-actions">
         <a
-          href="{{ url_for('main.test_detail', test_id=test.id) }}"
+          href="{{ url_for('test.detail', test_id=test.id) }}"
           class="btn btn-primary"
           >View Details</a
         >
         <a
-          href="{{ url_for('main.test_solve', test_id=test.id) }}"
+          href="{{ url_for('test.take_test', test_id=test.id) }}"
           class="btn btn-secondary"
           >Solve Test</a
         >

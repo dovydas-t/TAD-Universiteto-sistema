@@ -40,17 +40,19 @@
     </ul>
   </div>
 </nav>
-{% endblock %} {% block css %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/basedashboard.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/auth_forms.css') }}"
-/>
-{% endblock %} {% block content %} {% from 'profile/macros.html' import
-user_avatar %}
+{% endblock %}
+{% block css %}
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/basedashboard.css') }}"
+  />
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/auth_forms.css') }}"
+  />
+{% endblock %}
+{% block content %}
+{% from 'profile/macros.html' import user_avatar %}
 
 <div class="app-layout">
   <aside class="sidebar">
@@ -137,6 +139,13 @@ user_avatar %}
               >
             </div>
           </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Test</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('test.create_test') }}">Create Tests</a>
+              <a href="{{ url_for('test.index')}}">List Tests</a>
+            </div>
+          </li>
           {% elif current_user.profile.role.value == 'Teacher' %}
           <li>
             <a href="{{ url_for('main.teacher_dashboard') }}" class="nav-link"
@@ -209,7 +218,9 @@ user_avatar %}
   </aside>
 
   <main class="main-content">
-    <div class="content">{% block dashboard_content %}{% endblock %}</div>
+    <div class="content">
+      {% block dashboard_content %}{% endblock %}
+    </div>
   </main>
 </div>
 {% endblock %} {% block footer %}
