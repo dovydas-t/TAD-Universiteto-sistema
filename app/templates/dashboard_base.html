@@ -1,146 +1,224 @@
-{% extends "base.html" %}
-
-{%block navbar%} {%endblock%}
-{%block css%}
-
-<link rel="stylesheet" href="{{ url_for('static', filename='css/basedashboard.css') }}"/>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/auth_forms.css') }}"/>{%endblock%}
-
-{% block content %}
-
-{% from 'profile/macros.html' import user_avatar %}
+{% extends "base.html" %} {% block navbar %}
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="{{ url_for('main.index') }}" class="nav-brand">
+      <img
+        src="{{ url_for('static', filename='tadlogo.png') }}"
+        alt="TAD University Logo"
+        class="navbar-logo"
+        style="height: 50px; vertical-align: middle"
+      />
+    </a>
+    <ul class="nav-menu">
+      <li>
+        <a
+          href="{{ url_for('main.index') }}"
+          class="nav-link {% if request.endpoint == 'main.index' %}nav-link--active{% endif %}"
+          >Home</a
+        >
+      </li>
+      {% if current_user.is_authenticated %}
+      <li>
+        <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
+      </li>
+      <li>
+        <a href="{{ url_for('main.profile') }}" class="nav-link">Profile</a>
+      </li>
+      <li>
+        <a href="{{ url_for('auth.logout') }}" class="nav-link"
+          >Logout ({{ current_user.username }})</a
+        >
+      </li>
+      {% else %}
+      <li>
+        <a href="{{ url_for('auth.login') }}" class="nav-link">Sign In</a>
+      </li>
+      <li>
+        <a href="{{ url_for('auth.register') }}" class="nav-link">Register</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+{% endblock %} {% block css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/basedashboard.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/auth_forms.css') }}"
+/>
+{% endblock %} {% block content %} {% from 'profile/macros.html' import
+user_avatar %}
 
 <div class="app-layout">
-    <aside class="sidebar">
-        
-        <div class="sidebar-header">
-            {% if current_user.profile.role == 'Student' or current_user.profile.role.value == 'Student' %}
-                <h3>Student Portal</h3>
-            {% elif current_user.profile.role == 'Teacher' or current_user.profile.role.value == 'Teacher' %}
-                <h3>Teacher Portal</h3>
-            {% elif current_user.profile.role == 'Admin' or current_user.profile.role.value == 'Admin' %}
-                <h3>Admin Portal</h3>
-            {% else %}
-                <h3>Portal</h3>
-            {% endif %}
-        </div>
-        {% block sidebar_user %}
-        {% if current_user.is_authenticated %}
-            <div class="user-profile-section">
-                <div class="user-info">
-                    {{ user_avatar(current_user, 'medium') }}
-                    <div class="user-details">
-                        <h4>{{ current_user.profile.first_name or current_user.username }}</h4>
-                        {% if current_user.profile.role.value == 'Student' and current_user.profile.group %}
-                        <p class="user-group">{{ current_user.profile.group.code }}</p>
-                        {% endif %}
-                        <p class="user-role">{{ current_user.profile.role.value if current_user.profile.role else 'User' }}</p>          
-                    </div>
-                </div>
-            </div>
+  <aside class="sidebar">
+    <div class="sidebar-container">
+      <div class="sidebar-header">
+        {% if current_user.profile.role == 'Student' or
+        current_user.profile.role.value == 'Student' %}
+        <h3>Student Portal</h3>
+        {% elif current_user.profile.role == 'Teacher' or
+        current_user.profile.role.value == 'Teacher' %}
+        <h3>Teacher Portal</h3>
+        {% elif current_user.profile.role == 'Admin' or
+        current_user.profile.role.value == 'Admin' %}
+        <h3>Admin Portal</h3>
+        {% else %}
+        <h3>Portal</h3>
         {% endif %}
-        {% endblock %}
-        
-        <nav class="sidebar-nav">
-            <ul class="nav-menu">
-                {% if current_user.profile.role.value == 'Admin' %}
-                    <!-- Admin Navigation -->
-                    <li><a href="{{ url_for('admin.admin_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-                    
-                    <li class="dropdown">
-                        <div class="nav-link dropbtn">📚 Groups</div>
-                        <div class="dropdown-content">
-                            <a href="{{ url_for('groups.create_group') }}">Create Groups</a>
-                           <a href="{{ url_for('groups.index') }}">Groups List</a>
+      </div>
 
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <div class="nav-link dropbtn">🏛️ Faculties</div>
-                        <div class="dropdown-content">
-                            <a href="{{ url_for('faculty.add_faculty') }}">Add Faculty</a>
-                            <a href="{{ url_for('faculty.index') }}">Faculties List</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <div class="nav-link dropbtn">🎓Study Programs</div>
-                        <div class="dropdown-content">
-                            <a href="{{ url_for('programs.add_program') }}">Add Study Program</a>
-                            <a href="{{ url_for('programs.index') }}">Study Programs List</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <div class="nav-link dropbtn">Modules</div>
-                        <div class="dropdown-content">
-                            <a href="{{ url_for('module.add_module') }}">Add Modules</a>
-                            <a href="{{ url_for('module.module_list') }}">Module List</a>
-                        </div>
-                    </li>
-
-                    <li class="dropdown">
-                        <div class="nav-link dropbtn">Users</div>
-                        <div class="dropdown-content">
-                          <a href="{{ url_for('admin.admin_blocked_users') }}">Blocked Users</a>
-                           
-
-                    </div>
-
-                    
-                {% elif current_user.profile.role.value == 'Teacher' %}
-                    <!-- Teacher Navigation -->
-                    <li><a href="{{ url_for('main.teacher_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-                    <li class="dropdown">
-                        <div class="nav-link dropbtn">Modules</div>
-                        <div class="dropdown-content">
-                            <a href="{{ url_for('module.add_module') }}">Add Modules</a>
-                            <a href="{{ url_for('module.module_list') }}">List Modules</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <div class="nav-link dropbtn">Test</div>
-                        <div class="dropdown-content">
-                            <a href="{{ url_for('test.create_test') }}">Create Tests</a>
-                            <a href=>List Tests</a>
-                        </div>
-                    </li>
-                    
-                    
-                {% elif current_user.profile.role.value == 'Student' %}
-                    <!-- Student Navigation -->
-                    
-                   <li><a href="{{ url_for('main.student_dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-                    <li><a href="{{ url_for('groups.group_info') }}" class="nav-link">Group</a> </li>
-                    <li><a href="{{ url_for('student.academic_info') }}" class="nav-link">Academic Information</a></li>
-                    <li><a href="{{ url_for('student.my_modules') }}" class="nav-link">My Modules</a></li>
-                {% else %}
-                    <!-- Default Navigation -->
-                    <li><a href="{{ url_for('main.dashboard') }}" class="nav-link">🏠 Dashboard</a></li>
-            
-                    
-                {% endif %}
-
-                <!-- Common links for all roles -->
-                <li class="nav-divider"></li>
-                
-                <li><a href="{{ url_for('main.profile') }}" class="nav-link">👤 Profile</a></li>
-                <li><a href="{{ url_for('auth.logout') }}" class="nav-link">🚪 Logout</a></li>
-            </ul>
-        </nav>
-    </aside>
-    
-    <!-- Main content area -->
-    <main class="main-content">
-        {% block dashboard_header %}
-        <header class="content-header">
-            <h1>{% block page_title %}Dashboard{% endblock %}</h1>
-        </header>
-        {% endblock %}
-        
-        <div class="content">
-            {% block dashboard_content %}{% endblock %}
+      {% if current_user.is_authenticated %}
+      <div class="user-profile-section">
+        <div class="user-info">
+          {{ user_avatar(current_user, 'medium') }}
+          <div class="user-details">
+            <h4>
+              {{ current_user.profile.first_name or current_user.username }}
+            </h4>
+            {% if current_user.profile.role.value == 'Student' and
+            current_user.profile.group %}
+            <p class="user-group">{{ current_user.profile.group.code }}</p>
+            {% endif %}
+            <p class="user-role">
+              {{ current_user.profile.role.value if current_user.profile.role
+              else 'User' }}
+            </p>
+          </div>
         </div>
-    </main>
+      </div>
+      {% endif %}
+
+      <nav class="sidebar-nav">
+        <ul class="nav-menu">
+          {% if current_user.profile.role.value == 'Admin' %}
+          <li>
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-link"
+              >Dashboard</a
+            >
+          </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Groups</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('groups.create_group') }}">Create Groups</a>
+              <a href="{{ url_for('groups.index') }}">Groups List</a>
+            </div>
+          </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Faculties</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('faculty.add_faculty') }}">Add Faculty</a>
+              <a href="{{ url_for('faculty.index') }}">Faculties List</a>
+            </div>
+          </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Study Programs</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('programs.add_program') }}"
+                >Add Study Program</a
+              >
+              <a href="{{ url_for('programs.index') }}">Study Programs List</a>
+            </div>
+          </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Modules</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('module.add_module') }}">Add Modules</a>
+              <a href="{{ url_for('module.module_list') }}">Module List</a>
+            </div>
+          </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Users</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('admin.admin_blocked_users') }}"
+                >Blocked Users</a
+              >
+            </div>
+          </li>
+          {% elif current_user.profile.role.value == 'Teacher' %}
+          <li>
+            <a href="{{ url_for('main.teacher_dashboard') }}" class="nav-link"
+              >Dashboard</a
+            >
+          </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Modules</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('module.add_module') }}">Add Modules</a>
+              <a href="{{ url_for('module.module_list') }}">List Modules</a>
+            </div>
+          </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Test</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('test.create_test') }}">Create Tests</a>
+              <a href="#">List Tests</a>
+            </div>
+          </li>
+          {% elif current_user.profile.role.value == 'Student' %}
+          <li>
+            <a href="{{ url_for('main.student_dashboard') }}" class="nav-link"
+              >Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('groups.group_info') }}" class="nav-link"
+              >Group</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('student.academic_info') }}" class="nav-link"
+              >Academic Information</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('student.my_modules') }}" class="nav-link"
+              >My Modules</a
+            >
+          </li>
+          {% else %}
+          <li>
+            <a href="{{ url_for('main.dashboard') }}" class="nav-link"
+              >Dashboard</a
+            >
+          </li>
+          {% endif %}
+
+          <li class="nav-divider"></li>
+          <li>
+            <a href="{{ url_for('main.profile') }}" class="nav-link">Profile</a>
+          </li>
+          <li>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="content">{% block dashboard_content %}{% endblock %}</div>
+  </main>
 </div>
-
+{% endblock %} {% block footer %}
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-left">
+      <p><strong>TAD University</strong></p>
+      <p>42 Dreamy Avenue, Pixie Hollow, Neverland</p>
+      <p>Phone: +123 456 789</p>
+      <p>
+        Email:
+        <a href="mailto:info@taduniversity.com">info@taduniversity.com</a>
+      </p>
+    </div>
+    <div class="footer-right">
+      <a href="#" class="footer-btn">Accessibility</a>
+      <a href="#" class="footer-btn">Privacy</a>
+      <a href="#" class="footer-btn">Media</a>
+    </div>
+  </div>
+</footer>
 {% endblock %}
-

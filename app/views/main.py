@@ -91,9 +91,14 @@ def student_dashboard():
                          study_program=study_program)
 
 
-    
+@bp.route('/privacy')
+def privacy():
+    return render_template('admin/privacy.html')
 
-    
-    
-    
-    
+@bp.route('/accessibility')
+def accessibility():
+    return render_template('admin/accessibility.html')
+
+@bp.route('/media')
+def media():
+    return render_template('admin/media.html')

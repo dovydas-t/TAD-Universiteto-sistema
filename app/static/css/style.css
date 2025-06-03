@@ -1,4 +1,5 @@
 /* BASICS ***********************************************/
+
 * {
   margin: 0;
   padding: 0;
@@ -16,7 +17,7 @@ body {
   min-height: 100vh;
 }
 
-/* Navigation Bar ***********************************************/
+/* NAVIGATION BAR ***********************************************/
 .navbar {
   width: 100%; /* Full width */
   background-color: #ffffff;
@@ -131,18 +132,21 @@ body {
 
 .photo-overlay {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: auto; /* only as wide as the text */
+  height: auto; /* only as tall as the text */
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-start;
   z-index: 2;
-  background: rgba(0, 0, 0, 0.3); /* darken overlay if needed */
-  text-align: center;
+  background: rgba(0, 0, 0, 0.3); /* optional for better visibility */
+  text-align: left;
+  padding: 1rem 1.5rem; /* keep it from the edges */
+  margin: 1rem; /* optional extra spacing from edge */
+  border-radius: 4px; /* optional for a rounded look */
 }
 
 .photo-title {
@@ -161,6 +165,23 @@ main {
   padding: 2rem 0;
 }
 
+.page-content {
+  max-width: 70%;
+  margin: 0 auto;
+}
+
+/* Spacing for accessibility page content */
+.page-content p,
+.page-content h1,
+.page-content h2,
+.page-content ul {
+  margin-bottom: 1.5rem; /* Adjust this value to control spacing */
+}
+
+.page-content ul li {
+  margin-bottom: 0.5rem; /* Optional: adjust spacing within lists */
+}
+
 /* Messages ***********************************************/
 .messages {
   margin-bottom: 2rem;
@@ -173,28 +194,29 @@ main {
   position: relative;
 }
 
-.message-success {
-  background-color: #e0f4f4; /* light version of #286e73 for bg */
-  color: #286e73; /* primary color for text */
-  border: 1px solid #286e73; /* primary color for border */
+.alert-success {
+  color: #00ff3c;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
 }
 
-.message-error {
-  background-color: #f9e6e7;
-  color: #000;
-  border: 1px solid #8283d2;
+.alert-info {
+  color: #00d9ff;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
 }
 
-.message-warning {
-  background-color: #fdf7e3;
-  color: #000;
-  border: 1px solid #8283d2;
+.alert-warning {
+  color: #ffbf00;
+  background-color: #fff3cd;
+  border-color: #ffc400;
 }
 
-.message-info {
-  background-color: #e0e4f8;
-  color: #000;
-  border: 1px solid #8283d2;
+.alert-error,
+.alert-danger {
+  color: #ff0019;
+  background-color: #f8d7da;
+  border-color: #ff0019;
 }
 
 .message-close {
@@ -456,27 +478,33 @@ main {
   color: #ffffff;
   border: 2px solid #ffffff;
   border-radius: 4px;
-  text-decoration: none;
+  text-decoration: none !important;
   font-size: 0.8rem;
   font-weight: 700;
   font-family: "Josefin Sans", "Avenir Next", Avenir, "Helvetica Neue",
     Helvetica, "Segoe UI", Ubuntu, Cantarell, sans-serif;
   text-transform: lowercase;
   transition: all 0.3s ease;
+  margin-top: 1.5rem;
 }
 
 .footer-btn:hover {
-  background-color: #000;
-  color: #fff;
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
 }
 
 .footer a {
-  color: rgb(255, 190, 226);
+  color: rgb(255, 255, 255);
   text-decoration: underline;
 }
 
 .footer a:hover {
-  text-decoration: underline; /* Optional: underline on hover for clarity */
+  text-decoration: underline;
+}
+
+.footer-left a:hover {
+  color: #ff00be;
 }
 
 /* REG FORM ***********************************************/

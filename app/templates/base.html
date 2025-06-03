@@ -12,18 +12,18 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-    {% endblock %} {% block head %}{% endblock %}
+    {% endblock %} {% block head %}
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/auth_forms.css') }}"
     />
-    {% endblock %} {% block head %}{% endblock %}
+    {% endblock %}
   </head>
 
   <body>
     {% from 'profile/macros.html' import user_avatar %}
 
-    <!-- Navigation (full width) -->
+    <!-- Navigation -->
     {% block navbar %}
     <nav class="navbar">
       <div class="nav-container">
@@ -53,9 +53,9 @@
             <a href="{{ url_for('main.profile') }}" class="nav-link">Profile</a>
           </li>
           <li>
-            <a href="{{ url_for('auth.logout') }}" class="nav-link">
-              Logout ({{ current_user.username }})
-            </a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link"
+              >Logout ({{ current_user.username }})</a
+            >
           </li>
           {% else %}
           <li>
@@ -69,7 +69,6 @@
           {% endif %}
         </ul>
       </div>
-      <!-- nav-container -->
     </nav>
     {% endblock %}
 
@@ -105,9 +104,9 @@
     <!-- Main Content -->
     <main class="page-inner">{% block content %}{% endblock %}</main>
 
-    <!-- Footer (full width) -->
+    <!-- Footer -->
     <footer class="footer">
-      <div class="container footer-container">
+      <div class="footer-container">
         <!-- Left side: contact details -->
         <div class="footer-left">
           <p><strong>TAD University</strong></p>
@@ -121,9 +120,11 @@
 
         <!-- Right side: buttons -->
         <div class="footer-right">
-          <a href="#" class="footer-btn">Accessibility</a>
-          <a href="#" class="footer-btn">Privacy</a>
-          <a href="#" class="footer-btn">Media</a>
+          <a href="{{ url_for('main.accessibility') }}" class="footer-btn"
+            >Accessibility</a
+          >
+          <a href="{{ url_for('main.privacy') }}" class="footer-btn">Privacy</a>
+          <a href="{{ url_for('main.media') }}" class="footer-btn">Media</a>
         </div>
       </div>
     </footer>
@@ -133,7 +134,6 @@
     {% block scripts %}
     <script src="{{ url_for('static', filename='js/group_form.js') }}"></script>
     <script src="{{ url_for('static', filename='js/student_edit.js') }}"></script>
-
     {% endblock %}
   </body>
 </html>
