@@ -11,9 +11,14 @@ from app.services.test_service import TestService
 bp = Blueprint('test', __name__)
 
 @bp.route('/')
-def index():    
+@login_required
+def index():
+    """Display all tests"""
+    tests = TestService.get_all_tests()
     return render_template('tests/tests.html',
-                           title='Test')
+                           title='Test',
+                           tests=tests)
+
 @bp.route('/test/create',  methods=['GET','POST'])
 def create_test():
     form = TestForm()
@@ -30,7 +35,28 @@ def create_test():
         return redirect(url_for('test_question.add_question', test_id=test.id))
     return render_template('tests/create_test.html', form=form)
 
-
+@bp.route('/test/<int:test_id>', methods=['GET', 'POST'])
+@login_required
+def take_test(test_id):
+    """Take a test"""
+    test = TestService.get_test_by_id(test_id)    
+    if not test:
+        flash('Test not found.', 'error')
+        return redirect(url_for('test.index'))
+    serialized_questions = []
+    for question in test.questions:
+        serialized_questions.append({
+            'id': question.id,
+            'text': question.question_text,
+            'answers': [
+                {'id': option.id, 'text': option.option_text}
+                for option in question.answer_options
+            ]
+        })
+    return render_template('tests/take_test.html',
+                            title='Take Test',
+                            test=test,
+                            questions=serialized_questions)
 
 @bp.route('/detail/<int:test_id>')
 def detail(test_id):

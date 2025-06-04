@@ -50,31 +50,6 @@ from app.models.attendance import Attendance
 bp = Blueprint('admin', __name__)
 
 
-@bp.route('/dashboard', methods=['GET'])
-@admin_required
-def admin_dashboard():
-    try:
-        faculties = FacultyService.get_all_faculties()
-        study_programs = StudyProgramService.get_all_study_programs()
-        modules = ModuleService.get_all_modules()
-        teachers = UserService.get_all_teachers()
-
-        """Admin dashboard"""
-        return render_template('admin/dashboard.html',
-                            title='TAD University Modules',
-                            faculties=faculties,
-                            modules=modules,
-                            study_programs=study_programs,
-                            teachers=teachers)
-    except Exception as e:
-        print(f"{e}")
-        return render_template('admin/dashboard.html',
-                            title='TAD University Modules',
-                            faculties=faculties,
-                            modules=modules,
-                            study_programs=study_programs,
-                            teachers=teachers)
-
 @bp.route('/admin/blocked-users')
 @login_required
 @admin_required

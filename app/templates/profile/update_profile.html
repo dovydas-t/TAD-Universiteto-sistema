@@ -8,7 +8,8 @@
       method="POST"
       action="{{ url_for('profile.profile_update') }}"
       class="auth-form"
-    >
+      enctype="multipart/form-data">
+
       {{ form.hidden_tag() }}
 
       <div class="form-group">

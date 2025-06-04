@@ -132,29 +132,4 @@ def delete_group(group_id):
 
     return redirect(url_for('groups.index'))
     
-    
 
-
-
-    
-    
-
-@bp.route('/group-info')
-@login_required
-def group_info():
-    """View group information"""
-    if not current_user.profile.group_id:
-        flash('You are not assigned to any group.', 'info')
-        return redirect(url_for('main.student_dashboard'))
-    
-    group = current_user.profile.group_id
-    
-    # Get all students in this group
-    group_members = UserProfile.query.filter_by(
-        group_id=group.id,
-        role=RoleEnum.Student
-    ).all()
-    
-    return render_template('groups/groups_info.html',
-                         group=group,
-                         group_members=group_members)

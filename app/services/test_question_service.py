@@ -81,3 +81,15 @@ class TestQuestionService:
             option.is_correct = answer_form.is_correct.data
 
         db.session.commit()
+
+    @staticmethod
+    def check_submitted_answer(question_id: int, selected_answers: list[int]) -> bool:
+        # Get all correct options for this question
+        correct_options = AnswerOption.query.filter_by(question_id=question_id, is_correct=True).all()
+        correct_ids = {opt.id for opt in correct_options}
+
+        # Convert submitted answers to set for comparison
+        selected_set = set(selected_answers)
+
+        # Return True only if selected answers exactly match correct answers
+        return selected_set == correct_ids

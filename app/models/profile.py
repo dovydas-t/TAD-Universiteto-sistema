@@ -2,7 +2,7 @@ from app.extensions import db
 from app.models.enum import RoleEnum
 from app.models.enrolled_modules import enrolled_modules
 from app.models.completed_modules import completed_modules
-
+from app.models.module_teachers import module_teachers
 class UserProfile(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('auth_user.id'), primary_key=True)
 
@@ -40,15 +40,23 @@ class UserProfile(db.Model):
     attendances = db.relationship("Attendance", back_populates="student")
     grades = db.relationship("Grade", back_populates="student")
     schedule_items = db.relationship("ScheduleItem", back_populates="user")
+    
     modules = db.relationship(
         'Module',
         secondary=enrolled_modules,
-        backref='enrolled_users'
+        back_populates='enrolled_users'
     )
+
     completed_modules = db.relationship(
         'Module',
         secondary=completed_modules,
-        backref='completed_by_users'
+        back_populates='completed_by_users'
+    )
+    created_modules = db.relationship('Module', back_populates='created_by')
+    teaching_modules = db.relationship(
+    'Module',
+    secondary=module_teachers,
+    back_populates='teachers'
     )
  
     

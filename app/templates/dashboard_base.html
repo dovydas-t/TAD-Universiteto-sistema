@@ -19,7 +19,9 @@
       </li>
       {% if current_user.is_authenticated %}
       <li>
-        <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
+        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link"
+          >Dashboard</a
+        >
       </li>
       <li>
         <a href="{{ url_for('main.profile') }}" class="nav-link">Profile</a>
@@ -95,7 +97,9 @@ user_avatar %}
         <ul class="nav-menu">
           {% if current_user.profile.role.value == 'Admin' %}
           <li>
-            <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-link"
+            <a
+              href="{{ url_for('dashboard.admin_dashboard') }}"
+              class="nav-link"
               >Dashboard</a
             >
           </li>
@@ -137,12 +141,30 @@ user_avatar %}
               >
             </div>
           </li>
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Test</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('test.create_test') }}">Create Tests</a>
+              <a href="{{ url_for('test.index')}}">List Tests</a>
+            </div>
+          </li>
           {% elif current_user.profile.role.value == 'Teacher' %}
           <li>
-            <a href="{{ url_for('main.teacher_dashboard') }}" class="nav-link"
+            <a
+              href="{{url_for('dashboard.teacher_dashboard') }}"
+              class="nav-link"
               >Dashboard</a
             >
           </li>
+
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Sessions</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('session.add_session') }}">Create</a>
+              <a href="{{ url_for('session.session_list') }}">List</a>
+            </div>
+          </li>
+
           <li class="dropdown">
             <div class="nav-link dropbtn">Modules</div>
             <div class="dropdown-content">
@@ -154,17 +176,30 @@ user_avatar %}
             <div class="nav-link dropbtn">Test</div>
             <div class="dropdown-content">
               <a href="{{ url_for('test.create_test') }}">Create Tests</a>
-              <a href="#">List Tests</a>
+              <a href="{{ url_for('test.index')}}">List Tests</a>
             </div>
           </li>
+
           {% elif current_user.profile.role.value == 'Student' %}
           <li>
-            <a href="{{ url_for('main.student_dashboard') }}" class="nav-link"
+            <a
+              href="{{ url_for('dashboard.student_dashboard') }}"
+              class="nav-link"
               >Dashboard</a
             >
           </li>
           <li>
-            <a href="{{ url_for('groups.group_info') }}" class="nav-link"
+            <a href="{{ url_for('student.student_grades') }}" class="nav-link"
+              >Grades</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('student.my_calendar') }}" class="nav-link"
+              >Schedule</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('student.group_info') }}" class="nav-link"
               >Group</a
             >
           </li>
@@ -173,10 +208,14 @@ user_avatar %}
               >Academic Information</a
             >
           </li>
-          <li>
-            <a href="{{ url_for('student.my_modules') }}" class="nav-link"
-              >My Modules</a
-            >
+          <li class="dropdown">
+            <div class="nav-link dropbtn">Modules</div>
+            <div class="dropdown-content">
+              <a href="{{ url_for('student.choose_module') }}"
+                >Choose Modules</a
+              >
+              <a href="{{ url_for('student.my_modules') }}">My Modules</a>
+            </div>
           </li>
           {% else %} {% endif %}
         </ul>

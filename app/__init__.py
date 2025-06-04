@@ -39,6 +39,9 @@ def create_app(config_class=Config):
     from app.views.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
     
+    from app.views.dashboard import bp as dashboard_bp
+    app.register_blueprint(dashboard_bp)
+    
     from app.views.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
@@ -77,6 +80,9 @@ def create_app(config_class=Config):
 
     from app.views.users import bp as users_bp
     app.register_blueprint(users_bp, url_prefix='/users')
+    
+    from app.views.session import bp as session_bp
+    app.register_blueprint(session_bp, url_prefix='/session')
 
 
     @app.context_processor
