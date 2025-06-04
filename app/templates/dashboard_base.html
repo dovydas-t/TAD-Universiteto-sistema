@@ -178,28 +178,16 @@ user_avatar %}
               >My Modules</a
             >
           </li>
-          {% else %}
-          <li>
-            <a href="{{ url_for('main.dashboard') }}" class="nav-link"
-              >Dashboard</a
-            >
-          </li>
-          {% endif %}
-
-          <li class="nav-divider"></li>
-          <li>
-            <a href="{{ url_for('main.profile') }}" class="nav-link">Profile</a>
-          </li>
-          <li>
-            <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
-          </li>
+          {% else %} {% endif %}
         </ul>
       </nav>
     </div>
   </aside>
 
   <main class="main-content">
-    <div class="content">{% block dashboard_content %}{% endblock %}</div>
+    <div class="content-container">
+      <div class="content">{% block dashboard_content %}{% endblock %}</div>
+    </div>
   </main>
 </div>
 {% endblock %} {% block footer %}

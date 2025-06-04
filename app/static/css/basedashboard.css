@@ -122,6 +122,19 @@ body {
   border-color: black;
 }
 
+.dropbtn::after {
+  content: "▼";
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
+  display: inline-block;
+  transition: transform 0.3s ease;
+  color: #ffc0cb;
+}
+
+.dropdown:hover .dropbtn::after {
+  transform: rotate(180deg);
+}
+
 .navbar,
 .sidebar {
   background-color: #ffffff;
@@ -300,30 +313,6 @@ body {
   margin: 0;
 }
 
-.nav-link {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
-  color: #ecf0f1;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border-left: 3px solid transparent;
-  font-size: 0.95rem;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-left-color: rgba(255, 255, 255, 0.3);
-}
-
-.nav-link.active {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
-  border-left-color: white;
-  font-weight: 500;
-}
-
 /* Main Content Area ***********************************************/
 .main-content {
   flex: 1;
@@ -348,6 +337,12 @@ body {
 .content {
   flex: 1;
   padding: 2rem 0;
+}
+
+.content-container {
+  max-width: 1200px; /* or 90%, adjust as needed */
+  margin: 0 auto;
+  padding: 0 2rem; /* optional for inner spacing */
 }
 
 /* Alert Messages ***********************************************/
@@ -633,7 +628,7 @@ body {
 }
 
 .footer-btn:hover {
-  background-color: #fff;
+  background-color: #ff00be;
   color: #000;
   border: 2px solid #000;
 }
