@@ -77,8 +77,8 @@ user_avatar %}
         <div class="user-info">
           {{ user_avatar(current_user, 'medium') }}
           <div class="user-details">
-            <h4>
-              {{ current_user.profile.first_name or current_user.username }}
+            <h4 class="user-full-name">
+              {{ current_user.profile.full_name }}
             </h4>
             {% if current_user.profile.role.value == 'Student' and
             current_user.profile.group %}

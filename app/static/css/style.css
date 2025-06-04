@@ -359,7 +359,7 @@ main {
   color: #666;
 }
 
-/* User Info ***********************************************/
+
 .user-info {
   background: white;
   padding: 2rem;
@@ -396,6 +396,10 @@ main {
   color: #666;
 }
 
+/* User Info ***********************************************/
+.user-full-name {
+  color: #000000; /* or any color you want */
+}
 /* Profile ***********************************************/
 .profile-container {
   max-width: 600px;
