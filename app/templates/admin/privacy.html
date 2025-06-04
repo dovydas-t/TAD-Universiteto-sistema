@@ -1,10 +1,114 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Privacy</title>
-  </head>
-  <body>
-    <h1>Privacy Policy</h1>
-    <p>Here is our privacy policy...</p>
-  </body>
-</html>
+{% extends "base.html" %} {% block title %}Privacy Policy{% endblock %} {% block
+content %}
+<div class="privacy-container">
+  <h1 style="margin-bottom: 2rem">Privacy Policy</h1>
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">1. General Provisions</button>
+      <div class="accordion-content">
+        <p>
+          The concepts used in the Privacy Policy are interpreted in the meaning
+          defined as follows:
+        </p>
+        <ul>
+          <li>
+            <strong>Personal data</strong> – any information related to a
+            natural person whose identity is or can be identified...
+          </li>
+          <li>
+            <strong>GDPR</strong> – Regulation (EU) 2016/679 of the European
+            Parliament and Council...
+          </li>
+          <li>
+            <strong>Data subject</strong>, <strong>Data controller</strong>,
+            <strong>Processor</strong>, <strong>Joint controllers</strong>…
+          </li>
+          <li>
+            <strong>Special category personal data</strong> – racial or ethnic
+            origin, health, etc.
+          </li>
+          <li>
+            <strong>Consent</strong> – clear agreement to data processing.
+          </li>
+          <li>
+            <strong>Direct marketing</strong> – promotion requiring consent.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header">2. Personal Data Processing</button>
+      <div class="accordion-content">
+        <p>
+          We apply appropriate organizational and technical measures, and
+          employees follow GDPR and national regulations.
+        </p>
+        <p>
+          Data is processed lawfully, fairly, securely, and accurately. We may
+          transfer data outside the EU/EEA with protection mechanisms like
+          Standard Contractual Clauses.
+        </p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header">
+        3. Protection of the Rights of the Data Subjects
+      </button>
+      <div class="accordion-content">
+        <ul>
+          <li>Right to know about data processing</li>
+          <li>Right to access, correct, delete, limit, or transfer data</li>
+          <li>Right to object or withdraw consent</li>
+          <li>
+            Right to lodge a complaint with the State Data Protection
+            Inspectorate
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header">4. Data Transfers and Security</button>
+      <div class="accordion-content">
+        <p>
+          We ensure security through technical safeguards and authorized
+          processors. Transfers outside the EU/EEA are handled using secure
+          contracts or adequacy decisions.
+        </p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header">5. Final Provisions</button>
+      <div class="accordion-content">
+        <p>
+          This Privacy Policy may be updated based on legal or procedural
+          changes. The latest version is always available at
+          <a href="https://ktu.edu" target="_blank">ktu.edu</a>.
+        </p>
+        <p>Last updated: 15-01-2025</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  const headers = document.querySelectorAll(".accordion-header");
+  headers.forEach((header) => {
+    header.addEventListener("click", () => {
+      const open = header.classList.contains("active");
+      document.querySelectorAll(".accordion-header").forEach((h) => {
+        h.classList.remove("active");
+        h.nextElementSibling.style.maxHeight = null;
+      });
+      if (!open) {
+        header.classList.add("active");
+        header.nextElementSibling.style.maxHeight =
+          header.nextElementSibling.scrollHeight + "px";
+      }
+    });
+  });
+</script>
+{% endblock %}
