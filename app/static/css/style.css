@@ -709,3 +709,44 @@ main {
   flex-direction: column;
   gap: 1.5rem;
 }
+
+/* PRIVACY CONTAINER ***********************************************/
+
+.privacy-container {
+  max-width: 70%;
+  margin: 2rem auto;
+  padding: 1rem;
+  line-height: 1.6;
+}
+
+.accordion {
+  border-top: 1px solid #ccc;
+}
+
+.accordion-item {
+  border-bottom: 1px solid #ccc;
+}
+
+.accordion-header {
+  background: #f9f9f9;
+  cursor: pointer;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: none;
+  text-align: left;
+  width: 100%;
+  outline: none;
+  transition: background 0.2s ease;
+}
+
+.accordion-header:hover,
+.accordion-header.active {
+  background: #e6e6e6;
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 1rem;
+}
